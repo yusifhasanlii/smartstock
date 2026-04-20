@@ -1262,9 +1262,9 @@
             <div class="chart-header">
                 <h3 class="chart-title">Filialların Satış Müqayisəsi</h3>
                 <div class="chart-filters">
-                    <button class="filter-btn active">Bu Ay</button>
-                    <button class="filter-btn">Rüblük</button>
-                    <button class="filter-btn">İllik</button>
+                    <button class="filter-btn active" data-period="month">Bu Ay</button>
+                    <button class="filter-btn" data-period="quarter">Rüblük</button>
+                    <button class="filter-btn" data-period="year">İllik</button>
                 </div>
             </div>
             <canvas id="storeComparisonChart"></canvas>
@@ -1649,24 +1649,54 @@
             }
         });
 
+        let storeComparisonChart = null;
+
+        const storeComparisonPeriods = {
+            month: {
+                labels: ['28 Mal', 'Nərimanov', 'Nizami', 'Gənclik', 'Sahil', 'Yasamal'],
+                sales: [42500, 38900, 45200, 35600, 41800, 39400],
+                inventory: [15600, 14200, 16800, 13400, 15900, 14700]
+            },
+            quarter: {
+                labels: ['28 Mal', 'Nərimanov', 'Nizami', 'Gənclik', 'Sahil', 'Yasamal'],
+                sales: [128400, 116700, 135600, 106800, 124500, 118200],
+                inventory: [46800, 42900, 50300, 40300, 47700, 44100]
+            },
+            year: {
+                labels: ['28 Mal', 'Nərimanov', 'Nizami', 'Gənclik', 'Sahil', 'Yasamal'],
+                sales: [516000, 472000, 541000, 429000, 501000, 483000],
+                inventory: [191000, 174000, 205000, 162000, 196000, 181000]
+            }
+        };
+
+        function applyStoreComparisonPeriod(periodKey) {
+            const selected = storeComparisonPeriods[periodKey] || storeComparisonPeriods.month;
+            if (!storeComparisonChart) return;
+
+            storeComparisonChart.data.labels = selected.labels;
+            storeComparisonChart.data.datasets[0].data = selected.sales;
+            storeComparisonChart.data.datasets[1].data = selected.inventory;
+            storeComparisonChart.update();
+        }
+
         // FIX: CDN problemi olsa səhv partlamasın
         if (typeof Chart !== 'undefined') {
             // Store Comparison Chart
             const storeCtx = document.getElementById('storeComparisonChart').getContext('2d');
-            new Chart(storeCtx, {
+            storeComparisonChart = new Chart(storeCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['28 Mal', 'Nərimanov', 'Nizami', 'Gənclik', 'Sahil', 'Yasamal'],
+                    labels: storeComparisonPeriods.month.labels,
                     datasets: [{
                         label: 'Satış (₼)',
-                        data: [42500, 38900, 45200, 35600, 41800, 39400],
+                        data: storeComparisonPeriods.month.sales,
                         backgroundColor: 'rgba(0, 217, 255, 0.6)',
                         borderColor: 'rgba(0, 217, 255, 1)',
                         borderWidth: 2,
                         borderRadius: 8
                     }, {
                         label: 'Anbar Dəyəri (₼)',
-                        data: [15600, 14200, 16800, 13400, 15900, 14700],
+                        data: storeComparisonPeriods.month.inventory,
                         backgroundColor: 'rgba(124, 58, 237, 0.6)',
                         borderColor: 'rgba(124, 58, 237, 1)',
                         borderWidth: 2,
@@ -1837,6 +1867,7 @@
             btn.addEventListener('click', () => {
                 btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                applyStoreComparisonPeriod(btn.dataset.period || 'month');
             });
         });
 
