@@ -3,677 +3,1430 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartStock — Ağıllı Anbar İdarəetmə Sistemi</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>SmartStock — İntelektual Anbar İdarəetmə Sistemi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+/* ═══════════════════════════════════════════════════════
+   SMARTSTOCK v3.0 — DESIGN SYSTEM
+   Typographi: Sora (display) + Plus Jakarta Sans (body) + JetBrains Mono (data)
+   Estetika: Dark Operative — military-precision data panel
+   ═══════════════════════════════════════════════════════ */
+
 :root {
-  --bg: #06080f;
-  --bg2: #0d1017;
-  --bg3: #131820;
-  --bg4: #1a2030;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #eef2f8;
-  --muted: #6b7a99;
-  --muted2: #9aa3bc;
-  --cyan: #00e5ff;
-  --cyan2: rgba(0,229,255,0.12);
-  --cyan3: rgba(0,229,255,0.06);
-  --violet: #7b5ea7;
-  --violet2: rgba(123,94,167,0.2);
-  --green: #00c896;
-  --green2: rgba(0,200,150,0.15);
-  --red: #ff4d6a;
-  --red2: rgba(255,77,106,0.15);
-  --amber: #ffb340;
-  --amber2: rgba(255,179,64,0.15);
-  --shadow: 0 24px 64px rgba(0,0,0,0.6);
-  --shadow2: 0 4px 16px rgba(0,0,0,0.4);
-  --ease: cubic-bezier(.4,0,.2,1);
-  --sidebar: 256px;
-  --header: 64px;
+  /* Rəng sistemi */
+  --bg-base:    #070b14;
+  --bg-surface: #0c1220;
+  --bg-raised:  #111827;
+  --bg-overlay: #172033;
+  --bg-active:  #1e2d45;
+
+  /* Haşiyə */
+  --border-subtle:  rgba(148,163,184,0.07);
+  --border-default: rgba(148,163,184,0.12);
+  --border-strong:  rgba(148,163,184,0.22);
+
+  /* Mətn */
+  --text-primary:   #f0f4fc;
+  --text-secondary: #94a3b8;
+  --text-tertiary:  #4b5675;
+  --text-muted:     #334060;
+
+  /* Brend rəngləri */
+  --accent:    #3b82f6;
+  --accent-hi: #60a5fa;
+  --accent-lo: rgba(59,130,246,0.12);
+  --accent-xl: rgba(59,130,246,0.06);
+
+  /* Semantik rənglər */
+  --success:    #10b981;
+  --success-bg: rgba(16,185,129,0.1);
+  --warning:    #f59e0b;
+  --warning-bg: rgba(245,158,11,0.1);
+  --danger:     #ef4444;
+  --danger-bg:  rgba(239,68,68,0.1);
+  --info:       #8b5cf6;
+  --info-bg:    rgba(139,92,246,0.12);
+
+  /* Tipografiya */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Kölgələr */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.6), 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 24px rgba(59,130,246,0.15);
+
+  /* Layout */
+  --sidebar-w: 260px;
+  --header-h: 60px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 [data-theme="light"] {
-  --bg: #f0f2f8;
-  --bg2: #ffffff;
-  --bg3: #f5f7fc;
-  --bg4: #eaecf5;
-  --border: rgba(0,0,0,0.07);
-  --border2: rgba(0,0,0,0.12);
-  --text: #0f1623;
-  --muted: #7a869a;
-  --muted2: #5a6478;
-  --cyan: #0080ff;
-  --cyan2: rgba(0,128,255,0.1);
-  --cyan3: rgba(0,128,255,0.05);
-  --shadow: 0 24px 64px rgba(0,0,0,0.08);
-  --shadow2: 0 4px 16px rgba(0,0,0,0.06);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;transition:background .3s,color .3s}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  position:fixed;left:0;top:0;width:var(--sidebar);height:100dvh;
-  background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;z-index:200;overflow:hidden;
-  transition:transform .3s var(--ease);
-}
-.sidebar::before{
-  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse 200px 300px at 50% 0%,rgba(0,229,255,0.04) 0%,transparent 70%);
-  pointer-events:none;
-}
-.logo-area{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
-.logo-wrap{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.2rem}
-.logo-mark{
-  width:32px;height:32px;border-radius:8px;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;color:#fff;
-  letter-spacing:-0.5px;flex-shrink:0;
-}
-.logo-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-0.5px}
-.logo-sub{font-size:0.7rem;color:var(--muted);letter-spacing:0.3px}
-.sidebar-status{
-  display:flex;align-items:center;gap:0.4rem;margin-top:0.75rem;
-  padding:0.4rem 0.6rem;background:var(--green2);border-radius:6px;width:fit-content;
-}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.status-txt{font-size:0.68rem;color:var(--green);font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
-.nav-section{padding:1rem 0.75rem 0.5rem;flex:1;overflow-y:auto}
-.nav-label{font-size:0.62rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;padding:0.5rem 0.5rem 0.4rem;margin-top:0.5rem}
-.nav-item{list-style:none;margin-bottom:2px}
-.nav-link{
-  display:flex;align-items:center;gap:0.65rem;padding:0.6rem 0.75rem;
-  border-radius:8px;color:var(--muted2);text-decoration:none;
-  font-size:0.85rem;font-weight:500;transition:all .2s var(--ease);position:relative;cursor:pointer;
-}
-.nav-link:hover{background:var(--cyan3);color:var(--cyan)}
-.nav-link.active{background:var(--cyan2);color:var(--cyan)}
-.nav-link.active .nav-icon-wrap{color:var(--cyan)}
-.nav-link.active::before{
-  content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;
-  background:var(--cyan);border-radius:0 2px 2px 0;
-}
-.nav-icon-wrap{width:16px;text-align:center;font-size:0.9rem;flex-shrink:0}
-.nav-badge{
-  margin-left:auto;font-size:0.65rem;font-weight:700;
-  background:var(--red2);color:var(--red);
-  padding:1px 5px;border-radius:10px;
-}
-.sidebar-footer{
-  padding:0.75rem 1rem;border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:0.65rem;flex-shrink:0;
-}
-.user-avatar{
-  width:30px;height:30px;border-radius:8px;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0;
-}
-.user-info{flex:1;min-width:0}
-.user-name{font-size:0.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.user-role{font-size:0.65rem;color:var(--muted)}
-
-/* ── HEADER ── */
-.header{
-  position:fixed;top:0;left:var(--sidebar);right:0;height:var(--header);
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:1rem;padding:0 1.5rem;z-index:100;
-  backdrop-filter:blur(12px);
-}
-.search-wrap{position:relative;flex:1;max-width:440px}
-.search-ic{position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem;pointer-events:none}
-.search-inp{
-  width:100%;padding:0.5rem 1rem 0.5rem 2.4rem;
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;
-  transition:.2s;outline:none;
-}
-.search-inp::placeholder{color:var(--muted)}
-.search-inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan3)}
-.search-drop{
-  position:absolute;top:calc(100% + 6px);left:0;right:0;
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  overflow:hidden;display:none;box-shadow:var(--shadow);z-index:300;
-}
-.search-drop.open{display:block}
-.search-row{
-  display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;
-  border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
-}
-.search-row:last-child{border-bottom:0}
-.search-row:hover{background:var(--bg3)}
-.search-chip{
-  width:36px;height:36px;border-radius:8px;flex-shrink:0;
-  background:var(--bg4);display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:500;color:var(--cyan);
-}
-.search-rname{font-size:0.83rem;font-weight:500}
-.search-rmeta{font-size:0.72rem;color:var(--muted);margin-top:1px}
-.hdr-actions{display:flex;align-items:center;gap:0.5rem;margin-left:auto}
-.hdr-btn{
-  display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;
-  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
-  color:var(--muted2);font-size:0.78rem;font-weight:500;cursor:pointer;
-  transition:.2s;font-family:'DM Sans',sans-serif;white-space:nowrap;
-}
-.hdr-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-.notif-btn{
-  position:relative;width:34px;height:34px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:8px;display:flex;
-  align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:0.9rem;
-}
-.notif-btn:hover{border-color:var(--cyan)}
-.notif-dot{
-  position:absolute;top:4px;right:4px;width:8px;height:8px;
-  background:var(--red);border-radius:50%;border:2px solid var(--bg2);
-}
-.avatar-btn{
-  width:34px;height:34px;border-radius:8px;cursor:pointer;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;
+  --bg-base:    #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-raised:  #f8fafc;
+  --bg-overlay: #f1f5f9;
+  --bg-active:  #e2e8f0;
+  --border-subtle:  rgba(15,23,42,0.06);
+  --border-default: rgba(15,23,42,0.1);
+  --border-strong:  rgba(15,23,42,0.18);
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary:  #94a3b8;
+  --text-muted:     #cbd5e1;
+  --accent:    #2563eb;
+  --accent-hi: #3b82f6;
+  --accent-lo: rgba(37,99,235,0.1);
+  --accent-xl: rgba(37,99,235,0.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.1);
+  --shadow-glow: 0 0 24px rgba(37,99,235,0.1);
 }
 
-/* ── MAIN ── */
-.main{margin-left:var(--sidebar);margin-top:var(--header);padding:1.5rem;min-height:calc(100dvh - var(--header))}
-.page{display:none;animation:fadeUp .3s var(--ease)}
-.page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.page-head{margin-bottom:1.5rem}
-.page-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;line-height:1.2}
-.page-sub{color:var(--muted);font-size:0.83rem;margin-top:0.2rem}
-.page-title span{
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-
-/* ── KPI CARDS ── */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
-.kpi{
-  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:1rem 1.1rem;position:relative;overflow:hidden;transition:.25s var(--ease);
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.kpi::after{
-  content:'';position:absolute;inset:0;opacity:0;
-  background:linear-gradient(135deg,var(--cyan3),transparent);transition:.25s;
-}
-.kpi:hover{transform:translateY(-2px);border-color:var(--border2)}
-.kpi:hover::after{opacity:1}
-.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;position:relative;z-index:1}
-.kpi-label{font-size:0.72rem;color:var(--muted);font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
-.kpi-ic{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.85rem}
-.kpi-val{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-0.3px;position:relative;z-index:1;line-height:1.1;word-break:break-all;overflow-wrap:anywhere}
-.kpi-mono{font-family:'DM Mono',monospace;font-size:0.65rem;margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem;position:relative;z-index:1;flex-wrap:wrap}
-.tag-up{color:var(--green);font-weight:500}
-.tag-dn{color:var(--red);font-weight:500}
-.tag-dim{color:var(--muted)}
-.kpi-bar{height:2px;border-radius:1px;background:var(--bg4);margin-top:0.75rem;position:relative;z-index:1;overflow:hidden}
-.kpi-bar-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
-
-/* ── AI CARDS ── */
-.ai-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
-.ai-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:1rem 1.1rem;position:relative;overflow:hidden;
-}
-.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad-top,linear-gradient(90deg,var(--cyan),var(--violet)))}
-.ai-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
-.ai-card-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600}
-.ai-card-ic{font-size:0.9rem}
-.ai-card-val{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:0.35rem;word-break:break-word;line-height:1.3}
-.ai-card-note{font-size:0.73rem;color:var(--muted2);line-height:1.45;margin-top:0.2rem}
-.ai-pulse{
-  display:inline-flex;align-items:center;gap:0.3rem;font-size:0.65rem;
-  color:var(--cyan);background:var(--cyan2);padding:2px 6px;border-radius:4px;
-  font-weight:600;letter-spacing:0.5px;margin-bottom:0.4rem;
-}
-.ai-pulse::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--cyan);animation:blink 1.5s infinite}
-
-/* ── CHART CARD ── */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem}
-.card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700}
-.card-meta{font-size:0.72rem;color:var(--muted);margin-top:1px}
-.filter-group{display:flex;gap:4px}
-.f-btn{
-  padding:0.35rem 0.7rem;border-radius:6px;font-size:0.72rem;font-weight:600;
-  background:var(--bg3);border:1px solid var(--border);color:var(--muted2);
-  cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif;
-}
-.f-btn:hover,.f-btn.active{background:var(--cyan2);border-color:var(--cyan);color:var(--cyan)}
-.chart-wrap{position:relative}
-#mainChart{width:100%!important;height:280px!important}
-
-/* ── TWO COL ── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-#donutChart{width:100%!important;height:220px!important}
-
-/* ── TABLE ── */
-.tbl-wrap{overflow-x:auto;border-radius:10px}
-table{width:100%;border-collapse:collapse}
-thead tr{background:var(--bg3)}
-th{padding:0.75rem 1rem;text-align:left;font-size:0.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap}
-td{padding:0.75rem 1rem;font-size:0.82rem;border-bottom:1px solid var(--border);white-space:nowrap}
-tbody tr{transition:.15s}
-tbody tr:hover{background:var(--bg3)}
-tbody tr:last-child td{border-bottom:0}
-.code{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--cyan)}
-.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.68rem;font-weight:700;letter-spacing:0.3px}
-.badge::before{content:'';width:4px;height:4px;border-radius:50%;flex-shrink:0}
-.b-crit{background:var(--red2);color:var(--red)}.b-crit::before{background:var(--red)}
-.b-ok{background:var(--green2);color:var(--green)}.b-ok::before{background:var(--green)}
-.b-warn{background:var(--amber2);color:var(--amber)}.b-warn::before{background:var(--amber)}
-.tbl-actions{display:flex;gap:1rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap}
-.tbl-search{
-  padding:0.4rem 0.75rem 0.4rem 2.2rem;background:var(--bg3);
-  border:1px solid var(--border);border-radius:8px;color:var(--text);
-  font-family:'DM Sans',sans-serif;font-size:0.8rem;outline:none;
-  width:220px;transition:.2s;
-}
-.tbl-search:focus{border-color:var(--cyan)}
-.tbl-search-wrap{position:relative}
-.tbl-search-wrap .search-ic{font-size:0.75rem}
-.add-btn{
-  display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
-  background:var(--cyan2);border:1px solid var(--cyan);border-radius:8px;
-  color:var(--cyan);font-size:0.78rem;font-weight:600;cursor:pointer;
-  transition:.2s;font-family:'DM Sans',sans-serif;margin-left:auto;
-}
-.add-btn:hover{background:var(--cyan);color:var(--bg)}
-.supplier-chip{
-  display:inline-flex;align-items:center;gap:0.3rem;
-  padding:0.2rem 0.5rem;background:var(--bg4);border-radius:4px;
-  font-size:0.72rem;color:var(--muted2);
-}
-.progress-cell{display:flex;align-items:center;gap:0.5rem}
-.mini-bar{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;min-width:60px}
-.mini-fill{height:100%;border-radius:2px}
-.pct-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:28px;text-align:right}
-
-/* ── BUDGET ── */
-.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.slider-card{background:var(--bg3);border-radius:10px;padding:1.1rem}
-.slider-label{font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:0.75rem}
-.slider-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--cyan);margin-bottom:0.75rem}
-input[type=range]{
-  width:100%;height:4px;-webkit-appearance:none;appearance:none;
-  background:var(--bg4);border-radius:2px;outline:none;cursor:pointer;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  cursor:pointer;transition:.15s;box-shadow:0 0 8px rgba(0,229,255,0.4);
-}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
-.metrics-panel{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
-.met{background:var(--bg3);border-radius:10px;padding:1rem;border-left:3px solid var(--border2)}
-.met-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.4rem}
-.met-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
-.roi-card{
-  grid-column:span 2;background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(123,94,167,0.08));
-  border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:1.1rem;
-  display:flex;align-items:center;gap:1.5rem;
-}
-.roi-big{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--cyan);line-height:1}
-.roi-label{font-size:0.72rem;color:var(--muted);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.5px}
-.roi-note{font-size:0.8rem;color:var(--muted2)}
-.breakdown{margin-top:1rem}
-.breakdown-title{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.6rem}
-.breakdown-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
-.breakdown-name{font-size:0.8rem;display:flex;align-items:center;gap:0.5rem}
-.breakdown-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.breakdown-pct{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted2)}
-.breakdown-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin:0 0.75rem}
-.breakdown-bar-fill{height:100%;border-radius:2px;transition:.3s}
-
-/* ── DISCOUNT ── */
-.disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.disc-controls{display:flex;flex-direction:column;gap:0.75rem}
-.disc-select{
-  width:100%;padding:0.55rem 0.75rem;background:var(--bg4);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.83rem;outline:none;
-  cursor:pointer;transition:.2s;
-}
-.disc-select:focus{border-color:var(--cyan)}
-.disc-pct-display{
-  display:flex;align-items:flex-end;gap:0.5rem;padding:1rem;
-  background:linear-gradient(135deg,var(--cyan3),var(--violet2));
-  border:1px solid rgba(0,229,255,0.2);border-radius:10px;
-}
-.disc-big{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--cyan);line-height:1}
-.disc-unit{font-size:1rem;color:var(--muted);margin-bottom:0.5rem}
-.disc-results{display:grid;gap:0.75rem}
-.disc-met{
-  background:var(--bg3);border-radius:10px;padding:1rem;
-  border-left:3px solid var(--border2);transition:.2s;
-}
-.disc-met-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.35rem}
-.disc-met-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800}
-.scenario-strip{
-  margin-top:1rem;padding:0.75rem 1rem;
-  background:var(--bg3);border-radius:8px;font-size:0.78rem;color:var(--muted2);
-  border-left:3px solid var(--amber);
-}
-.scenario-strip strong{color:var(--amber)}
-
-/* ── KANBAN ── */
-.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.kb-col{background:var(--bg3);border-radius:12px;padding:0.9rem}
-.kb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.85rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
-.kb-title{font-size:0.8rem;font-weight:700;display:flex;align-items:center;gap:0.5rem}
-.kb-cnt{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
-  background:var(--bg2);border:1px solid var(--border);
-  padding:1px 6px;border-radius:4px;color:var(--muted2);
-}
-.kb-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:9px;
-  padding:0.85rem;margin-bottom:0.5rem;cursor:grab;transition:.2s var(--ease);
-}
-.kb-card:hover{transform:translateY(-2px);border-color:var(--border2);box-shadow:var(--shadow2)}
-.kb-card:last-child{margin-bottom:0}
-.kb-card-title{font-size:0.8rem;font-weight:600;margin-bottom:0.3rem}
-.kb-card-desc{font-size:0.73rem;color:var(--muted);margin-bottom:0.6rem;line-height:1.4}
-.kb-card-foot{display:flex;justify-content:space-between;align-items:center}
-.kb-tag{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:4px}
-.kb-tag-h{background:var(--red2);color:var(--red)}
-.kb-tag-m{background:var(--amber2);color:var(--amber)}
-.kb-tag-l{background:var(--green2);color:var(--green)}
-.kb-time{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)}
-.kb-assign{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#fff}
-
-/* ── RECOMMENDATIONS ── */
-.rec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
-.rec-card{
-  background:var(--bg3);border:1px dashed var(--border2);border-radius:12px;
-  padding:1.25rem;text-align:center;cursor:pointer;transition:.25s var(--ease);
-}
-.rec-card:hover{border-color:var(--cyan);border-style:solid;transform:translateY(-2px)}
-.rec-ic{font-size:2rem;margin-bottom:0.6rem}
-.rec-name{font-size:0.85rem;font-weight:700;margin-bottom:0.2rem}
-.rec-desc{font-size:0.72rem;color:var(--muted);margin-bottom:0.6rem}
-.rec-pct{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--cyan);font-weight:500}
-.rec-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:0.5rem;overflow:hidden}
-.rec-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet))}
-.assoc-card{background:var(--bg3);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
-.assoc-title{font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem}
-.assoc-row{display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid var(--border)}
-.assoc-row:last-child{border-bottom:0}
-.assoc-pair{display:flex;align-items:center;gap:0.4rem;flex:1;font-size:0.8rem}
-.assoc-arrow{color:var(--cyan);font-family:'DM Mono',monospace;font-size:0.75rem}
-.assoc-conf{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--cyan)}
-.assoc-lift{font-size:0.7rem;color:var(--muted)}
-
-/* ── ANALYTICS ── */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-#lineChart{width:100%!important;height:200px!important}
-#barChart2{width:100%!important;height:200px!important}
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1rem}
-.stat-box{background:var(--bg3);border-radius:10px;padding:0.9rem;text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:0.2rem}
-.stat-lbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
-
-/* ── SETTINGS ── */
-.settings-sections{display:grid;gap:1rem}
-.sett-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.sett-head{padding:0.85rem 1.1rem;background:var(--bg3);border-bottom:1px solid var(--border);font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
-.sett-row{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1.1rem;border-bottom:1px solid var(--border);transition:.15s}
-.sett-row:last-child{border-bottom:0}
-.sett-row:hover{background:var(--bg3)}
-.sett-key{font-size:0.82rem;font-weight:500}
-.sett-desc{font-size:0.72rem;color:var(--muted);margin-top:1px}
-.sett-val{font-size:0.8rem;color:var(--cyan);font-weight:600;text-align:right}
-.toggle{width:36px;height:20px;border-radius:10px;background:var(--green);cursor:pointer;position:relative;flex-shrink:0;transition:.2s}
-.toggle::after{content:'';position:absolute;top:2px;left:16px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
-.toggle.off{background:var(--bg4)}
-.toggle.off::after{left:2px}
-
-/* ── AI PANEL ── */
-.ai-fab{
-  position:fixed;right:1.25rem;bottom:1.25rem;width:52px;height:52px;
-  border-radius:50%;border:0;cursor:pointer;z-index:500;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  color:#fff;font-size:1.2rem;box-shadow:0 4px 20px rgba(0,229,255,0.35);
-  transition:.25s var(--ease);
-}
-.ai-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,229,255,0.5)}
-.ai-chat{
-  position:fixed;right:85px;bottom:1.25rem;width:320px;
-  background:var(--bg2);border:1px solid var(--border2);border-radius:14px;
-  box-shadow:var(--shadow);z-index:500;overflow:hidden;
-  transform:scale(0.95) translateY(8px);opacity:0;pointer-events:none;transition:.25s var(--ease);
-}
-.ai-chat.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
-.ai-chat-head{
-  padding:0.75rem 0.9rem;background:var(--bg3);border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.ai-chat-title{font-size:0.83rem;font-weight:700;display:flex;align-items:center;gap:0.4rem}
-.ai-online{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
-.ai-x{background:0;border:0;color:var(--muted);cursor:pointer;font-size:1rem;line-height:1}
-.ai-msgs{max-height:220px;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem}
-.ai-msg{padding:0.55rem 0.7rem;border-radius:9px;font-size:0.78rem;line-height:1.5;max-width:90%}
-.ai-msg.bot{background:var(--bg3);border:1px solid var(--border);align-self:flex-start}
-.ai-msg.user{background:var(--cyan2);border:1px solid rgba(0,229,255,0.2);align-self:flex-end;text-align:right}
-.ai-typing{display:flex;gap:3px;align-items:center;padding:0.4rem 0.6rem}
-.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:bounce .9s infinite}
-.ai-dot:nth-child(2){animation-delay:.15s}
-.ai-dot:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.ai-inp-row{border-top:1px solid var(--border);padding:0.6rem;display:flex;gap:0.4rem}
-.ai-inp{
-  flex:1;padding:0.45rem 0.65rem;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;outline:none;
-}
-.ai-inp:focus{border-color:var(--cyan)}
-.ai-send{
-  padding:0.45rem 0.75rem;background:var(--cyan2);border:1px solid var(--cyan);
-  border-radius:8px;color:var(--cyan);font-size:0.75rem;font-weight:700;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:.15s;
-}
-.ai-send:hover{background:var(--cyan);color:var(--bg)}
-.ai-suggestions{display:flex;flex-wrap:wrap;gap:0.3rem;padding:0 0.75rem 0.5rem}
-.ai-sug{
-  font-size:0.68rem;padding:0.25rem 0.5rem;background:var(--bg3);
-  border:1px solid var(--border);border-radius:5px;color:var(--muted2);
-  cursor:pointer;transition:.15s;
-}
-.ai-sug:hover{border-color:var(--cyan);color:var(--cyan)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1100px){
-  .kpi-row{grid-template-columns:repeat(2,1fr)}
-  .ai-row{grid-template-columns:repeat(2,1fr)}
-  .two-col,.budget-grid,.disc-grid,.analytics-grid{grid-template-columns:1fr}
-  .rec-grid{grid-template-columns:repeat(2,1fr)}
-  .kanban{grid-template-columns:1fr}
-}
-@media(max-width:768px){
-  :root{--sidebar:0px}
-  .sidebar{transform:translateX(-256px)}
-  .sidebar.mobile-open{transform:translateX(0);width:256px}
-  .header{left:0}
-  .main{margin-left:0}
-  .kpi-row{grid-template-columns:1fr 1fr}
-  .ai-chat{right:0.75rem;left:0.75rem;width:auto;bottom:80px}
-}
-@media(max-width:500px){
-  .kpi-row,.ai-row,.rec-grid{grid-template-columns:1fr}
+/* ── RESET & BASE ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.6;
+  transition: background 0.3s var(--ease-in-out), color 0.3s var(--ease-in-out);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sidebar {
+  position: fixed; left: 0; top: 0;
+  width: var(--sidebar-w); height: 100dvh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex; flex-direction: column;
+  z-index: 200;
+  transition: transform 0.3s var(--ease-out);
+}
+
+/* Subtle noise texture overlay */
+.sidebar::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 180px 280px at 50% 0%, rgba(59,130,246,0.05) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+.logo-area {
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+
+.logo-wrap { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.85rem; }
+
+.logo-mark {
+  width: 34px; height: 34px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600;
+  color: #fff; letter-spacing: -0.5px; flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+}
+
+.logo-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 800;
+  letter-spacing: -0.4px; line-height: 1;
+}
+
+.logo-tagline {
+  font-size: 0.65rem; color: var(--text-tertiary);
+  letter-spacing: 0.2px; font-weight: 400;
+  margin-top: 0.15rem;
+}
+
+.sys-status {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  background: var(--success-bg);
+  border: 1px solid rgba(16,185,129,0.15);
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+.status-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+  animation: pulse 2.4s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(16,185,129,0); }
+}
+.status-label {
+  font-size: 0.63rem; color: var(--success);
+  font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+
+/* NAV */
+.nav-area {
+  padding: 0.75rem 0.75rem; flex: 1;
+  overflow-y: auto; position: relative; z-index: 1;
+}
+
+.nav-section-label {
+  font-size: 0.6rem; font-weight: 700;
+  color: var(--text-tertiary); letter-spacing: 1.8px;
+  text-transform: uppercase; padding: 0.75rem 0.65rem 0.4rem;
+  font-family: var(--font-mono);
+}
+
+.nav-item { list-style: none; margin-bottom: 1px; }
+
+.nav-link {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.58rem 0.75rem; border-radius: var(--radius-md);
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.83rem; font-weight: 500;
+  transition: all 0.18s var(--ease-in-out);
+  cursor: pointer; position: relative;
+  font-family: var(--font-body);
+}
+
+.nav-link:hover {
+  background: var(--accent-xl);
+  color: var(--accent-hi);
+}
+
+.nav-link.active {
+  background: var(--accent-lo);
+  color: var(--accent-hi);
+}
+
+.nav-link.active::before {
+  content: '';
+  position: absolute; left: 0; top: 25%; bottom: 25%;
+  width: 2.5px; background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+  width: 18px; text-align: center; font-size: 0.88rem;
+  flex-shrink: 0; opacity: 0.8;
+}
+.nav-link.active .nav-icon { opacity: 1; }
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 0.6rem; font-weight: 700;
+  background: var(--danger-bg); color: var(--danger);
+  padding: 1px 5px; border-radius: 10px;
+  font-family: var(--font-mono);
+}
+
+.sidebar-footer {
+  padding: 0.85rem 1.1rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex; align-items: center; gap: 0.7rem;
+  flex-shrink: 0; position: relative; z-index: 1;
+}
+
+.user-avatar {
+  width: 32px; height: 32px; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+
+.user-name { font-size: 0.8rem; font-weight: 600; line-height: 1.2; }
+.user-meta { font-size: 0.63rem; color: var(--text-tertiary); }
+
+/* ═══════════════ HEADER ═══════════════ */
+.header {
+  position: fixed; top: 0;
+  left: var(--sidebar-w); right: 0;
+  height: var(--header-h);
+  background: rgba(12,18,32,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0 1.5rem; z-index: 100;
+  transition: background 0.3s;
+}
+
+[data-theme="light"] .header {
+  background: rgba(255,255,255,0.92);
+}
+
+.search-wrap { position: relative; flex: 1; max-width: 380px; }
+
+.search-icon {
+  position: absolute; left: 0.75rem; top: 50%;
+  transform: translateY(-50%); color: var(--text-tertiary);
+  font-size: 0.8rem; pointer-events: none;
+}
+
+.search-input {
+  width: 100%; padding: 0.48rem 1rem 0.48rem 2.35rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.82rem; font-weight: 400;
+  transition: 0.2s; outline: none;
+}
+
+.search-input::placeholder { color: var(--text-tertiary); }
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-lo);
+}
+
+.search-dropdown {
+  position: absolute; top: calc(100% + 6px);
+  left: 0; right: 0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden; display: none;
+  box-shadow: var(--shadow-lg); z-index: 400;
+}
+.search-dropdown.open { display: block; }
+
+.search-result-row {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer; transition: 0.15s;
+}
+.search-result-row:last-child { border-bottom: none; }
+.search-result-row:hover { background: var(--bg-raised); }
+
+.search-chip {
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  flex-shrink: 0; background: var(--bg-overlay);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.6rem;
+  font-weight: 600; color: var(--accent-hi);
+}
+.s-rname { font-size: 0.82rem; font-weight: 500; }
+.s-rmeta { font-size: 0.7rem; color: var(--text-secondary); margin-top: 1px; }
+
+.header-actions { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+
+.hdr-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.42rem 0.85rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 500;
+  cursor: pointer; transition: 0.18s; white-space: nowrap;
+}
+.hdr-btn:hover { border-color: var(--accent); color: var(--accent-hi); }
+
+.notif-btn {
+  position: relative; width: 36px; height: 36px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: 0.18s; font-size: 0.85rem;
+}
+.notif-btn:hover { border-color: var(--accent); }
+
+.notif-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  background: var(--danger); border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+}
+
+.avatar-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  cursor: pointer;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; color: #fff;
+}
+
+/* ═══════════════ MAIN LAYOUT ═══════════════ */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--header-h);
+  padding: 1.5rem;
+  min-height: calc(100dvh - var(--header-h));
+}
+
+.page { display: none; animation: fadeUp 0.28s var(--ease-out); }
+.page.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page-header { margin-bottom: 1.5rem; }
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem; font-weight: 800;
+  letter-spacing: -0.5px; line-height: 1.2;
+}
+
+.page-title span {
+  background: linear-gradient(90deg, var(--accent-hi), #8b5cf6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  font-size: 0.8rem; color: var(--text-secondary);
+  margin-top: 0.25rem; font-weight: 400;
+}
+
+/* ═══════════════ KPI CARDS ═══════════════ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem; margin-bottom: 1rem;
+}
+
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.2rem;
+  position: relative; overflow: hidden;
+  transition: transform 0.22s var(--ease-out), border-color 0.22s, box-shadow 0.22s;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--kpi-accent, var(--accent)), transparent);
+  opacity: 0.6;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 0.8rem;
+}
+
+.kpi-label {
+  font-size: 0.68rem; color: var(--text-secondary);
+  font-weight: 600; letter-spacing: 0.4px;
+  text-transform: uppercase; font-family: var(--font-mono);
+}
+
+.kpi-icon {
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; flex-shrink: 0;
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 800;
+  letter-spacing: -0.3px; line-height: 1;
+}
+
+.kpi-delta {
+  display: flex; align-items: center; gap: 0.35rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.63rem;
+}
+
+.delta-up { color: var(--success); font-weight: 600; }
+.delta-dn { color: var(--danger); font-weight: 600; }
+.delta-dim { color: var(--text-tertiary); }
+
+.kpi-progress {
+  height: 2px; border-radius: 1px;
+  background: var(--bg-overlay); margin-top: 0.85rem; overflow: hidden;
+}
+.kpi-progress-fill {
+  height: 100%; border-radius: 1px;
+  background: linear-gradient(90deg, var(--kpi-accent, var(--accent)), #8b5cf6);
+  transition: width 0.6s var(--ease-out);
+}
+
+/* ═══════════════ AI INSIGHT CARDS ═══════════════ */
+.ai-insight-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem; margin-bottom: 1rem;
+}
+
+.ai-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.2rem;
+  position: relative; overflow: hidden;
+}
+
+.ai-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--card-gradient, linear-gradient(90deg, var(--accent), #8b5cf6));
+}
+
+.ai-card-top {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 0.6rem;
+}
+
+.ai-card-label {
+  font-size: 0.63rem; font-weight: 700;
+  color: var(--text-tertiary); text-transform: uppercase;
+  letter-spacing: 1px; font-family: var(--font-mono);
+}
+
+.ai-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.6rem; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px;
+  letter-spacing: 0.5px; font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+.ai-badge::before {
+  content: ''; width: 4px; height: 4px;
+  border-radius: 50%; background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+.badge-live    { background: var(--accent-lo); color: var(--accent-hi); }
+.badge-critical { background: var(--danger-bg); color: var(--danger); }
+.badge-optimal  { background: var(--success-bg); color: var(--success); }
+
+.ai-card-value {
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 0.35rem; line-height: 1.3;
+}
+
+.ai-card-desc {
+  font-size: 0.74rem; color: var(--text-secondary);
+  line-height: 1.5; font-weight: 400;
+}
+
+/* ═══════════════ CHART CARD ═══════════════ */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 1.25rem;
+  flex-wrap: wrap; gap: 0.6rem;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem; font-weight: 700; letter-spacing: -0.2px;
+}
+
+.card-subtitle {
+  font-size: 0.7rem; color: var(--text-tertiary);
+  margin-top: 0.15rem; font-weight: 400;
+}
+
+.filter-pills { display: flex; gap: 4px; }
+
+.pill {
+  padding: 0.32rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem; font-weight: 600;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  cursor: pointer; transition: 0.15s;
+  font-family: var(--font-body);
+}
+.pill:hover, .pill.active {
+  background: var(--accent-lo);
+  border-color: var(--accent);
+  color: var(--accent-hi);
+}
+
+#mainChart  { width: 100% !important; height: 270px !important; }
+#lineChart  { width: 100% !important; height: 200px !important; }
+#donutChart { width: 100% !important; height: 210px !important; }
+#barChart2  { width: 100% !important; height: 195px !important; }
+#pieChart   { width: 100% !important; height: 195px !important; }
+#trendChart { width: 100% !important; height: 195px !important; }
+
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.85rem; margin-bottom: 1rem;
+}
+.two-col .card { margin-bottom: 0; }
+
+/* ═══════════════ TABLE ═══════════════ */
+.table-actions {
+  display: flex; gap: 0.75rem;
+  margin-bottom: 1rem; align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-search-wrap { position: relative; }
+
+.table-search {
+  padding: 0.42rem 0.9rem 0.42rem 2.15rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.79rem;
+  outline: none; transition: 0.2s; width: 220px;
+}
+.table-search:focus { border-color: var(--accent); }
+
+.table-search-icon {
+  position: absolute; left: 0.65rem; top: 50%;
+  transform: translateY(-50%); color: var(--text-tertiary);
+  font-size: 0.75rem; pointer-events: none;
+}
+
+.table-filter-select {
+  padding: 0.42rem 0.85rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.79rem;
+  outline: none; cursor: pointer; transition: 0.2s;
+}
+.table-filter-select:focus { border-color: var(--accent); }
+
+.add-btn {
+  display: flex; align-items: center; gap: 0.35rem;
+  padding: 0.42rem 1rem;
+  background: var(--accent-lo);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  color: var(--accent-hi);
+  font-family: var(--font-body); font-size: 0.78rem;
+  font-weight: 600; cursor: pointer; transition: 0.18s;
+  margin-left: auto;
+}
+.add-btn:hover { background: var(--accent); color: #fff; }
+
+.table-wrap { overflow-x: auto; border-radius: var(--radius-md); }
+
+table { width: 100%; border-collapse: collapse; }
+
+thead tr { background: var(--bg-raised); }
+
+th {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.62rem; color: var(--text-tertiary);
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.9px; white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+td {
+  padding: 0.7rem 1rem;
+  font-size: 0.81rem;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: var(--bg-raised); }
+tbody tr:last-child td { border-bottom: none; }
+
+.mono-cell {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; color: var(--accent-hi);
+  font-weight: 500;
+}
+
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.22rem 0.6rem; border-radius: 5px;
+  font-size: 0.64rem; font-weight: 700;
+  letter-spacing: 0.3px; font-family: var(--font-mono);
+}
+.badge::before {
+  content: ''; width: 4px; height: 4px;
+  border-radius: 50%; flex-shrink: 0;
+}
+
+.b-danger  { background: var(--danger-bg);  color: var(--danger);  }
+.b-danger::before { background: var(--danger); }
+.b-success { background: var(--success-bg); color: var(--success); }
+.b-success::before { background: var(--success); }
+.b-warning { background: var(--warning-bg); color: var(--warning); }
+.b-warning::before { background: var(--warning); }
+
+.supplier-tag {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.18rem 0.5rem; background: var(--bg-overlay);
+  border-radius: var(--radius-sm);
+  font-size: 0.68rem; color: var(--text-secondary);
+  font-family: var(--font-body);
+}
+
+.progress-cell { display: flex; align-items: center; gap: 0.5rem; }
+.mini-track {
+  flex: 1; height: 4px; background: var(--bg-overlay);
+  border-radius: 2px; overflow: hidden; min-width: 60px;
+}
+.mini-fill { height: 100%; border-radius: 2px; }
+.pct-text {
+  font-family: var(--font-mono);
+  font-size: 0.64rem; color: var(--text-tertiary);
+  width: 28px; text-align: right;
+}
+
+/* ═══════════════ BUDGET PAGE ═══════════════ */
+.budget-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.slider-block {
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+}
+
+.block-label {
+  font-size: 0.63rem; color: var(--text-tertiary);
+  font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.9px; margin-bottom: 0.6rem;
+  font-family: var(--font-mono);
+}
+
+.slider-display {
+  font-family: var(--font-display);
+  font-size: 2.2rem; font-weight: 800;
+  color: var(--accent-hi); margin-bottom: 0.75rem;
+  letter-spacing: -1px;
+}
+
+input[type="range"] {
+  width: 100%; height: 3px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--bg-overlay);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  cursor: pointer; transition: 0.15s;
+  box-shadow: 0 0 8px rgba(59,130,246,0.4);
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+.range-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 0.4rem;
+  font-size: 0.62rem; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+.breakdown-section { margin-top: 1rem; }
+
+.breakdown-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.5rem; padding: 0.3rem 0;
+}
+.breakdown-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.breakdown-name { font-size: 0.78rem; flex: 1; font-weight: 500; }
+.breakdown-track { flex: 2; height: 3px; background: var(--bg-overlay); border-radius: 2px; overflow: hidden; }
+.breakdown-fill { height: 100%; border-radius: 2px; transition: width 0.4s var(--ease-out); }
+.breakdown-amount { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-secondary); min-width: 60px; text-align: right; }
+
+.roi-highlight {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  display: flex; align-items: center; gap: 1.5rem;
+}
+
+.roi-number {
+  font-family: var(--font-display);
+  font-size: 3rem; font-weight: 800;
+  color: var(--accent-hi); line-height: 1;
+  letter-spacing: -2px;
+}
+
+.roi-label { font-size: 0.63rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.2rem; font-family: var(--font-mono); }
+.roi-note { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; }
+
+.metrics-2x2 {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.65rem; margin-top: 0.75rem;
+}
+
+.metric-box {
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--metric-color, var(--accent));
+}
+.metric-label { font-size: 0.62rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.7px; font-family: var(--font-mono); margin-bottom: 0.35rem; }
+.metric-value { font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; color: var(--metric-color, var(--accent)); }
+
+/* ═══════════════ DISCOUNT PAGE ═══════════════ */
+.disc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.disc-controls { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.disc-display {
+  display: flex; align-items: flex-end; gap: 0.4rem;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, var(--accent-xl), rgba(139,92,246,0.06));
+  border: 1px solid rgba(59,130,246,0.18);
+  border-radius: var(--radius-md);
+}
+.disc-number {
+  font-family: var(--font-display);
+  font-size: 3.2rem; font-weight: 800;
+  color: var(--accent-hi); line-height: 1; letter-spacing: -2px;
+}
+.disc-unit { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+
+.disc-select {
+  width: 100%; padding: 0.52rem 0.75rem;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.8rem;
+  outline: none; cursor: pointer; transition: 0.2s;
+}
+.disc-select:focus { border-color: var(--accent); }
+
+.disc-result-grid { display: grid; gap: 0.65rem; }
+
+.disc-result-item {
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  border-left: 3px solid var(--item-color, var(--accent));
+  transition: 0.2s;
+}
+.disc-result-label { font-size: 0.62rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.7px; font-family: var(--font-mono); margin-bottom: 0.3rem; }
+.disc-result-value { font-family: var(--font-display); font-size: 1.45rem; font-weight: 800; }
+
+.scenario-note {
+  margin-top: 1rem; padding: 0.8rem 1rem;
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  font-size: 0.77rem; color: var(--text-secondary);
+  border-left: 3px solid var(--warning); line-height: 1.5;
+}
+.scenario-note strong { color: var(--warning); }
+
+/* ═══════════════ KANBAN ═══════════════ */
+.kanban { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+.kanban-col {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem;
+}
+
+.kanban-col-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.col-title {
+  font-size: 0.78rem; font-weight: 700;
+  display: flex; align-items: center; gap: 0.45rem;
+}
+
+.col-count {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-default);
+  padding: 1px 5px; border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.kanban-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  margin-bottom: 0.5rem;
+  cursor: grab; transition: 0.2s var(--ease-out);
+}
+.kanban-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+.kanban-card:last-child { margin-bottom: 0; }
+
+.kanban-card-title { font-size: 0.79rem; font-weight: 600; margin-bottom: 0.3rem; }
+.kanban-card-desc { font-size: 0.71rem; color: var(--text-secondary); margin-bottom: 0.6rem; line-height: 1.45; }
+.kanban-card-footer { display: flex; justify-content: space-between; align-items: center; }
+
+.priority-tag {
+  font-size: 0.62rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  font-family: var(--font-mono); text-transform: uppercase;
+}
+.p-high   { background: var(--danger-bg);  color: var(--danger); }
+.p-medium { background: var(--warning-bg); color: var(--warning); }
+.p-low    { background: var(--success-bg); color: var(--success); }
+
+.card-time {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; color: var(--text-tertiary);
+}
+
+.assignee {
+  width: 20px; height: 20px; border-radius: 5px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.52rem; font-weight: 700; color: #fff;
+}
+
+/* ═══════════════ RECOMMENDATIONS ═══════════════ */
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem; margin-bottom: 1rem;
+}
+
+.rec-card {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem; text-align: center;
+  cursor: pointer; transition: 0.22s var(--ease-out);
+}
+.rec-card:hover {
+  border-color: var(--accent);
+  border-style: solid;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.rec-emoji { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.rec-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.2rem; }
+.rec-description { font-size: 0.69rem; color: var(--text-secondary); margin-bottom: 0.6rem; }
+.rec-stat { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-hi); font-weight: 500; }
+
+.rec-track { height: 2px; background: var(--bg-overlay); border-radius: 1px; margin-top: 0.5rem; overflow: hidden; }
+.rec-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #8b5cf6); }
+
+/* ═══════════════ ANALYTICS ═══════════════ */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem; margin-bottom: 1rem;
+}
+
+.stat-block {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1rem; text-align: center;
+}
+.stat-value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.2rem; }
+.stat-label { font-size: 0.63rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-mono); }
+
+/* ═══════════════ SETTINGS ═══════════════ */
+.settings-layout { display: grid; gap: 1rem; }
+
+.settings-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 0.75rem 1.15rem;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.63rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-tertiary); font-family: var(--font-mono);
+}
+
+.settings-row {
+  display: flex; justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.15s;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row:hover { background: var(--bg-raised); }
+
+.setting-key { font-size: 0.82rem; font-weight: 500; }
+.setting-desc { font-size: 0.7rem; color: var(--text-secondary); margin-top: 1px; font-weight: 400; }
+
+.setting-value {
+  font-size: 0.78rem; color: var(--accent-hi);
+  font-weight: 600; text-align: right;
+  font-family: var(--font-mono);
+}
+
+.toggle {
+  width: 36px; height: 20px; border-radius: 10px;
+  background: var(--success); cursor: pointer;
+  position: relative; flex-shrink: 0; transition: 0.22s;
+}
+.toggle::after {
+  content: '';
+  position: absolute; top: 2px; left: 18px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; transition: 0.22s;
+  box-shadow: var(--shadow-sm);
+}
+.toggle.off { background: var(--bg-overlay); }
+.toggle.off::after { left: 2px; }
+
+/* ═══════════════ AI CHAT ═══════════════ */
+.ai-fab {
+  position: fixed; right: 1.25rem; bottom: 1.25rem;
+  width: 50px; height: 50px; border-radius: 50%;
+  border: none; cursor: pointer; z-index: 500;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  color: #fff; font-size: 1.1rem;
+  box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+  transition: 0.22s var(--ease-out);
+}
+.ai-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 28px rgba(59,130,246,0.55);
+}
+
+.ai-panel {
+  position: fixed; right: 80px; bottom: 1.25rem;
+  width: 310px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg); z-index: 500;
+  overflow: hidden;
+  transform: scale(0.94) translateY(10px);
+  opacity: 0; pointer-events: none;
+  transition: 0.22s var(--ease-out);
+}
+.ai-panel.open {
+  transform: scale(1) translateY(0);
+  opacity: 1; pointer-events: auto;
+}
+
+.ai-panel-header {
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex; justify-content: space-between;
+  align-items: center;
+}
+
+.ai-title {
+  font-size: 0.8rem; font-weight: 700;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-display);
+}
+
+.ai-online-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--success); animation: pulse 2s infinite;
+}
+
+.ai-close {
+  background: none; border: none; color: var(--text-tertiary);
+  cursor: pointer; font-size: 0.9rem; line-height: 1;
+  transition: color 0.15s;
+}
+.ai-close:hover { color: var(--text-primary); }
+
+.ai-messages {
+  max-height: 210px; overflow-y: auto;
+  padding: 0.75rem; display: flex;
+  flex-direction: column; gap: 0.5rem;
+}
+
+.ai-msg {
+  padding: 0.55rem 0.7rem; border-radius: var(--radius-md);
+  font-size: 0.76rem; line-height: 1.5; max-width: 88%;
+}
+.ai-msg.bot {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  align-self: flex-start;
+}
+.ai-msg.user {
+  background: var(--accent-lo);
+  border: 1px solid rgba(59,130,246,0.2);
+  align-self: flex-end; text-align: right;
+}
+
+.typing-indicator {
+  display: flex; gap: 3px; align-items: center;
+  padding: 0.4rem 0.6rem;
+}
+.typing-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--text-tertiary); animation: bounce 0.9s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.ai-suggestions {
+  display: flex; flex-wrap: wrap; gap: 0.3rem;
+  padding: 0 0.75rem 0.5rem;
+}
+.ai-sug {
+  font-size: 0.66rem; padding: 0.25rem 0.55rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: 5px; color: var(--text-secondary);
+  cursor: pointer; transition: 0.15s;
+  font-family: var(--font-body);
+}
+.ai-sug:hover { border-color: var(--accent); color: var(--accent-hi); }
+
+.ai-input-row {
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.6rem; display: flex; gap: 0.4rem;
+}
+
+.ai-input {
+  flex: 1; padding: 0.42rem 0.65rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body); font-size: 0.76rem;
+  outline: none;
+}
+.ai-input:focus { border-color: var(--accent); }
+
+.ai-send {
+  padding: 0.42rem 0.8rem;
+  background: var(--accent-lo);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  color: var(--accent-hi);
+  font-size: 0.72rem; font-weight: 700;
+  cursor: pointer; font-family: var(--font-body);
+  transition: 0.15s;
+}
+.ai-send:hover { background: var(--accent); color: #fff; }
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .ai-insight-grid { grid-template-columns: repeat(2, 1fr); }
+  .budget-layout, .disc-layout, .two-col { grid-template-columns: 1fr; }
+  .rec-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-260px); }
+  .sidebar.mobile-open { transform: translateX(0); width: 260px; }
+  .header { left: 0; }
+  .main { margin-left: 0; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .kanban { grid-template-columns: 1fr; }
+  .ai-panel { right: 0.75rem; left: 0.75rem; width: auto; bottom: 78px; }
+}
+
+@media (max-width: 500px) {
+  .kpi-grid, .ai-insight-grid, .rec-grid { grid-template-columns: 1fr; }
+  .stat-strip { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body data-theme="dark">
 
-<!-- SIDEBAR -->
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
 <aside class="sidebar" id="sidebar">
   <div class="logo-area">
     <div class="logo-wrap">
       <div class="logo-mark">SS</div>
       <div>
         <div class="logo-name">SmartStock</div>
+        <div class="logo-tagline">AI-Powered Inventory Intelligence</div>
       </div>
     </div>
-    <div class="logo-sub">AI-Powered Inventory Management v2.4</div>
-    <div class="sidebar-status">
-      <div class="status-dot"></div>
-      <span class="status-txt">Sistem Aktiv</span>
+    <div class="sys-status">
+      <div class="status-pulse"></div>
+      <span class="status-label">Sistem Aktiv · v3.0</span>
     </div>
   </div>
 
-  <div class="nav-section">
-    <div class="nav-label">Əsas</div>
+  <div class="nav-area">
+    <div class="nav-section-label">Əsas Bölmələr</div>
     <ul style="list-style:none">
-      <li class="nav-item"><a class="nav-link active" data-page="dashboard"><span class="nav-icon-wrap">◈</span>İdarəetmə Paneli</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="inventory"><span class="nav-icon-wrap">▦</span>Anbar<span class="nav-badge">5</span></a></li>
-      <li class="nav-item"><a class="nav-link" data-page="recommendations"><span class="nav-icon-wrap">◎</span>Tövsiyələr</a></li>
+      <li class="nav-item">
+        <a class="nav-link active" data-page="dashboard">
+          <span class="nav-icon">◈</span>İdarəetmə Paneli
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="inventory">
+          <span class="nav-icon">▦</span>Anbar Vəziyyəti
+          <span class="nav-badge">5</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="recommendations">
+          <span class="nav-icon">◎</span>AI Tövsiyələri
+        </a>
+      </li>
     </ul>
-    <div class="nav-label">Alətlər</div>
+
+    <div class="nav-section-label">Analitik Alətlər</div>
     <ul style="list-style:none">
-      <li class="nav-item"><a class="nav-link" data-page="budget"><span class="nav-icon-wrap">◇</span>Büdcə Optimizer</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="discount"><span class="nav-icon-wrap">◈</span>Endirim Sim.</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="tasks"><span class="nav-icon-wrap">≡</span>Tapşırıqlar<span class="nav-badge">8</span></a></li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="budget">
+          <span class="nav-icon">◇</span>Büdcə Optimizer
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="discount">
+          <span class="nav-icon">◈</span>Endirim Simulatoru
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="tasks">
+          <span class="nav-icon">≡</span>Tapşırıq İdarəsi
+          <span class="nav-badge">8</span>
+        </a>
+      </li>
     </ul>
-    <div class="nav-label">Analiz</div>
+
+    <div class="nav-section-label">Hesabat & Konfiq.</div>
     <ul style="list-style:none">
-      <li class="nav-item"><a class="nav-link" data-page="analytics"><span class="nav-icon-wrap">◉</span>Analitika</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="settings"><span class="nav-icon-wrap">◌</span>Tənzimləmələr</a></li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="analytics">
+          <span class="nav-icon">◉</span>Dərin Analitika
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="settings">
+          <span class="nav-icon">◌</span>Tənzimləmələr
+        </a>
+      </li>
     </ul>
   </div>
 
   <div class="sidebar-footer">
     <div class="user-avatar">ER</div>
-    <div class="user-info">
+    <div style="flex:1;min-width:0">
       <div class="user-name">Elnur Rəhimov</div>
-      <div class="user-role">Anbar Meneceri · Bakı</div>
+      <div class="user-meta">Anbar Meneceri · Bakı HQ</div>
     </div>
   </div>
 </aside>
 
-<!-- HEADER -->
+<!-- ═══════════════ HEADER ═══════════════ -->
 <header class="header">
   <div class="search-wrap">
-    <span class="search-ic">⌕</span>
-    <input class="search-inp" id="searchInp" placeholder="Məhsul kodu, ad, təchizatçı..." autocomplete="off">
-    <div class="search-drop" id="searchDrop"></div>
+    <span class="search-icon">⌕</span>
+    <input class="search-input" id="searchInp"
+      placeholder="SKU kodu, məhsul adı, təchizatçı..."
+      autocomplete="off">
+    <div class="search-dropdown" id="searchDrop"></div>
   </div>
-  <div class="hdr-actions">
+
+  <div class="header-actions">
     <button class="hdr-btn" id="themeBtn">◑ &nbsp;Mövzu</button>
-    <div class="notif-btn" title="Bildirişlər">🔔<div class="notif-dot"></div></div>
+    <div class="notif-btn" title="Bildirişlər">
+      🔔<div class="notif-dot"></div>
+    </div>
     <div class="avatar-btn">ER</div>
   </div>
 </header>
 
-<!-- MAIN -->
+<!-- ═══════════════ MAIN ═══════════════ -->
 <main class="main">
 
-  <!-- ═══════════════ DASHBOARD ═══════════════ -->
+  <!-- ══════════ DASHBOARD ══════════ -->
   <div class="page active" id="page-dashboard">
-    <div class="page-head">
+    <div class="page-header">
       <div class="page-title">İdarəetmə <span>Paneli</span></div>
-      <div class="page-sub">Son yenilənmə: 03 May 2026, 14:22 · Bütün filiallara ümumi baxış</div>
+      <div class="page-subtitle">03 May 2026, 14:22 AZT · 6 filial · Real vaxt məlumatı · Bakı Metropolitan Area</div>
     </div>
 
-    <div class="kpi-row">
-      <div class="kpi">
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--kpi-accent:#10b981">
         <div class="kpi-top">
-          <div class="kpi-label">Aylıq Gəlir</div>
-          <div class="kpi-ic" style="background:var(--green2);color:var(--green)">₼</div>
+          <div class="kpi-label">Aylıq Dövriyyə</div>
+          <div class="kpi-icon" style="background:var(--success-bg);color:var(--success)">₼</div>
         </div>
-        <div class="kpi-val">₼387.4K</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 14.2%</span><span class="tag-dim">ötən aya</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%"></div></div>
+        <div class="kpi-value">₼ 387,450</div>
+        <div class="kpi-delta">
+          <span class="delta-up">↑ 14.2%</span>
+          <span class="delta-dim">ötən aya nisbətən</span>
+        </div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" style="width:72%"></div></div>
       </div>
-      <div class="kpi">
+
+      <div class="kpi-card" style="--kpi-accent:#3b82f6">
         <div class="kpi-top">
           <div class="kpi-label">Anbar Dəyəri</div>
-          <div class="kpi-ic" style="background:var(--cyan2);color:var(--cyan)">▦</div>
+          <div class="kpi-icon" style="background:var(--accent-lo);color:var(--accent-hi)">▦</div>
         </div>
-        <div class="kpi-val">₼214.8K</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 6.8%</span><span class="tag-dim">7.240 SKU aktiv</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:58%"></div></div>
+        <div class="kpi-value">₼ 214,800</div>
+        <div class="kpi-delta">
+          <span class="delta-up">↑ 6.8%</span>
+          <span class="delta-dim">7,240 aktiv SKU</span>
+        </div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" style="width:58%"></div></div>
       </div>
-      <div class="kpi">
+
+      <div class="kpi-card" style="--kpi-accent:#ef4444">
         <div class="kpi-top">
           <div class="kpi-label">Zay Olma Riski</div>
-          <div class="kpi-ic" style="background:var(--red2);color:var(--red)">⚠</div>
+          <div class="kpi-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>
         </div>
-        <div class="kpi-val">₼18.6K</div>
-        <div class="kpi-mono"><span class="tag-dn">↓ 22.1%</span><span class="tag-dim">68 SKU risk</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div>
+        <div class="kpi-value">₼ 18,640</div>
+        <div class="kpi-delta">
+          <span class="delta-dn">↓ 22.1%</span>
+          <span class="delta-dim">68 SKU kritik həddə</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-fill" style="width:24%;background:linear-gradient(90deg,var(--danger),var(--warning))"></div>
+        </div>
       </div>
-      <div class="kpi">
+
+      <div class="kpi-card" style="--kpi-accent:#8b5cf6">
         <div class="kpi-top">
           <div class="kpi-label">VIP Sifarişlər</div>
-          <div class="kpi-ic" style="background:var(--violet2);color:var(--violet)">★</div>
+          <div class="kpi-icon" style="background:var(--info-bg);color:var(--info)">★</div>
         </div>
-        <div class="kpi-val">147</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 31.4%</span><span class="tag-dim">₼92.4K dəyər</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:85%;background:linear-gradient(90deg,var(--violet),#c084fc)"></div></div>
+        <div class="kpi-value">147 sifariş</div>
+        <div class="kpi-delta">
+          <span class="delta-up">↑ 31.4%</span>
+          <span class="delta-dim">₼ 92,400 dəyərində</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-fill" style="width:85%;background:linear-gradient(90deg,#8b5cf6,#c084fc)"></div>
+        </div>
       </div>
     </div>
 
-    <div class="ai-row">
-      <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--cyan),#0ea5e9)">
-        <div class="ai-card-head"><div class="ai-card-label">AI Proqnoz</div><div class="ai-card-ic">📈</div></div>
-        <div class="ai-pulse">CANLI</div>
-        <div class="ai-card-val">+22% Tələb Artımı</div>
-        <div class="ai-card-note">Növbəti 14 gündə Ramazan öncəsi kofe, çay və şirniyyat kateqoriyasında tələb 22% artacaq. Nərimanov filialı üçün ehtiyat tövsiyə edilir.</div>
+    <!-- AI INSIGHTS -->
+    <div class="ai-insight-grid">
+      <div class="ai-card" style="--card-gradient:linear-gradient(90deg,#3b82f6,#0ea5e9)">
+        <div class="ai-card-top">
+          <div class="ai-card-label">AI Tələb Proqnozu</div>
+          <span class="ai-badge badge-live">● Canli</span>
+        </div>
+        <div class="ai-card-value">+22% Tələb Artımı · 14 gün</div>
+        <div class="ai-card-desc">
+          Ramazan bayramı öncəsi dövrdə kofe, çay və şirniyyat kateqoriyasında
+          tələbin 22% artacağı proqnozlaşdırılır. Nərimanov filialı üçün
+          ehtiyat sifariş planı hazırlanmışdır. Patentli ARIMA+XGBoost modeli əsasında.
+        </div>
       </div>
-      <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--red),var(--amber))">
-        <div class="ai-card-head"><div class="ai-card-label">AI Risk Xəbərdarlığı</div><div class="ai-card-ic">⚠️</div></div>
-        <div class="ai-pulse" style="color:var(--red);background:var(--red2)">KRİTİK</div>
-        <div class="ai-card-val">7 SKU · 48 saat</div>
-        <div class="ai-card-note">PRD-001, PRD-005, PRD-019 üçün stok kritik həddə çatıb. Beverage Co. təchizatçısından 48 saat içində minimum 200 ədəd sifariş tələb olunur.</div>
+
+      <div class="ai-card" style="--card-gradient:linear-gradient(90deg,#ef4444,#f59e0b)">
+        <div class="ai-card-top">
+          <div class="ai-card-label">AI Risk Xəbərdarlığı</div>
+          <span class="ai-badge badge-critical">● Kritik</span>
+        </div>
+        <div class="ai-card-value">7 SKU · 48 saatlıq pəncərə</div>
+        <div class="ai-card-desc">
+          PRD-001, PRD-005, PRD-010 üçün stok kritik həddə çatıb. Beverage Co.
+          və Lənkəran Çay təchizatçılarından 48 saat içərisində
+          minimum 320 ədəd sifariş edilməsi tələb olunur.
+        </div>
       </div>
-      <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--green),#059669)">
-        <div class="ai-card-head"><div class="ai-card-label">AI Endirim Tövsiyəsi</div><div class="ai-card-ic">🏷️</div></div>
-        <div class="ai-pulse" style="color:var(--green);background:var(--green2)">OPTİMAL</div>
-        <div class="ai-card-val">12–15% · Süd Kateqoriyası</div>
-        <div class="ai-card-note">567 ədəd Tam Yağlı Süd üçün mərhələli kampaniya: ilk 3 gün 12%, sonra 15%. Gözlənilən dövriyyə sürəti: 11 gündən 7 günə.</div>
+
+      <div class="ai-card" style="--card-gradient:linear-gradient(90deg,#10b981,#059669)">
+        <div class="ai-card-top">
+          <div class="ai-card-label">AI Qiymət Optimizasiyası</div>
+          <span class="ai-badge badge-optimal">● Optimal</span>
+        </div>
+        <div class="ai-card-value">12–15% · Süd Kateqoriyası</div>
+        <div class="ai-card-desc">
+          567 ədəd Tam Yağlı Süd üçün mərhələli kampaniya: ilk 3 gün 12%, ardınca
+          15%. Price elasticity əmsalı: −1.8. Gözlənilən dövriyyə sürəti: 11 gündən 7 günə
+          (qısa olaraq 36% sürətlənmə).
+        </div>
       </div>
     </div>
 
+    <!-- MAIN CHART -->
     <div class="card">
-      <div class="card-head">
+      <div class="card-header">
         <div>
-          <div class="card-title">Filialların Satış Müqayisəsi</div>
-          <div class="card-meta">6 filial · Bakı Metropolitan Area</div>
+          <div class="card-title">Filial Satış Müqayisəsi · Bakı Metropolitan Area</div>
+          <div class="card-subtitle">6 filial · Gəlir (₼) vs. Anbar Dəyəri (₼)</div>
         </div>
-        <div class="filter-group">
-          <button class="f-btn active" data-period="month">Bu Ay</button>
-          <button class="f-btn" data-period="quarter">Rüblük</button>
-          <button class="f-btn" data-period="year">İllik</button>
+        <div class="filter-pills">
+          <button class="pill active" data-period="month">Bu Ay</button>
+          <button class="pill" data-period="quarter">Rüblük</button>
+          <button class="pill" data-period="year">İllik</button>
         </div>
       </div>
-      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+      <canvas id="mainChart"></canvas>
     </div>
 
     <div class="two-col">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head">
+      <div class="card">
+        <div class="card-header">
           <div>
-            <div class="card-title">Son 7 Gün · Satış Trendi</div>
-            <div class="card-meta">Bütün filiallar · Gündəlik</div>
+            <div class="card-title">Son 7 Gün · Gündəlik Satış Trendi</div>
+            <div class="card-subtitle">Bütün filiallar birləşdirilmiş (₼)</div>
           </div>
         </div>
         <canvas id="lineChart"></canvas>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head">
+
+      <div class="card">
+        <div class="card-header">
           <div>
             <div class="card-title">Son İstifadə Tarixi Analizi</div>
-            <div class="card-meta">458 aktiv məhsul üzrə</div>
+            <div class="card-subtitle">458 aktiv məhsul üzrə risk bölgüsü</div>
           </div>
         </div>
         <canvas id="donutChart"></canvas>
@@ -681,56 +1434,64 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
   </div>
 
-  <!-- ═══════════════ INVENTORY ═══════════════ -->
+  <!-- ══════════ INVENTORY ══════════ -->
   <div class="page" id="page-inventory">
-    <div class="page-head">
+    <div class="page-header">
       <div class="page-title">Anbar <span>Vəziyyəti</span></div>
-      <div class="page-sub">7.240 aktiv SKU · 6 filial · Real vaxt məlumatı</div>
+      <div class="page-subtitle">7,240 aktiv SKU · 6 filial · Real vaxt IoT sensorları ilə sinxronizasiya</div>
     </div>
 
-    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Ümumi SKU</div><div class="kpi-ic" style="background:var(--cyan2);color:var(--cyan)">▦</div></div>
-        <div class="kpi-val">7,240</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 3.1%</span><span class="tag-dim">həftəlik</span></div>
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--kpi-accent:#3b82f6">
+        <div class="kpi-top"><div class="kpi-label">Ümumi SKU</div><div class="kpi-icon" style="background:var(--accent-lo);color:var(--accent-hi)">▦</div></div>
+        <div class="kpi-value">7,240</div>
+        <div class="kpi-delta"><span class="delta-up">↑ 3.1%</span><span class="delta-dim">həftəlik dinamika</span></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Kritik Stok</div><div class="kpi-ic" style="background:var(--red2);color:var(--red)">!</div></div>
-        <div class="kpi-val">68</div>
-        <div class="kpi-mono"><span class="tag-dn">↑ 5 yeni</span><span class="tag-dim">bu gün</span></div>
+      <div class="kpi-card" style="--kpi-accent:#ef4444">
+        <div class="kpi-top"><div class="kpi-label">Kritik Stok</div><div class="kpi-icon" style="background:var(--danger-bg);color:var(--danger)">!</div></div>
+        <div class="kpi-value">68 SKU</div>
+        <div class="kpi-delta"><span class="delta-dn">+5 yeni bu gün</span><span class="delta-dim">dərhal müdaxilə tələb edir</span></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Dövriyyə Sürəti</div><div class="kpi-ic" style="background:var(--green2);color:var(--green)">↻</div></div>
-        <div class="kpi-val">8.3x</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 0.7x</span><span class="tag-dim">aylıq</span></div>
+      <div class="kpi-card" style="--kpi-accent:#10b981">
+        <div class="kpi-top"><div class="kpi-label">Dövriyyə Sürəti</div><div class="kpi-icon" style="background:var(--success-bg);color:var(--success)">↻</div></div>
+        <div class="kpi-value">8.3×</div>
+        <div class="kpi-delta"><span class="delta-up">↑ 0.7×</span><span class="delta-dim">sənaye ortalaması: 6.2×</span></div>
       </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Uyğunsuzluq</div><div class="kpi-ic" style="background:var(--amber2);color:var(--amber)">≠</div></div>
-        <div class="kpi-val">12</div>
-        <div class="kpi-mono"><span class="tag-dn">↓ 3</span><span class="tag-dim">dünənə nisbətən</span></div>
+      <div class="kpi-card" style="--kpi-accent:#f59e0b">
+        <div class="kpi-top"><div class="kpi-label">Sistem Uyğunsuzluğu</div><div class="kpi-icon" style="background:var(--warning-bg);color:var(--warning)">≠</div></div>
+        <div class="kpi-value">12 qeyd</div>
+        <div class="kpi-delta"><span class="delta-up">↓ 3</span><span class="delta-dim">dünənə nisbətən azalma</span></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="tbl-actions">
-        <div class="tbl-search-wrap" style="position:relative">
-          <span class="search-ic" style="position:absolute;left:0.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.75rem">⌕</span>
-          <input class="tbl-search" id="tblSearch" placeholder="Axtar..." style="padding-left:2rem">
+      <div class="table-actions">
+        <div class="table-search-wrap">
+          <span class="table-search-icon">⌕</span>
+          <input class="table-search" id="tblSearch" placeholder="SKU, məhsul, təchizatçı...">
         </div>
-        <select class="disc-select" style="width:auto;padding:0.38rem 0.75rem;font-size:0.78rem" id="statusFilter">
+        <select class="table-filter-select" id="statusFilter">
           <option value="">Bütün statuslar</option>
           <option value="Kritik">Kritik</option>
           <option value="Normal">Normal</option>
           <option value="Çox">Çox</option>
         </select>
-        <button class="add-btn" onclick="alert('Yeni məhsul əlavə et')">+ Məhsul Əlavə Et</button>
+        <button class="add-btn" onclick="alert('Yeni məhsul əlavə edilir...')">+ Məhsul Əlavə Et</button>
       </div>
-      <div class="tbl-wrap">
+      <div class="table-wrap">
         <table id="invTable">
           <thead>
             <tr>
-              <th>Kod</th><th>Məhsul</th><th>Kateqoriya</th><th>Stok</th><th>Min.Hədd</th>
-              <th>Stok Dolma</th><th>Status</th><th>Qiymət</th><th>Təchizatçı</th><th>Yenilənib</th>
+              <th>SKU Kodu</th>
+              <th>Məhsul Adı</th>
+              <th>Kateqoriya</th>
+              <th>Stok</th>
+              <th>Min. Hədd</th>
+              <th>Doldurma %</th>
+              <th>Status</th>
+              <th>Vahid Qiymət</th>
+              <th>Təchizatçı</th>
+              <th>Son Yenilənmə</th>
             </tr>
           </thead>
           <tbody id="invBody"></tbody>
@@ -739,135 +1500,142 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
   </div>
 
-  <!-- ═══════════════ RECOMMENDATIONS ═══════════════ -->
+  <!-- ══════════ RECOMMENDATIONS ══════════ -->
   <div class="page" id="page-recommendations">
-    <div class="page-head">
-      <div class="page-title">AI <span>Tövsiyələr</span></div>
-      <div class="page-sub">Apriori alqoritmi əsaslı birlikdə alış analizi · Son 90 gün · 28,400 tranzaksiya</div>
+    <div class="page-header">
+      <div class="page-title">AI <span>Tövsiyələri</span></div>
+      <div class="page-subtitle">Apriori + FP-Growth alqoritmi · Son 90 gün · 28,400 tranzaksiya · min_support=0.05, min_confidence=0.6</div>
     </div>
 
     <div class="rec-grid">
-      <div class="rec-card">
-        <div class="rec-ic">☕</div>
-        <div class="rec-name">Kofe Dənələri</div>
-        <div class="rec-desc">Ən çox satılan məhsul</div>
-        <div class="rec-pct">Dəstək: 34.2%</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:85%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍫</div>
-        <div class="rec-name">Şokolad</div>
-        <div class="rec-desc">Kofe ilə 85% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 2.48x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:85%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🥛</div>
-        <div class="rec-name">Süd</div>
-        <div class="rec-desc">Çay ilə 72% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.93x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:72%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍪</div>
-        <div class="rec-name">Peçenye</div>
-        <div class="rec-desc">Kofe ilə 68% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.72x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:68%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🧀</div>
-        <div class="rec-name">Pendir</div>
-        <div class="rec-desc">Çörək ilə 61% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.59x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:61%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍳</div>
-        <div class="rec-name">Yumurta</div>
-        <div class="rec-desc">Süd ilə 58% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.44x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:58%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🧴</div>
-        <div class="rec-name">Zeytun Yağı</div>
-        <div class="rec-desc">Makaron ilə 52% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.38x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:52%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">⚡</div>
-        <div class="rec-name">Enerji İçkisi</div>
-        <div class="rec-desc">Çips ilə 47% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.28x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:47%"></div></div>
-      </div>
+      <div class="rec-card"><div class="rec-emoji">☕</div><div class="rec-name">Kofe Dənələri</div><div class="rec-description">Ən yüksək tezliyə malik məhsul</div><div class="rec-stat">Dəstək: 34.2%</div><div class="rec-track"><div class="rec-fill" style="width:85%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🍫</div><div class="rec-name">Şokolad</div><div class="rec-description">Kofe ilə 85% birlikdə alınır</div><div class="rec-stat">Lift: 2.48×</div><div class="rec-track"><div class="rec-fill" style="width:85%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🥛</div><div class="rec-name">Süd (1L)</div><div class="rec-description">Çay ilə 72% birlikdə alınır</div><div class="rec-stat">Lift: 1.93×</div><div class="rec-track"><div class="rec-fill" style="width:72%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🍪</div><div class="rec-name">Peçenye</div><div class="rec-description">Kofe ilə 68% birlikdə alınır</div><div class="rec-stat">Lift: 1.72×</div><div class="rec-track"><div class="rec-fill" style="width:68%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🧀</div><div class="rec-name">Pendir</div><div class="rec-description">Çörək ilə 61% birlikdə alınır</div><div class="rec-stat">Lift: 1.59×</div><div class="rec-track"><div class="rec-fill" style="width:61%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🍳</div><div class="rec-name">Kənd Yumurtası</div><div class="rec-description">Süd ilə 58% birlikdə alınır</div><div class="rec-stat">Lift: 1.44×</div><div class="rec-track"><div class="rec-fill" style="width:58%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">🧴</div><div class="rec-name">Zeytun Yağı</div><div class="rec-description">Makaron ilə 52% birlikdə alınır</div><div class="rec-stat">Lift: 1.38×</div><div class="rec-track"><div class="rec-fill" style="width:52%"></div></div></div>
+      <div class="rec-card"><div class="rec-emoji">⚡</div><div class="rec-name">Enerji İçkisi</div><div class="rec-description">Protein Bar ilə 47% birlikdə alınır</div><div class="rec-stat">Lift: 1.28×</div><div class="rec-track"><div class="rec-fill" style="width:47%"></div></div></div>
     </div>
 
     <div class="card">
-      <div class="card-head"><div class="card-title">Güclü Birlikdə Alış Qaydaları (Association Rules)</div></div>
-      <div class="tbl-wrap">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Güclü Birlikdə Alış Qaydaları — Association Rule Mining</div>
+          <div class="card-subtitle">Apriori alqoritmi çıxışı · FDR düzəldilmiş p-dəyərləri</div>
+        </div>
+      </div>
+      <div class="table-wrap">
         <table>
-          <thead><tr><th>Əgər Alınsa</th><th>Onda Alınır</th><th>Dəstək</th><th>Etibar</th><th>Lift</th><th>Tövsiyə</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Antecedent (Əgər)</th>
+              <th>Consequent (Onda)</th>
+              <th>Dəstək</th>
+              <th>Etibar</th>
+              <th>Lift</th>
+              <th>Biznes Tövsiyəsi</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td>Kofe Dənələri</td><td>Şokolad + Peçenye</td><td><span class="code">34.2%</span></td><td><span class="code">85.4%</span></td><td><span style="color:var(--green);font-family:'DM Mono',monospace">2.48x</span></td><td><span class="badge b-ok">Birlikdə yerləşdir</span></td></tr>
-            <tr><td>Çay Paketləri</td><td>Süd + Şəkər</td><td><span class="code">28.7%</span></td><td><span class="code">78.3%</span></td><td><span style="color:var(--green);font-family:'DM Mono',monospace">2.14x</span></td><td><span class="badge b-ok">Paket kampaniyası</span></td></tr>
-            <tr><td>Makaron</td><td>Tomat Pasty + Yağ</td><td><span class="code">22.1%</span></td><td><span class="code">71.6%</span></td><td><span style="color:var(--cyan);font-family:'DM Mono',monospace">1.93x</span></td><td><span class="badge b-ok">Combo endirimi</span></td></tr>
-            <tr><td>Çörək</td><td>Kərə Yağı + Pendir</td><td><span class="code">19.4%</span></td><td><span class="code">68.9%</span></td><td><span style="color:var(--cyan);font-family:'DM Mono',monospace">1.77x</span></td><td><span class="badge b-warn">Yaxın rəfdə saxla</span></td></tr>
-            <tr><td>Enerji İçkisi</td><td>Protein Bar + Çips</td><td><span class="code">12.8%</span></td><td><span class="code">61.2%</span></td><td><span style="color:var(--amber);font-family:'DM Mono',monospace">1.44x</span></td><td><span class="badge b-warn">Test et</span></td></tr>
+            <tr>
+              <td>Kofe Dənələri</td>
+              <td>Şokolad + Peçenye</td>
+              <td><span class="mono-cell">34.2%</span></td>
+              <td><span class="mono-cell">85.4%</span></td>
+              <td><span style="color:var(--success);font-family:var(--font-mono);font-size:0.75rem;font-weight:600">2.48×</span></td>
+              <td><span class="badge b-success">Birlikdə yerləşdir</span></td>
+            </tr>
+            <tr>
+              <td>Çay Paketləri</td>
+              <td>Süd + Şəkər</td>
+              <td><span class="mono-cell">28.7%</span></td>
+              <td><span class="mono-cell">78.3%</span></td>
+              <td><span style="color:var(--success);font-family:var(--font-mono);font-size:0.75rem;font-weight:600">2.14×</span></td>
+              <td><span class="badge b-success">Paket kampaniyası</span></td>
+            </tr>
+            <tr>
+              <td>Makaron (500q)</td>
+              <td>Tomat Pasty + Yağ</td>
+              <td><span class="mono-cell">22.1%</span></td>
+              <td><span class="mono-cell">71.6%</span></td>
+              <td><span style="color:var(--accent-hi);font-family:var(--font-mono);font-size:0.75rem;font-weight:600">1.93×</span></td>
+              <td><span class="badge b-success">Combo endirimi</span></td>
+            </tr>
+            <tr>
+              <td>Çörək</td>
+              <td>Kərə Yağı + Pendir</td>
+              <td><span class="mono-cell">19.4%</span></td>
+              <td><span class="mono-cell">68.9%</span></td>
+              <td><span style="color:var(--accent-hi);font-family:var(--font-mono);font-size:0.75rem;font-weight:600">1.77×</span></td>
+              <td><span class="badge b-warning">Yaxın rəfdə saxla</span></td>
+            </tr>
+            <tr>
+              <td>Enerji İçkisi</td>
+              <td>Protein Bar + Çips</td>
+              <td><span class="mono-cell">12.8%</span></td>
+              <td><span class="mono-cell">61.2%</span></td>
+              <td><span style="color:var(--warning);font-family:var(--font-mono);font-size:0.75rem;font-weight:600">1.44×</span></td>
+              <td><span class="badge b-warning">A/B test aparın</span></td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ BUDGET ═══════════════ -->
+  <!-- ══════════ BUDGET ══════════ -->
   <div class="page" id="page-budget">
-    <div class="page-head">
+    <div class="page-header">
       <div class="page-title">Büdcə <span>Optimizer</span></div>
-      <div class="page-sub">Knapsack alqoritmi · Optimal alış planlaması · 7 kateqoriya üzrə</div>
+      <div class="page-subtitle">0-1 Knapsack alqoritmi · Dinamik proqramlaşdırma · 7 kateqoriya üzrə ROI maksimizasiyası</div>
     </div>
+
     <div class="card">
-      <div class="budget-grid">
+      <div class="budget-layout">
         <div>
-          <div class="slider-card">
-            <div class="slider-label">Mövcud Büdcə</div>
-            <div class="slider-val" id="budgetDisp">₼15,000</div>
+          <div class="slider-block">
+            <div class="block-label">Mövcud Alış Büdcəsi (₼)</div>
+            <div class="slider-display" id="budgetDisp">₼ 15,000</div>
             <input type="range" id="budgetSlider" min="2000" max="50000" step="1000" value="15000">
-            <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.68rem;color:var(--muted)"><span>₼2,000</span><span>₼50,000</span></div>
+            <div class="range-labels"><span>₼ 2,000</span><span>₼ 50,000</span></div>
           </div>
-          <div class="breakdown" style="margin-top:1rem">
-            <div class="breakdown-title">Optimal Bölgü (Knapsack)</div>
+
+          <div class="breakdown-section">
+            <div class="block-label" style="padding:0.75rem 0 0.4rem">Optimal Kateqoriya Bölgüsü</div>
             <div id="breakdownRows"></div>
           </div>
         </div>
+
         <div>
-          <div class="roi-card">
+          <div class="roi-highlight">
             <div>
               <div class="roi-label">Gözlənilən ROI</div>
-              <div class="roi-big" id="roiDisp">187%</div>
+              <div class="roi-number" id="roiDisp">187%</div>
             </div>
             <div>
-              <div class="roi-note" id="roiNote">₼15,000 büdcə üçün optimal alış planı hesablandı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.</div>
+              <div class="roi-note" id="roiNote">
+                ₼15,000 büdcə üçün optimal alış planı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.
+              </div>
             </div>
           </div>
-          <div class="metrics-panel" style="margin-top:0.75rem">
-            <div class="met" style="border-left-color:var(--cyan)">
-              <div class="met-label">Optimal Xərc</div>
-              <div class="met-val" id="optCost" style="color:var(--cyan)">₼14,550</div>
+
+          <div class="metrics-2x2">
+            <div class="metric-box" style="--metric-color:var(--accent-hi)">
+              <div class="metric-label">Optimal Xərc</div>
+              <div class="metric-value" id="optCost">₼14,550</div>
             </div>
-            <div class="met" style="border-left-color:var(--green)">
-              <div class="met-label">Gözlənilən Gəlir</div>
-              <div class="met-val" id="expRev" style="color:var(--green)">₼41,700</div>
+            <div class="metric-box" style="--metric-color:var(--success)">
+              <div class="metric-label">Gözlənilən Gəlir</div>
+              <div class="metric-value" id="expRev">₼41,700</div>
             </div>
-            <div class="met" style="border-left-color:var(--violet)">
-              <div class="met-label">Xalis Qazanc</div>
-              <div class="met-val" id="netProfit" style="color:var(--violet)">₼27,150</div>
+            <div class="metric-box" style="--metric-color:#8b5cf6">
+              <div class="metric-label">Xalis Qazanc</div>
+              <div class="metric-value" id="netProfit">₼27,150</div>
             </div>
-            <div class="met" style="border-left-color:var(--amber)">
-              <div class="met-label">Geri Ödəmə</div>
-              <div class="met-val" id="payback" style="color:var(--amber)">6.2 gün</div>
+            <div class="metric-box" style="--metric-color:var(--warning)">
+              <div class="metric-label">Geri Ödəmə Müddəti</div>
+              <div class="metric-value" id="payback">6.2 gün</div>
             </div>
           </div>
         </div>
@@ -875,664 +1643,833 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
   </div>
 
-  <!-- ═══════════════ DISCOUNT ═══════════════ -->
+  <!-- ══════════ DISCOUNT ══════════ -->
   <div class="page" id="page-discount">
-    <div class="page-head">
-      <div class="page-title">Endirim <span>Simulyatoru</span></div>
-      <div class="page-sub">Price elasticity modeli · Tarixi satış məlumatları əsasında · Gərçək vaxt simulyasiya</div>
+    <div class="page-header">
+      <div class="page-title">Endirim <span>Simulatoru</span></div>
+      <div class="page-subtitle">Price Elasticity of Demand modeli · Tarixi 24 ay satış datasına əsasən kalibrə edilmiş</div>
     </div>
+
     <div class="card">
-      <div class="disc-grid">
+      <div class="disc-layout">
         <div class="disc-controls">
-          <div class="slider-card">
-            <div class="slider-label">Endirim Faizi</div>
-            <div class="disc-pct-display">
-              <div class="disc-big" id="discDisp">15</div>
+          <div class="slider-block">
+            <div class="block-label">Endirim Faizi (%)</div>
+            <div class="disc-display">
+              <div class="disc-number" id="discDisp">15</div>
               <div class="disc-unit">%</div>
             </div>
             <input type="range" id="discSlider" min="0" max="50" step="5" value="15" style="margin-top:0.75rem">
-            <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.68rem;color:var(--muted)"><span>0%</span><span>50%</span></div>
+            <div class="range-labels"><span>0%</span><span>50%</span></div>
           </div>
-          <div class="slider-card">
-            <div class="slider-label">Hədəf Məhsul</div>
-            <select class="disc-select" id="discProduct" style="margin-top:0.5rem">
-              <option value="sud" data-stock="567" data-price="1.80" data-elastic="-1.8">Tam Yağlı Süd (567 ədəd · ₼1.80) — Çox</option>
-              <option value="yogurt" data-stock="423" data-price="2.40" data-elastic="-2.1">Organik Yoğurt (423 ədəd · ₼2.40) — Vaxt bitir</option>
+
+          <div class="slider-block">
+            <div class="block-label">Hədəf Məhsul Seçimi</div>
+            <select class="disc-select" id="discProduct" style="margin-top:0.6rem">
+              <option value="sud"    data-stock="567" data-price="1.80" data-elastic="-1.8">Tam Yağlı Süd (567 ədəd · ₼1.80) — Artıq Stok</option>
+              <option value="yogurt" data-stock="423" data-price="2.40" data-elastic="-2.1">Organik Yoğurt (423 ədəd · ₼2.40) — Vaxt Azalır</option>
               <option value="pendir" data-stock="178" data-price="8.50" data-elastic="-1.3">Premium Pendir (178 ədəd · ₼8.50) — Normal</option>
-              <option value="kofe" data-stock="45" data-price="12.99" data-elastic="-0.9">Kofe Dənələri (45 ədəd · ₼12.99) — Kritik</option>
-              <option value="enerji" data-stock="28" data-price="2.10" data-elastic="-2.4">Enerji İçkisi (28 ədəd · ₼2.10) — Kritik</option>
+              <option value="kofe"   data-stock="45"  data-price="12.99" data-elastic="-0.9">Kofe Dənələri (45 ədəd · ₼12.99) — Kritik</option>
+              <option value="enerji" data-stock="28"  data-price="2.10"  data-elastic="-2.4">Enerji İçkisi (28 ədəd · ₼2.10) — Kritik</option>
             </select>
           </div>
         </div>
-        <div class="disc-results">
-          <div class="disc-met" style="border-left-color:var(--green)">
-            <div class="disc-met-label">Gözlənilən Satış Artımı</div>
-            <div class="disc-met-val" id="discSales" style="color:var(--green)">+27.0%</div>
+
+        <div class="disc-result-grid">
+          <div class="disc-result-item" style="--item-color:var(--success)">
+            <div class="disc-result-label">Gözlənilən Satış Həcmi Artımı</div>
+            <div class="disc-result-value" id="discSales" style="color:var(--success)">+27.0%</div>
           </div>
-          <div class="disc-met" style="border-left-color:var(--amber)">
-            <div class="disc-met-label">Gəlir Dəyişimi (endirim effekti)</div>
-            <div class="disc-met-val" id="discRevChg" style="color:var(--amber)">+₼342</div>
+          <div class="disc-result-item" style="--item-color:var(--warning)">
+            <div class="disc-result-label">Gəlir Dəyişimi (net endirim effekti)</div>
+            <div class="disc-result-value" id="discRevChg" style="color:var(--warning)">+₼342</div>
           </div>
-          <div class="disc-met" style="border-left-color:var(--cyan)">
-            <div class="disc-met-label">Anbarın Boşalma Müddəti</div>
-            <div class="disc-met-val" id="discClear" style="color:var(--cyan)">9 gün</div>
+          <div class="disc-result-item" style="--item-color:var(--accent-hi)">
+            <div class="disc-result-label">Anbar Boşalma Müddəti (gün)</div>
+            <div class="disc-result-value" id="discClear" style="color:var(--accent-hi)">9 gün</div>
           </div>
-          <div class="disc-met" style="border-left-color:var(--violet)">
-            <div class="disc-met-label">Marja Dəyişimi</div>
-            <div class="disc-met-val" id="discMargin" style="color:var(--violet)">-₼486</div>
+          <div class="disc-result-item" style="--item-color:#8b5cf6">
+            <div class="disc-result-label">Gross Marja Dəyişimi</div>
+            <div class="disc-result-value" id="discMargin" style="color:#8b5cf6">−₼486</div>
           </div>
         </div>
       </div>
-      <div class="scenario-strip" id="scenarioNote">
-        <strong>AI Tövsiyəsi:</strong> Tam Yağlı Süd üçün 15% endirim optimal seçimdir — satış həcmi 27% artacaq, marja itkisi isə minimal qalacaq. Kampaniya cümə günü başlaması tövsiyə edilir.
+
+      <div class="scenario-note" id="scenarioNote">
+        <strong>AI Tövsiyəsi:</strong> Tam Yağlı Süd üçün 15% endirim optimal seçimdir — satış həcmi 27% artacaq,
+        marja itkisi isə minimal qalacaq (elasticity: −1.8). Kampaniya cümə günü başlaması tövsiyə edilir.
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ TASKS ═══════════════ -->
+  <!-- ══════════ TASKS ══════════ -->
   <div class="page" id="page-tasks">
-    <div class="page-head">
-      <div class="page-title">Prioritetli <span>Tapşırıqlar</span></div>
-      <div class="page-sub">16 aktiv tapşırıq · 3 filial · Bu gün üçün</div>
+    <div class="page-header">
+      <div class="page-title">Tapşırıq <span>İdarəsi</span></div>
+      <div class="page-subtitle">16 aktiv tapşırıq · Prioritet sıralama · 03 May 2026</div>
     </div>
+
     <div class="kanban">
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--red)">●</span> Təcili VIP <span class="kb-cnt">3</span></div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2847 · Nargiz Hüseynova</div>
-          <div class="kb-card-desc">Xüsusi Novruz qablaşdırması · 48 dəst · Yasamal çatdırılma</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ 14:00</span>
-            <div class="kb-assign">ER</div>
+      <!-- COL 1 -->
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <div class="col-title">
+            <span style="color:var(--danger)">●</span>
+            Təcili VIP
+            <span class="col-count">3</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2848 · Azərenerji ASC</div>
-          <div class="kb-card-desc">Korporativ sifariş · 1,200 ədəd içki · Sabunçu anbarı</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ 16:30</span>
-            <div class="kb-assign">SQ</div>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">VIP-2847 · Nargiz Hüseynova</div>
+          <div class="kanban-card-desc">Xüsusi Novruz qablaşdırması · 48 dəst · Yasamal çatdırılma</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-high">Yüksək</span>
+            <span class="card-time">→ 14:00</span>
+            <div class="assignee">ER</div>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2849 · Limak Holding</div>
-          <div class="kb-card-desc">Layihə dövründə ərzaq dəstəyi · Aylıq kontrakt</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ Sabah 09:00</span>
-            <div class="kb-assign">FR</div>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">VIP-2848 · Azərenerji ASC</div>
+          <div class="kanban-card-desc">Korporativ sifariş · 1,200 ədəd içki · Sabunçu anbarı</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-high">Yüksək</span>
+            <span class="card-time">→ 16:30</span>
+            <div class="assignee">SQ</div>
+          </div>
+        </div>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">VIP-2849 · Limak Holding</div>
+          <div class="kanban-card-desc">İnşaat layihəsi dövründə ərzaq dəstəyi · Aylıq kontrakt</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-high">Yüksək</span>
+            <span class="card-time">→ Sabah 09:00</span>
+            <div class="assignee">FR</div>
           </div>
         </div>
       </div>
 
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--amber)">●</span> Vaxt Azalır <span class="kb-cnt">5</span></div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">PRD-087 · Süd Məhsulları</div>
-          <div class="kb-card-desc">Son istifadə: 06 May · 234 ədəd · Nizami filialı</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-m">Orta</span>
-            <span class="kb-time">3 gün</span>
+      <!-- COL 2 -->
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <div class="col-title">
+            <span style="color:var(--warning)">●</span>
+            Vaxt Azalır
+            <span class="col-count">5</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">PRD-112 · Organik Yoğurt</div>
-          <div class="kb-card-desc">Son istifadə: 08 May · 156 ədəd · 28 May filialı</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-m">Orta</span>
-            <span class="kb-time">5 gün</span>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">PRD-087 · Süd Məhsulları</div>
+          <div class="kanban-card-desc">Son istifadə: 06 May · 234 ədəd · Nizami filialı</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-medium">Orta</span>
+            <span class="card-time">3 gün qalıb</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">PRD-203 · Taze Pendir</div>
-          <div class="kb-card-desc">Son istifadə: 10 May · 89 ədəd · Gənclik filialı</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-m">Orta</span>
-            <span class="kb-time">7 gün</span>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">PRD-112 · Organik Yoğurt</div>
+          <div class="kanban-card-desc">Son istifadə: 08 May · 156 ədəd · 28 May filialı</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-medium">Orta</span>
+            <span class="card-time">5 gün qalıb</span>
+          </div>
+        </div>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">PRD-203 · Taze Pendir</div>
+          <div class="kanban-card-desc">Son istifadə: 10 May · 89 ədəd · Gənclik filialı</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-medium">Orta</span>
+            <span class="card-time">7 gün qalıb</span>
           </div>
         </div>
       </div>
 
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--green)">●</span> Gündəlik Sifarişlər <span class="kb-cnt">8</span></div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">ORD-5623 · Sahil Filialı</div>
-          <div class="kb-card-desc">Standart həftəlik sifariş · 340 ədəd müxtəlif</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-l">Adi</span>
-            <span class="kb-time">Sabah</span>
+      <!-- COL 3 -->
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <div class="col-title">
+            <span style="color:var(--success)">●</span>
+            Planlaşdırılmış
+            <span class="col-count">8</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">ORD-5624 · Filial Transferi</div>
-          <div class="kb-card-desc">Yasamal → Nərimanov · 120 ədəd kofe kateqoriyası</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-l">Adi</span>
-            <span class="kb-time">2 gün</span>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">ORD-5623 · Sahil Filialı</div>
+          <div class="kanban-card-desc">Standart həftəlik sifariş · 340 ədəd müxtəlif kateqoriya</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-low">Adi</span>
+            <span class="card-time">Sabah</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">ORD-5625 · Anbar Sayımı</div>
-          <div class="kb-card-desc">Aylıq inventar sayımı · Bütün filiallarda</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-l">Adi</span>
-            <span class="kb-time">31 May</span>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">ORD-5624 · Filiallar Arası Transfer</div>
+          <div class="kanban-card-desc">Yasamal → Nərimanov · 120 ədəd kofe kateqoriyası</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-low">Adi</span>
+            <span class="card-time">2 gün sonra</span>
+          </div>
+        </div>
+
+        <div class="kanban-card">
+          <div class="kanban-card-title">ORD-5625 · Aylıq Sayım</div>
+          <div class="kanban-card-desc">Fiziki inventar yoxlaması · Bütün 6 filialda eyni vaxtda</div>
+          <div class="kanban-card-footer">
+            <span class="priority-tag p-low">Adi</span>
+            <span class="card-time">31 May</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ ANALYTICS ═══════════════ -->
+  <!-- ══════════ ANALYTICS ══════════ -->
   <div class="page" id="page-analytics">
-    <div class="page-head">
+    <div class="page-header">
       <div class="page-title">Dərin <span>Analitika</span></div>
-      <div class="page-sub">May 2026 · 6 filial · Azərbaycan Manatı (₼)</div>
+      <div class="page-subtitle">May 2026 · 6 filial · Azərbaycan Manatı (₼) · Konsolidasiya edilmiş hesabat</div>
     </div>
-    <div class="stat-row">
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--green)">₼387,450</div>
-        <div class="stat-lbl">Bu Ay Cəmi Gəlir</div>
+
+    <div class="stat-strip">
+      <div class="stat-block">
+        <div class="stat-value" style="color:var(--success)">₼ 387,450</div>
+        <div class="stat-label">Bu Ay Cəmi Dövriyyə</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--cyan)">₼241,280</div>
-        <div class="stat-lbl">Xalis Mənfəət (62.3%)</div>
+      <div class="stat-block">
+        <div class="stat-value" style="color:var(--accent-hi)">₼ 241,280</div>
+        <div class="stat-label">Xalis Mənfəət (62.3%)</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--amber)">8.3x</div>
-        <div class="stat-lbl">Stok Dövriyyə Sürəti</div>
+      <div class="stat-block">
+        <div class="stat-value" style="color:var(--warning)">8.3×</div>
+        <div class="stat-label">Stok Dövriyyə Sürəti</div>
       </div>
     </div>
+
     <div class="two-col">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head"><div class="card-title">Filial Gəlirləri · May 2026</div></div>
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Filial Gəlirləri · May 2026</div>
+            <div class="card-subtitle">Aylıq konsolidasiya · ₼</div>
+          </div>
+        </div>
         <canvas id="barChart2"></canvas>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head"><div class="card-title">Kateqoriya Payı</div></div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Kateqoriya Gəlir Payı</div>
+            <div class="card-subtitle">7 kateqoriya · % bölgüsü</div>
+          </div>
+        </div>
         <canvas id="pieChart"></canvas>
       </div>
     </div>
-    <div class="card" style="margin-top:1rem">
-      <div class="card-head">
-        <div class="card-title">Aylıq Gəlir Trendi · 2025–2026</div>
-        <div class="filter-group">
-          <button class="f-btn active">₼ Gəlir</button>
-          <button class="f-btn">% Artım</button>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Aylıq Gəlir Trendi · İyun 2025 — May 2026</div>
+          <div class="card-subtitle">12 aylıq dinamika · CAGR: +18.4%</div>
+        </div>
+        <div class="filter-pills">
+          <button class="pill active">₼ Gəlir</button>
+          <button class="pill">% Artım</button>
         </div>
       </div>
-      <canvas id="trendChart" style="width:100%!important;height:200px!important"></canvas>
+      <canvas id="trendChart"></canvas>
     </div>
   </div>
 
-  <!-- ═══════════════ SETTINGS ═══════════════ -->
+  <!-- ══════════ SETTINGS ══════════ -->
   <div class="page" id="page-settings">
-    <div class="page-head">
+    <div class="page-header">
       <div class="page-title">Sistem <span>Tənzimləmələri</span></div>
-      <div class="page-sub">SmartStock v2.4.1 · Lisenziya: Enterprise · Bakı, Azərbaycan</div>
+      <div class="page-subtitle">SmartStock v3.0.1 · Enterprise Lisenziyası · Bakı, Azərbaycan</div>
     </div>
-    <div class="settings-sections">
-      <div class="sett-section">
-        <div class="sett-head">Ümumi Parametrlər</div>
-        <div class="sett-row"><div><div class="sett-key">Sistem Dili</div><div class="sett-desc">İnterfeys dili</div></div><div class="sett-val">Azərbaycan dili (AZ)</div></div>
-        <div class="sett-row"><div><div class="sett-key">Valyuta</div><div class="sett-desc">Azərbaycan Manatı</div></div><div class="sett-val">₼ AZN</div></div>
-        <div class="sett-row"><div><div class="sett-key">Saat Qurşağı</div><div class="sett-desc">Bakı, Azərbaycan</div></div><div class="sett-val">UTC+4 (AZT)</div></div>
-        <div class="sett-row"><div><div class="sett-key">Vergi Dərəcəsi (ƏDV)</div><div class="sett-desc">Azərbaycan ƏDV standartı</div></div><div class="sett-val">18%</div></div>
+
+    <div class="settings-layout">
+      <div class="settings-section">
+        <div class="section-header">Ümumi Konfiqurasiya</div>
+        <div class="settings-row"><div><div class="setting-key">Sistem İnterfeys Dili</div><div class="setting-desc">Bütün UI elementləri bu dildə görünür</div></div><div class="setting-value">Azərbaycan dili (AZ)</div></div>
+        <div class="settings-row"><div><div class="setting-key">Əməliyyat Valyutası</div><div class="setting-desc">Bütün hesabatlar bu valyutada aparılır</div></div><div class="setting-value">₼ AZN (Manat)</div></div>
+        <div class="settings-row"><div><div class="setting-key">Saat Qurşağı</div><div class="setting-desc">Server vaxtı ilə sinxronizasiya</div></div><div class="setting-value">UTC+4 (AZT)</div></div>
+        <div class="settings-row"><div><div class="setting-key">ƏDV Dərəcəsi</div><div class="setting-desc">Azərbaycan Respublikası standartı</div></div><div class="setting-value">18%</div></div>
       </div>
-      <div class="sett-section">
-        <div class="sett-head">Bildiriş & Avtomatlaşdırma</div>
-        <div class="sett-row"><div><div class="sett-key">Real Vaxt Bildirişlər</div><div class="sett-desc">Kritik stok siqnalları</div></div><div class="toggle" onclick="this.classList.toggle('off')"></div></div>
-        <div class="sett-row"><div><div class="sett-key">Avtomatik Sifariş</div><div class="sett-desc">Minimum hədd aşıldıqda</div></div><div class="toggle off" onclick="this.classList.toggle('off')"></div></div>
-        <div class="sett-row"><div><div class="sett-key">AI Proqnoz Yenilənməsi</div><div class="sett-desc">Modelin öyrənmə tezliyi</div></div><div class="sett-val">Hər 6 saat</div></div>
-        <div class="sett-row"><div><div class="sett-key">Məlumat Yedəkləmə</div><div class="sett-desc">Azər Bulud serverinə</div></div><div class="sett-val">Hər gecə 02:00</div></div>
+
+      <div class="settings-section">
+        <div class="section-header">Bildiriş & Avtomatlaşdırma</div>
+        <div class="settings-row"><div><div class="setting-key">Real Vaxt Bildirişlər</div><div class="setting-desc">Kritik stok hədd aşılmasında dərhal xəbərdarlıq</div></div><div class="toggle" onclick="this.classList.toggle('off')"></div></div>
+        <div class="settings-row"><div><div class="setting-key">Avtomatik Yenilənmə Sifarişi</div><div class="setting-desc">Minimum hədd aşıldıqda avtomatik PO yaradılması</div></div><div class="toggle off" onclick="this.classList.toggle('off')"></div></div>
+        <div class="settings-row"><div><div class="setting-key">AI Model Yenilənmə Tezliyi</div><div class="setting-desc">Proqnoz modelinin öyrənmə dövrü</div></div><div class="setting-value">Hər 6 saat</div></div>
+        <div class="settings-row"><div><div class="setting-key">Məlumat Yedəkləmə</div><div class="setting-desc">Azər Bulud infrasturkturuna şifrəli yedəkləmə</div></div><div class="setting-value">Hər gecə 02:00</div></div>
       </div>
-      <div class="sett-section">
-        <div class="sett-head">İnteqrasiyalar</div>
-        <div class="sett-row"><div><div class="sett-key">ABB Bank POS İnteqrasiyası</div><div class="sett-desc">Satış məlumatlarının sinxronizasiyası</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
-        <div class="sett-row"><div><div class="sett-key">ASAN İmza</div><div class="sett-desc">Elektron sənəd imzalanması</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
-        <div class="sett-row"><div><div class="sett-key">DGK Vergi Portalı</div><div class="sett-desc">Vergi hesabatları avtomatik göndərilmə</div></div><div class="sett-val" style="color:var(--amber)">● Qurulur</div></div>
-        <div class="sett-row"><div><div class="sett-key">1C Mühasibat</div><div class="sett-desc">Mühasibat sistemi inteqrasiyası</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
+
+      <div class="settings-section">
+        <div class="section-header">Sistem İnteqrasiyaları</div>
+        <div class="settings-row"><div><div class="setting-key">ABB Bank POS İnteqrasiyası</div><div class="setting-desc">Satış terminalından real vaxt məlumat axını</div></div><div class="setting-value" style="color:var(--success)">● Aktiv</div></div>
+        <div class="settings-row"><div><div class="setting-key">ASAN İmza v2.0</div><div class="setting-desc">Elektron sənədlər üçün rəqəmsal imza</div></div><div class="setting-value" style="color:var(--success)">● Aktiv</div></div>
+        <div class="settings-row"><div><div class="setting-key">DGK Vergi Portalı API</div><div class="setting-desc">Aylıq vergi hesabatlarının avtomatik göndərilməsi</div></div><div class="setting-value" style="color:var(--warning)">● Qurulur</div></div>
+        <div class="settings-row"><div><div class="setting-key">1C:Mühasibat 8.3</div><div class="setting-desc">İkitərəfli mühasibat sistemi sinxronizasiyası</div></div><div class="setting-value" style="color:var(--success)">● Aktiv</div></div>
       </div>
-      <div class="sett-section">
-        <div class="sett-head">Lisenziya Məlumatı</div>
-        <div class="sett-row"><div><div class="sett-key">Plan</div><div class="sett-desc">Limitsiz filial, limitsiz SKU</div></div><div class="sett-val" style="color:var(--violet)">Enterprise</div></div>
-        <div class="sett-row"><div><div class="sett-key">Filialllar</div><div class="sett-desc">Aktiv filial sayı</div></div><div class="sett-val">6 / Limitsiz</div></div>
-        <div class="sett-row"><div><div class="sett-key">Yenilənmə Tarixi</div><div class="sett-desc">Növbəti ödəniş</div></div><div class="sett-val">01 Yanvar 2027</div></div>
+
+      <div class="settings-section">
+        <div class="section-header">Lisenziya Məlumatı</div>
+        <div class="settings-row"><div><div class="setting-key">Abunəlik Planı</div><div class="setting-desc">Limitsiz filial, limitsiz SKU, 24/7 dəstək</div></div><div class="setting-value" style="color:#8b5cf6">Enterprise</div></div>
+        <div class="settings-row"><div><div class="setting-key">Aktiv Filial Sayı</div><div class="setting-desc">Hazırda 6 filial qoşulub</div></div><div class="setting-value">6 / Limitsiz</div></div>
+        <div class="settings-row"><div><div class="setting-key">Növbəti Ödəniş Tarixi</div><div class="setting-desc">İllik yenilənmə</div></div><div class="setting-value">01 Yanvar 2027</div></div>
       </div>
     </div>
   </div>
 
 </main>
 
-<!-- AI FAB + CHAT -->
-<button class="ai-fab" id="aiFab" title="AI ilə Məsləhətləş">🤖</button>
-<div class="ai-chat" id="aiChat">
-  <div class="ai-chat-head">
-    <div class="ai-chat-title"><div class="ai-online"></div> SmartStock AI</div>
-    <button class="ai-x" id="aiX">✕</button>
+<!-- ═══════════════ AI CHAT ═══════════════ -->
+<button class="ai-fab" id="aiFab" title="SmartStock AI ilə Məsləhətləş">🤖</button>
+
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel-header">
+    <div class="ai-title">
+      <div class="ai-online-dot"></div>
+      SmartStock AI
+    </div>
+    <button class="ai-close" id="aiClose">✕</button>
   </div>
-  <div class="ai-msgs" id="aiMsgs">
-    <div class="ai-msg bot">Salam, Elnur! Bugün 7 kritik SKU var. Stok, endirim, proqnoz — nə lazımdır?</div>
+
+  <div class="ai-messages" id="aiMessages">
+    <div class="ai-msg bot">
+      Salam, Elnur! Bu gün 7 kritik SKU mövcuddur. Stok vəziyyəti, endirim optimizasiyası və ya proqnoz üzrə kömək edə bilərəm.
+    </div>
   </div>
+
   <div class="ai-suggestions" id="aiSugs">
     <span class="ai-sug" data-q="Kritik stoklar hansılardır?">Kritik stoklar</span>
     <span class="ai-sug" data-q="Süd məhsullarına endirim verimmi?">Endirim tövsiyəsi</span>
     <span class="ai-sug" data-q="Bu ay ROI nə qədərdir?">ROI analizi</span>
   </div>
-  <div class="ai-inp-row">
-    <input class="ai-inp" id="aiInp" placeholder="Sual yaz...">
+
+  <div class="ai-input-row">
+    <input class="ai-input" id="aiInput" placeholder="Sualınızı yazın...">
     <button class="ai-send" id="aiSendBtn">→</button>
   </div>
 </div>
 
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
-// ── DATA ──
-const invData = [
+// ═══════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════
+const INVENTORY = [
   {code:'PRD-001',name:'Premium Kofe Dənələri',cat:'İçki',stock:45,min:100,price:12.99,supplier:'Beverage Co.',updated:'2 saat əvvəl',status:'Kritik'},
-  {code:'PRD-002',name:'Organik Şokolad',cat:'Şirniyyat',stock:234,min:50,price:4.50,supplier:'Şərq Şirin MMC',updated:'5 saat əvvəl',status:'Normal'},
+  {code:'PRD-002',name:'Organik Şokolad (100q)',cat:'Şirniyyat',stock:234,min:50,price:4.50,supplier:'Şərq Şirin MMC',updated:'5 saat əvvəl',status:'Normal'},
   {code:'PRD-003',name:'Tam Yağlı Süd (1L)',cat:'Süd məhsulları',stock:567,min:200,price:1.80,supplier:'Bakı Süd Zavodu',updated:'1 gün əvvəl',status:'Çox'},
-  {code:'PRD-004',name:'Markalı Peçenye',cat:'Qida',stock:156,min:80,price:2.30,supplier:'Bakery Plus',updated:'3 saat əvvəl',status:'Normal'},
+  {code:'PRD-004',name:'Markalı Peçenye (200q)',cat:'Qida',stock:156,min:80,price:2.30,supplier:'Bakery Plus',updated:'3 saat əvvəl',status:'Normal'},
   {code:'PRD-005',name:'Enerji İçkisi (330ml)',cat:'İçki',stock:28,min:150,price:2.10,supplier:'Beverage Co.',updated:'4 saat əvvəl',status:'Kritik'},
-  {code:'PRD-006',name:'Premium Pendir',cat:'Süd məhsulları',stock:178,min:60,price:8.50,supplier:'Sumqayıt Süd',updated:'6 saat əvvəl',status:'Normal'},
+  {code:'PRD-006',name:'Premium Pendir (200q)',cat:'Süd məhsulları',stock:178,min:60,price:8.50,supplier:'Sumqayıt Süd',updated:'6 saat əvvəl',status:'Normal'},
   {code:'PRD-007',name:'Organik Yoğurt (500q)',cat:'Süd məhsulları',stock:423,min:100,price:2.40,supplier:'Bakı Süd Zavodu',updated:'2 gün əvvəl',status:'Çox'},
-  {code:'PRD-008',name:'Zəytun Yağı (0.75L)',cat:'Yağlar',stock:89,min:40,price:9.20,supplier:'AgroAzər',updated:'1 saat əvvəl',status:'Normal'},
+  {code:'PRD-008',name:'Zeytun Yağı (750ml)',cat:'Yağlar',stock:89,min:40,price:9.20,supplier:'AgroAzər',updated:'1 saat əvvəl',status:'Normal'},
   {code:'PRD-009',name:'Makaron (500q)',cat:'Dənli bitkilər',stock:312,min:120,price:1.10,supplier:'Azər Un',updated:'3 gün əvvəl',status:'Çox'},
   {code:'PRD-010',name:'Çay (100q)',cat:'İçki',stock:67,min:80,price:3.60,supplier:'Lənkəran Çay',updated:'2 saat əvvəl',status:'Kritik'},
   {code:'PRD-011',name:'Düyü (1kq)',cat:'Dənli bitkilər',stock:198,min:100,price:2.80,supplier:'AgroAzər',updated:'5 saat əvvəl',status:'Normal'},
-  {code:'PRD-012',name:'Pomidor Pasty (800q)',cat:'Konservlər',stock:445,min:150,price:2.20,supplier:'Şəki Konserv',updated:'1 gün əvvəl',status:'Çox'},
+  {code:'PRD-012',name:'Tomat Pasty (800q)',cat:'Konservlər',stock:445,min:150,price:2.20,supplier:'Şəki Konserv',updated:'1 gün əvvəl',status:'Çox'},
 ];
 
-const periods = {
-  month:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[87400,76200,94100,68300,82600,78850],
-    inv:[32100,28400,35600,25900,31200,29500]
+const PERIODS = {
+  month: {
+    labels: ['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
+    sales: [87400,76200,94100,68300,82600,78850],
+    inv:   [32100,28400,35600,25900,31200,29500]
   },
-  quarter:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[262200,228600,282300,204900,247800,236550],
-    inv:[96300,85200,106800,77700,93600,88500]
+  quarter: {
+    labels: ['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
+    sales: [262200,228600,282300,204900,247800,236550],
+    inv:   [96300, 85200, 106800,77700, 93600, 88500]
   },
-  year:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[1048800,914400,1129200,819600,991200,946200],
-    inv:[385200,340800,427200,310800,374400,354000]
+  year: {
+    labels: ['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
+    sales: [1048800,914400,1129200,819600,991200,946200],
+    inv:   [385200, 340800,427200, 310800,374400,354000]
   }
 };
 
-const catColors=['rgba(0,229,255,0.8)','rgba(123,94,167,0.8)','rgba(0,200,150,0.8)','rgba(255,179,64,0.8)','rgba(255,77,106,0.8)','rgba(99,102,241,0.8)','rgba(236,72,153,0.8)'];
+const BUDGET_CATS = [
+  {name:'İçkilər',         color:'#3b82f6', ratio:0.28},
+  {name:'Süd məhsulları', color:'#8b5cf6', ratio:0.22},
+  {name:'Şirniyyat',       color:'#10b981', ratio:0.16},
+  {name:'Dənli bitkilər',  color:'#f59e0b', ratio:0.13},
+  {name:'Konservlər',      color:'#ef4444', ratio:0.11},
+  {name:'Yağlar',          color:'#6366f1', ratio:0.10},
+];
 
-// ── CHARTS ──
+const CHART_COLORS = [
+  'rgba(59,130,246,0.8)','rgba(139,92,246,0.8)','rgba(16,185,129,0.8)',
+  'rgba(245,158,11,0.8)','rgba(239,68,68,0.8)', 'rgba(99,102,241,0.8)',
+  'rgba(236,72,153,0.8)'
+];
+
+// ═══════════════════════════════════════
+// CHART DEFAULTS
+// ═══════════════════════════════════════
+function chartDefaults() {
+  const grid  = 'rgba(148,163,184,0.06)';
+  const tick  = 'rgba(148,163,184,0.5)';
+  const azn   = v => '₼' + v.toLocaleString();
+  return { grid, tick, azn };
+}
+
 let mainChart, lineChart, donutChart, barChart2, pieChart, trendChart;
 
-function hexToRgba(c,a){return c}
+function initCharts() {
+  const { grid, tick, azn } = chartDefaults();
 
-function initCharts(){
-  const gridColor='rgba(255,255,255,0.05)';
-  const tickColor='rgba(255,255,255,0.35)';
-
-  // Main bar chart
-  mainChart = new Chart(document.getElementById('mainChart'),{
-    type:'bar',
-    data:{
-      labels:periods.month.labels,
-      datasets:[
-        {label:'Satış (₼)',data:periods.month.sales,backgroundColor:'rgba(0,229,255,0.7)',borderColor:'rgba(0,229,255,1)',borderWidth:1,borderRadius:6},
-        {label:'Anbar Dəyəri (₼)',data:periods.month.inv,backgroundColor:'rgba(123,94,167,0.7)',borderColor:'rgba(123,94,167,1)',borderWidth:1,borderRadius:6}
+  // ── Main bar chart ──
+  mainChart = new Chart(document.getElementById('mainChart'), {
+    type: 'bar',
+    data: {
+      labels: PERIODS.month.labels,
+      datasets: [
+        {
+          label: 'Satış Gəliri (₼)',
+          data: PERIODS.month.sales,
+          backgroundColor: 'rgba(59,130,246,0.65)',
+          borderColor: 'rgba(59,130,246,1)',
+          borderWidth: 1, borderRadius: 5, borderSkipped: false
+        },
+        {
+          label: 'Anbar Dəyəri (₼)',
+          data: PERIODS.month.inv,
+          backgroundColor: 'rgba(139,92,246,0.65)',
+          borderColor: 'rgba(139,92,246,1)',
+          borderWidth: 1, borderRadius: 5, borderSkipped: false
+        }
       ]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:tickColor,font:{family:'DM Sans',size:11}}}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:10},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:11}}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tick, font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 16 } }
+      },
+      scales: {
+        y: { grid: { color: grid }, ticks: { color: tick, font: { family: 'JetBrains Mono', size: 10 }, callback: azn } },
+        x: { grid: { display: false }, ticks: { color: tick, font: { family: 'Plus Jakarta Sans', size: 11 } } }
       }
     }
   });
 
-  // Line chart
-  const days=['27 Apr','28 Apr','29 Apr','30 Apr','01 May','02 May','03 May'];
-  lineChart = new Chart(document.getElementById('lineChart'),{
-    type:'line',
-    data:{
-      labels:days,
-      datasets:[{
-        label:'Gündəlik Satış (₼)',
-        data:[52400,48900,61200,57800,64300,59700,71200],
-        borderColor:'rgba(0,229,255,1)',
-        backgroundColor:'rgba(0,229,255,0.08)',
-        borderWidth:2,pointRadius:4,pointBackgroundColor:'rgba(0,229,255,1)',
-        fill:true,tension:0.4
+  // ── Line chart ──
+  lineChart = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: ['27 Apr','28 Apr','29 Apr','30 Apr','01 May','02 May','03 May'],
+      datasets: [{
+        label: 'Gündəlik Satış (₼)',
+        data: [52400,48900,61200,57800,64300,59700,71200],
+        borderColor: 'rgba(59,130,246,1)',
+        backgroundColor: 'rgba(59,130,246,0.07)',
+        borderWidth: 2, pointRadius: 4,
+        pointBackgroundColor: 'rgba(59,130,246,1)',
+        fill: true, tension: 0.4
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: grid }, ticks: { color: tick, font: { family: 'JetBrains Mono', size: 9 }, callback: azn } },
+        x: { grid: { display: false }, ticks: { color: tick, font: { family: 'Plus Jakarta Sans', size: 10 } } }
       }
     }
   });
 
-  // Donut
-  donutChart = new Chart(document.getElementById('donutChart'),{
-    type:'doughnut',
-    data:{
-      labels:['1-3 gün (Kritik)','4-7 gün','8-14 gün','15+ gün (Təhlükəsiz)'],
-      datasets:[{
-        data:[68,143,247,2782],
-        backgroundColor:['rgba(255,77,106,0.85)','rgba(255,179,64,0.85)','rgba(0,229,255,0.85)','rgba(0,200,150,0.85)'],
-        borderWidth:0,hoverOffset:6
+  // ── Donut chart ──
+  donutChart = new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['1–3 gün (Kritik)','4–7 gün','8–14 gün','15+ gün (Təhlükəsiz)'],
+      datasets: [{
+        data: [68, 143, 247, 2782],
+        backgroundColor: [
+          'rgba(239,68,68,0.85)', 'rgba(245,158,11,0.85)',
+          'rgba(59,130,246,0.85)', 'rgba(16,185,129,0.85)'
+        ],
+        borderWidth: 0, hoverOffset: 6
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      cutout:'62%',
-      plugins:{
-        legend:{position:'bottom',labels:{color:tickColor,font:{family:'DM Sans',size:10},padding:12}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: tick, font: { family: 'Plus Jakarta Sans', size: 10 }, padding: 12 }
+        }
       }
     }
   });
 
-  // Bar 2 (analytics)
-  barChart2 = new Chart(document.getElementById('barChart2'),{
-    type:'bar',
-    data:{
-      labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-      datasets:[{
-        label:'Gəlir (₼)',
-        data:[87400,76200,94100,68300,82600,78850],
-        backgroundColor:catColors,borderRadius:5,borderWidth:0
+  // ── Analytics bar ──
+  barChart2 = new Chart(document.getElementById('barChart2'), {
+    type: 'bar',
+    data: {
+      labels: ['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
+      datasets: [{
+        label: 'Gəlir (₼)',
+        data: [87400,76200,94100,68300,82600,78850],
+        backgroundColor: CHART_COLORS,
+        borderRadius: 5, borderWidth: 0
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: grid }, ticks: { color: tick, font: { family: 'JetBrains Mono', size: 9 }, callback: azn } },
+        x: { grid: { display: false }, ticks: { color: tick, font: { family: 'Plus Jakarta Sans', size: 10 } } }
       }
     }
   });
 
-  // Pie (analytics)
-  pieChart = new Chart(document.getElementById('pieChart'),{
-    type:'doughnut',
-    data:{
-      labels:['İçkilər','Süd məhsulları','Şirniyyat','Dənli bitkilər','Konservlər','Yağlar','Digər'],
-      datasets:[{
-        data:[28.4,22.1,15.6,12.3,9.8,6.7,5.1],
-        backgroundColor:catColors,borderWidth:0,hoverOffset:6
+  // ── Pie chart ──
+  pieChart = new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['İçkilər','Süd məhsulları','Şirniyyat','Dənli bitkilər','Konservlər','Yağlar','Digər'],
+      datasets: [{
+        data: [28.4, 22.1, 15.6, 12.3, 9.8, 6.7, 5.1],
+        backgroundColor: CHART_COLORS,
+        borderWidth: 0, hoverOffset: 6
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      cutout:'55%',
-      plugins:{
-        legend:{position:'bottom',labels:{color:tickColor,font:{family:'DM Sans',size:10},padding:8}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: tick, font: { family: 'Plus Jakarta Sans', size: 10 }, padding: 8 }
+        }
       }
     }
   });
 
-  // Trend
-  trendChart = new Chart(document.getElementById('trendChart'),{
-    type:'line',
-    data:{
-      labels:['İyn 25','İyl 25','Avq 25','Snt 25','Okt 25','Noy 25','Dek 25','Yan 26','Fvr 26','Mar 26','Apr 26','May 26'],
-      datasets:[{
-        label:'Aylıq Gəlir (₼)',
-        data:[298000,311000,324000,308000,342000,387000,421000,356000,334000,361000,378000,387450],
-        borderColor:'rgba(0,229,255,1)',
-        backgroundColor:'rgba(0,229,255,0.07)',
-        borderWidth:2,pointRadius:3,pointBackgroundColor:'rgba(0,229,255,1)',
-        fill:true,tension:0.4
+  // ── Trend line ──
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: ['İyn 25','İyl 25','Avq 25','Snt 25','Okt 25','Noy 25','Dek 25','Yan 26','Fvr 26','Mar 26','Apr 26','May 26'],
+      datasets: [{
+        label: 'Aylıq Gəlir (₼)',
+        data: [298000,311000,324000,308000,342000,387000,421000,356000,334000,361000,378000,387450],
+        borderColor: 'rgba(59,130,246,1)',
+        backgroundColor: 'rgba(59,130,246,0.06)',
+        borderWidth: 2, pointRadius: 3,
+        pointBackgroundColor: 'rgba(59,130,246,1)',
+        fill: true, tension: 0.4
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: grid }, ticks: { color: tick, font: { family: 'JetBrains Mono', size: 9 }, callback: azn } },
+        x: { grid: { display: false }, ticks: { color: tick, font: { family: 'Plus Jakarta Sans', size: 10 } } }
       }
     }
   });
 }
 
-// ── INVENTORY TABLE ──
-function renderInvTable(filter='',statusF=''){
-  const body=document.getElementById('invBody');
-  const rows=invData.filter(r=>{
-    const q=filter.toLowerCase();
-    const matchQ=!q||(r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q)||r.cat.toLowerCase().includes(q)||r.supplier.toLowerCase().includes(q));
-    const matchS=!statusF||r.status===statusF;
-    return matchQ&&matchS;
+// ═══════════════════════════════════════
+// INVENTORY TABLE
+// ═══════════════════════════════════════
+function renderInventoryTable(filterText = '', statusFilter = '') {
+  const tbody = document.getElementById('invBody');
+  const rows = INVENTORY.filter(r => {
+    const q = filterText.toLowerCase();
+    const matchQ = !q || [r.code, r.name, r.cat, r.supplier].some(s => s.toLowerCase().includes(q));
+    const matchS = !statusFilter || r.status === statusFilter;
+    return matchQ && matchS;
   });
-  body.innerHTML=rows.map(r=>{
-    const pct=Math.min(100,Math.round((r.stock/Math.max(r.stock,r.min*2))*100));
-    const barColor=r.status==='Kritik'?'var(--red)':r.status==='Çox'?'var(--amber)':'var(--green)';
-    const badgeCls=r.status==='Kritik'?'b-crit':r.status==='Çox'?'b-warn':'b-ok';
+
+  tbody.innerHTML = rows.map(r => {
+    const fillPct = Math.min(100, Math.round((r.stock / Math.max(r.stock, r.min * 2)) * 100));
+    const barColor = r.status === 'Kritik' ? 'var(--danger)' : r.status === 'Çox' ? 'var(--warning)' : 'var(--success)';
+    const badgeCls = r.status === 'Kritik' ? 'b-danger' : r.status === 'Çox' ? 'b-warning' : 'b-success';
+
     return `<tr>
-      <td><span class="code">${r.code}</span></td>
-      <td>${r.name}</td>
-      <td><span style="font-size:0.72rem;color:var(--muted2)">${r.cat}</span></td>
-      <td><strong>${r.stock}</strong> <span style="font-size:0.7rem;color:var(--muted)">ədəd</span></td>
-      <td style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:0.75rem">${r.min}</td>
+      <td><span class="mono-cell">${r.code}</span></td>
+      <td style="font-weight:500">${r.name}</td>
+      <td><span style="font-size:0.71rem;color:var(--text-secondary)">${r.cat}</span></td>
+      <td><strong>${r.stock}</strong> <span style="font-size:0.68rem;color:var(--text-tertiary)">ədəd</span></td>
+      <td style="color:var(--text-secondary);font-family:var(--font-mono);font-size:0.72rem">${r.min}</td>
       <td>
         <div class="progress-cell">
-          <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${barColor}"></div></div>
-          <span class="pct-label">${pct}%</span>
+          <div class="mini-track">
+            <div class="mini-fill" style="width:${fillPct}%;background:${barColor}"></div>
+          </div>
+          <span class="pct-text">${fillPct}%</span>
         </div>
       </td>
       <td><span class="badge ${badgeCls}">${r.status}</span></td>
-      <td style="font-family:'DM Mono',monospace;font-size:0.78rem">₼${r.price.toFixed(2)}</td>
-      <td><span class="supplier-chip">${r.supplier}</span></td>
-      <td style="font-size:0.72rem;color:var(--muted)">${r.updated}</td>
+      <td style="font-family:var(--font-mono);font-size:0.76rem">₼${r.price.toFixed(2)}</td>
+      <td><span class="supplier-tag">${r.supplier}</span></td>
+      <td style="font-size:0.7rem;color:var(--text-tertiary)">${r.updated}</td>
     </tr>`;
   }).join('');
 }
-renderInvTable();
-document.getElementById('tblSearch').addEventListener('input',e=>renderInvTable(e.target.value,document.getElementById('statusFilter').value));
-document.getElementById('statusFilter').addEventListener('change',e=>renderInvTable(document.getElementById('tblSearch').value,e.target.value));
 
-// ── SEARCH ──
-const searchInp=document.getElementById('searchInp');
-const searchDrop=document.getElementById('searchDrop');
-searchInp.addEventListener('input',e=>{
-  const q=e.target.value.toLowerCase().trim();
-  if(q.length<2){searchDrop.classList.remove('open');return}
-  const res=invData.filter(r=>r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q));
-  if(!res.length){searchDrop.classList.remove('open');return}
-  searchDrop.innerHTML=res.slice(0,5).map(r=>`
-    <div class="search-row" onclick="searchInp.value='${r.name}';searchDrop.classList.remove('open')">
+renderInventoryTable();
+
+document.getElementById('tblSearch').addEventListener('input', e =>
+  renderInventoryTable(e.target.value, document.getElementById('statusFilter').value)
+);
+document.getElementById('statusFilter').addEventListener('change', e =>
+  renderInventoryTable(document.getElementById('tblSearch').value, e.target.value)
+);
+
+// ═══════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════
+const searchInput = document.getElementById('searchInp');
+const searchDrop  = document.getElementById('searchDrop');
+
+searchInput.addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  if (q.length < 2) { searchDrop.classList.remove('open'); return; }
+
+  const results = INVENTORY.filter(r =>
+    r.code.toLowerCase().includes(q) || r.name.toLowerCase().includes(q)
+  );
+
+  if (!results.length) { searchDrop.classList.remove('open'); return; }
+
+  searchDrop.innerHTML = results.slice(0, 5).map(r => {
+    const statusColor = r.status === 'Kritik' ? 'var(--danger)' : r.status === 'Çox' ? 'var(--warning)' : 'var(--success)';
+    return `<div class="search-result-row" onclick="searchInput.value='${r.name}';searchDrop.classList.remove('open')">
       <div class="search-chip">${r.code.slice(-3)}</div>
-      <div><div class="search-rname">${r.name}</div><div class="search-rmeta">${r.code} · ${r.stock} ədəd · <span style="color:${r.status==='Kritik'?'var(--red)':r.status==='Çox'?'var(--amber)':'var(--green)'}">${r.status}</span></div></div>
-    </div>`).join('');
+      <div>
+        <div class="s-rname">${r.name}</div>
+        <div class="s-rmeta">${r.code} · ${r.stock} ədəd · <span style="color:${statusColor}">${r.status}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+
   searchDrop.classList.add('open');
 });
-document.addEventListener('click',e=>{if(!searchInp.contains(e.target)&&!searchDrop.contains(e.target))searchDrop.classList.remove('open')});
 
-// ── NAVIGATION ──
-document.querySelectorAll('.nav-link').forEach(link=>{
-  link.addEventListener('click',e=>{
+document.addEventListener('click', e => {
+  if (!searchInput.contains(e.target) && !searchDrop.contains(e.target))
+    searchDrop.classList.remove('open');
+});
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
     e.preventDefault();
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     link.classList.add('active');
-    const page=link.dataset.page;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-'+page).classList.add('active');
+
+    const page = link.dataset.page;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
   });
 });
 
-// ── FILTER BUTTONS ──
-document.querySelectorAll('.filter-group').forEach(group=>{
-  group.querySelectorAll('.f-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      group.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
+// ═══════════════════════════════════════
+// FILTER PILLS
+// ═══════════════════════════════════════
+document.querySelectorAll('.filter-pills').forEach(group => {
+  group.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      if(btn.dataset.period&&mainChart){
-        const d=periods[btn.dataset.period];
-        mainChart.data.datasets[0].data=d.sales;
-        mainChart.data.datasets[1].data=d.inv;
-        mainChart.update();
+
+      if (btn.dataset.period && mainChart) {
+        const d = PERIODS[btn.dataset.period];
+        mainChart.data.datasets[0].data = d.sales;
+        mainChart.data.datasets[1].data = d.inv;
+        mainChart.update('active');
       }
     });
   });
 });
 
-// ── BUDGET SLIDER ──
-const budgetCats=[
-  {name:'İçkilər',color:'#00e5ff',ratio:0.28},
-  {name:'Süd məhsulları',color:'#7b5ea7',ratio:0.22},
-  {name:'Şirniyyat',color:'#00c896',ratio:0.16},
-  {name:'Dənli bitkilər',color:'#ffb340',ratio:0.13},
-  {name:'Konservlər',color:'#ff4d6a',ratio:0.11},
-  {name:'Yağlar',color:'#6366f1',ratio:0.1},
-];
+// ═══════════════════════════════════════
+// BUDGET OPTIMIZER
+// ═══════════════════════════════════════
+function updateBudget() {
+  const budget = parseInt(document.getElementById('budgetSlider').value);
+  document.getElementById('budgetDisp').textContent = '₼ ' + budget.toLocaleString();
 
-function updateBudget(){
-  const b=parseInt(document.getElementById('budgetSlider').value);
-  document.getElementById('budgetDisp').textContent='₼'+b.toLocaleString();
-  const cost=Math.round(b*0.97);
-  const rev=Math.round(b*2.78);
-  const profit=rev-cost;
-  const roi=Math.round((profit/cost)*100);
-  const days=Math.max(4,Math.round(7200/b*10));
-  document.getElementById('optCost').textContent='₼'+cost.toLocaleString();
-  document.getElementById('expRev').textContent='₼'+rev.toLocaleString();
-  document.getElementById('netProfit').textContent='₼'+profit.toLocaleString();
-  document.getElementById('roiDisp').textContent=roi+'%';
-  document.getElementById('payback').textContent=days.toFixed(1)+' gün';
-  document.getElementById('roiNote').textContent='₼'+b.toLocaleString()+' büdcə üçün optimal alış planı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.';
-  const rows=document.getElementById('breakdownRows');
-  rows.innerHTML=budgetCats.map(c=>{
-    const amt=Math.round(b*c.ratio);
-    return`<div class="breakdown-row">
-      <div class="breakdown-name"><div class="breakdown-dot" style="background:${c.color}"></div>${c.name}</div>
-      <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:${c.ratio*100}%;background:${c.color}"></div></div>
-      <span class="breakdown-pct">₼${amt.toLocaleString()}</span>
+  const optCost  = Math.round(budget * 0.97);
+  const expRev   = Math.round(budget * 2.78);
+  const netProfit = expRev - optCost;
+  const roi      = Math.round((netProfit / optCost) * 100);
+  const payback  = Math.max(4, (7200 / budget * 10)).toFixed(1);
+
+  document.getElementById('optCost').textContent   = '₼' + optCost.toLocaleString();
+  document.getElementById('expRev').textContent    = '₼' + expRev.toLocaleString();
+  document.getElementById('netProfit').textContent = '₼' + netProfit.toLocaleString();
+  document.getElementById('roiDisp').textContent   = roi + '%';
+  document.getElementById('payback').textContent   = payback + ' gün';
+  document.getElementById('roiNote').textContent   =
+    '₼' + budget.toLocaleString() + ' büdcə üçün 0-1 Knapsack ilə optimal bölgü hesablandı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.';
+
+  document.getElementById('breakdownRows').innerHTML = BUDGET_CATS.map(c => {
+    const amt = Math.round(budget * c.ratio);
+    return `<div class="breakdown-row">
+      <div class="breakdown-dot" style="background:${c.color}"></div>
+      <span class="breakdown-name">${c.name}</span>
+      <div class="breakdown-track">
+        <div class="breakdown-fill" style="width:${c.ratio * 100}%;background:${c.color}"></div>
+      </div>
+      <span class="breakdown-amount">₼${amt.toLocaleString()}</span>
     </div>`;
   }).join('');
 }
-document.getElementById('budgetSlider').addEventListener('input',updateBudget);
+
+document.getElementById('budgetSlider').addEventListener('input', updateBudget);
 updateBudget();
 
-// ── DISCOUNT SIMULATOR ──
-function updateDisc(){
-  const disc=parseInt(document.getElementById('discSlider').value);
-  const sel=document.getElementById('discProduct');
-  const opt=sel.options[sel.selectedIndex];
-  const stock=parseInt(opt.dataset.stock||567);
-  const price=parseFloat(opt.dataset.price||1.80);
-  const elastic=parseFloat(opt.dataset.elastic||-1.8);
-  document.getElementById('discDisp').textContent=disc;
-  const salesInc=Math.max(0,Math.round(-elastic*disc*10)/10);
-  const revChange=Math.round(stock*price*(salesInc/100)*(1-disc/100)-stock*price*(salesInc/100)*0);
-  const baseRev=stock*price;
-  const newSales=stock*(1+salesInc/100);
-  const newRev=newSales*price*(1-disc/100);
-  const revDiff=Math.round(newRev-baseRev);
-  const marginLoss=Math.round(disc/100*price*newSales*0.4);
-  const baseDays=Math.round(stock/18);
-  const newDays=Math.max(3,Math.round(baseDays/(1+salesInc/100)));
-  document.getElementById('discSales').textContent='+'+salesInc.toFixed(1)+'%';
-  document.getElementById('discRevChg').style.color=revDiff>=0?'var(--green)':'var(--red)';
-  document.getElementById('discRevChg').textContent=(revDiff>=0?'+':'')+'₼'+Math.abs(revDiff).toLocaleString();
-  document.getElementById('discClear').textContent=newDays+' gün';
-  document.getElementById('discMargin').textContent='-₼'+marginLoss.toLocaleString();
-  const pName=opt.text.split('(')[0].trim();
-  let note='';
-  if(disc===0){note=`<strong>AI Tövsiyəsi:</strong> Endirim yoxdur. Mövcud satış sürəti saxlanılır.`;}
-  else if(disc<=15){note=`<strong>AI Tövsiyəsi:</strong> ${pName} üçün ${disc}% endirim optimal seçimdir — satış həcmi ${salesInc.toFixed(1)}% artacaq, marja itkisi minimal qalacaq. Kampaniya cümə günü başlaması tövsiyə edilir.`;}
-  else if(disc<=30){note=`<strong>AI Xəbərdarlığı:</strong> ${disc}% endirim yüksək satış artımı verəcək, lakin marja itkisi nəzərəçarpacaq ola bilər (₼${marginLoss}). Yalnız çox yüksək stokda istifadə et.`;}
-  else{note=`<strong>AI Risk:</strong> ${disc}% endirim marjanızı ciddi azaldacaq. Yalnız son istifadə tarixi kritik olan məhsullar üçün tövsiyə edilir.`;}
-  document.getElementById('scenarioNote').innerHTML=note;
-}
-document.getElementById('discSlider').addEventListener('input',updateDisc);
-document.getElementById('discProduct').addEventListener('change',updateDisc);
-updateDisc();
+// ═══════════════════════════════════════
+// DISCOUNT SIMULATOR
+// ═══════════════════════════════════════
+function updateDiscount() {
+  const disc    = parseInt(document.getElementById('discSlider').value);
+  const sel     = document.getElementById('discProduct');
+  const opt     = sel.options[sel.selectedIndex];
+  const stock   = parseInt(opt.dataset.stock   || 567);
+  const price   = parseFloat(opt.dataset.price || 1.80);
+  const elastic = parseFloat(opt.dataset.elastic || -1.8);
 
-// ── THEME ──
-document.getElementById('themeBtn').addEventListener('click',()=>{
-  const t=document.body.getAttribute('data-theme');
-  document.body.setAttribute('data-theme',t==='dark'?'light':'dark');
+  document.getElementById('discDisp').textContent = disc;
+
+  const salesInc = Math.max(0, Math.round(-elastic * disc * 10) / 10);
+  const newUnits = stock * (1 + salesInc / 100);
+  const baseRev  = stock * price;
+  const newRev   = newUnits * price * (1 - disc / 100);
+  const revDiff  = Math.round(newRev - baseRev);
+  const marginLoss = Math.round(disc / 100 * price * newUnits * 0.4);
+  const baseDays = Math.round(stock / 18);
+  const newDays  = Math.max(3, Math.round(baseDays / (1 + salesInc / 100)));
+
+  document.getElementById('discSales').textContent  = '+' + salesInc.toFixed(1) + '%';
+  document.getElementById('discClear').textContent  = newDays + ' gün';
+  document.getElementById('discMargin').textContent = '−₼' + marginLoss.toLocaleString();
+
+  const revEl = document.getElementById('discRevChg');
+  revEl.style.color = revDiff >= 0 ? 'var(--success)' : 'var(--danger)';
+  revEl.textContent = (revDiff >= 0 ? '+' : '') + '₼' + Math.abs(revDiff).toLocaleString();
+
+  const pName = opt.text.split('(')[0].trim();
+  let note = '';
+  if (disc === 0) {
+    note = `<strong>AI Qeyd:</strong> Endirim tətbiq edilməyib. Mövcud satış sürəti qorunur.`;
+  } else if (disc <= 15) {
+    note = `<strong>AI Tövsiyəsi:</strong> ${pName} üçün ${disc}% endirim optimal nöqtədir — satış +${salesInc.toFixed(1)}% artacaq, marja itkisi minimal (elasticity: ${elastic}). Kampaniya cümə günü başlasın.`;
+  } else if (disc <= 30) {
+    note = `<strong>AI Xəbərdarlığı:</strong> ${disc}% endirim yüksək satış artımı (${salesInc.toFixed(1)}%) verəcək, lakin marja itkisi ₼${marginLoss} olacaq. Yalnız yüksək stok hallarda tətbiq edin.`;
+  } else {
+    note = `<strong>AI Risk Xəbərdarlığı:</strong> ${disc}% endirim gross marjanı ciddi aşındıracaq. Yalnız son istifadə tarixi kritik olan məhsullarda nəzərə alın (son çarə kimi).`;
+  }
+  document.getElementById('scenarioNote').innerHTML = note;
+}
+
+document.getElementById('discSlider').addEventListener('input', updateDiscount);
+document.getElementById('discProduct').addEventListener('change', updateDiscount);
+updateDiscount();
+
+// ═══════════════════════════════════════
+// THEME TOGGLE
+// ═══════════════════════════════════════
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const current = document.body.getAttribute('data-theme');
+  document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 });
 
-// ── AI CHAT ──
-const fab=document.getElementById('aiFab');
-const chat=document.getElementById('aiChat');
-const aiX=document.getElementById('aiX');
-const aiMsgs=document.getElementById('aiMsgs');
-const aiInp=document.getElementById('aiInp');
-const aiSendBtn=document.getElementById('aiSendBtn');
-const aiSugs=document.getElementById('aiSugs');
+// ═══════════════════════════════════════
+// AI CHAT
+// ═══════════════════════════════════════
+const aiFab     = document.getElementById('aiFab');
+const aiPanel   = document.getElementById('aiPanel');
+const aiClose   = document.getElementById('aiClose');
+const aiMessages = document.getElementById('aiMessages');
+const aiInput   = document.getElementById('aiInput');
+const aiSendBtn = document.getElementById('aiSendBtn');
+const aiSugs    = document.getElementById('aiSugs');
 
-fab.addEventListener('click',()=>chat.classList.toggle('open'));
-aiX.addEventListener('click',()=>chat.classList.remove('open'));
+aiFab.addEventListener('click', () => aiPanel.classList.toggle('open'));
+aiClose.addEventListener('click', () => aiPanel.classList.remove('open'));
 
-const aiKB={
-  'kritik':()=>`Hazırda 7 kritik SKU var:\n• PRD-001 (Kofe) — 45 ədəd, min.hədd 100\n• PRD-005 (Enerji İçkisi) — 28 ədəd, min.hədd 150\n• PRD-010 (Çay) — 67 ədəd, min.hədd 80\nBeverage Co. ilə 48 saat içində əlaqə saxla.`,
-  'endirim':()=>`Süd məhsullarına 12–15% endirim tövsiyə edilir:\n• Tam Yağlı Süd: 567 ədəd (Çox stok)\n• Organik Yoğurt: 423 ədəd (Son tarix yaxınlaşır)\nCümə axşamı başlamaq optimal nəticə verir.`,
-  'roi':()=>`Bu ay ROI analizi:\n• Ümumi gəlir: ₼387,450\n• Xalis mənfəət: ₼241,280 (62.3%)\n• Stok dövriyyəsi: 8.3x (Sənaye ortalaması: 6.2x)\n• Zay olma itkisi: ₼18,640 (↓22% ötən aya)`,
-  'proqnoz':()=>`AI proqnozu (növbəti 14 gün):\n• Kofe kateqoriyası: +22% tələb artımı\n• Ramazan öncəsi çay: +18% artım\n• Süd məhsulları: -8% azalma (mövsüm sonu)`,
-  'filial':()=>`Ən yaxşı performans göstərən filial: Nizami (₼94,100/ay)\nƏn aşağı: Gənclik (₼68,300/ay)\nTövsiyə: Gənclik filialı üçün ayrıca kampaniya planla.`,
+const AI_KB = {
+  'kritik': () => `Hazırda 7 kritik SKU var:\n• PRD-001 — Kofe Dənələri: 45/100 ədəd\n• PRD-005 — Enerji İçkisi: 28/150 ədəd\n• PRD-010 — Çay: 67/80 ədəd\n\nBeverage Co. və Lənkəran Çay ilə 48 saat içərisində əlaqə saxlanması tövsiyə edilir.`,
+  'endirim': () => `Süd kateqoriyası üçün qiymət elastikliyi analizi:\n• Tam Yağlı Süd (e=−1.8): 15% endirim → +27% satış\n• Organik Yoğurt (e=−2.1): 12% endirim → +25.2% satış\n\nCümə günü başlayan kampaniya optimal nəticə verir.`,
+  'roi': () => `May 2026 ROI analizi:\n• Ümumi dövriyyə: ₼387,450\n• Xalis mənfəət: ₼241,280 (62.3%)\n• Stok dövriyyəsi: 8.3× (sənaye: 6.2×)\n• Zay olma itkisi: ₼18,640 (↓22% ötən aya)`,
+  'proqnoz': () => `AI proqnozu (növbəti 14 gün, ARIMA+XGBoost):\n• Kofe kateqoriyası: +22% tələb artımı\n• Çay: +18% (Ramazan öncəsi)\n• Süd məhsulları: −8% (mövsüm sonu)`,
+  'filial': () => `Filial performansı (May 2026):\n🥇 Nizami: ₼94,100 — ən yüksək\n🥈 28 Mal: ₼87,400\n⚠ Gənclik: ₼68,300 — ən aşağı\n\nGənclik filialı üçün lokal kampaniya planlanması tövsiyə edilir.`,
+  'knapsack': () => `0-1 Knapsack alqoritmi məhdud büdcə şəraitində maksimal ROI-ı hesablayır. DP mürəkkəbliyi: O(n×W). 7 kateqoriya, 14 alt-kateqoriya üzrə optimal bölgü verilir.`,
 };
 
-function aiReply(q){
-  const ql=q.toLowerCase();
-  for(const[k,fn] of Object.entries(aiKB)){
-    if(ql.includes(k))return fn();
+function getAIReply(q) {
+  const ql = q.toLowerCase();
+  for (const [key, fn] of Object.entries(AI_KB)) {
+    if (ql.includes(key)) return fn();
   }
-  return`Bu barədə məlumat topluyuram. Stok, endirim, proqnoz, ROI, filial analizi ilə bağlı sual ver — daha dəqiq cavab verə bilərəm.`;
+  return 'Sualınızla bağlı məlumatı emal edirəm. Stok, endirim, proqnoz, ROI, filial analizi üzrə dəqiq sual verin — daha ətraflı cavab alacaqsınız.';
 }
 
-function appendMsg(type,text){
-  const d=document.createElement('div');
-  d.className=`ai-msg ${type}`;
-  d.textContent=text;
-  aiMsgs.appendChild(d);
-  aiMsgs.scrollTop=aiMsgs.scrollHeight;
+function appendMessage(type, text) {
+  const el = document.createElement('div');
+  el.className = `ai-msg ${type}`;
+  el.style.whiteSpace = 'pre-line';
+  el.textContent = text;
+  aiMessages.appendChild(el);
+  aiMessages.scrollTop = aiMessages.scrollHeight;
 }
 
-function sendMsg(q){
-  q=q||aiInp.value.trim();
-  if(!q)return;
-  appendMsg('user',q);
-  aiInp.value='';
-  aiSugs.style.display='none';
-  setTimeout(()=>{
-    const typing=document.createElement('div');
-    typing.className='ai-msg bot ai-typing';
-    typing.innerHTML='<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
-    aiMsgs.appendChild(typing);
-    aiMsgs.scrollTop=aiMsgs.scrollHeight;
-    setTimeout(()=>{
+function sendMessage(q) {
+  q = q || aiInput.value.trim();
+  if (!q) return;
+  appendMessage('user', q);
+  aiInput.value = '';
+  aiSugs.style.display = 'none';
+
+  setTimeout(() => {
+    const typing = document.createElement('div');
+    typing.className = 'ai-msg bot typing-indicator';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    aiMessages.appendChild(typing);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+
+    setTimeout(() => {
       typing.remove();
-      appendMsg('bot',aiReply(q));
-    },900);
-  },100);
+      appendMessage('bot', getAIReply(q));
+    }, 850);
+  }, 100);
 }
 
-aiSendBtn.addEventListener('click',()=>sendMsg());
-aiInp.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
-document.querySelectorAll('.ai-sug').forEach(s=>{
-  s.addEventListener('click',()=>sendMsg(s.dataset.q));
-});
-document.addEventListener('click',e=>{
-  if(!fab.contains(e.target)&&!chat.contains(e.target))chat.classList.remove('open');
+aiSendBtn.addEventListener('click', () => sendMessage());
+aiInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+document.querySelectorAll('.ai-sug').forEach(s => {
+  s.addEventListener('click', () => sendMessage(s.dataset.q));
 });
 
-// ── INIT ──
+document.addEventListener('click', e => {
+  if (!aiFab.contains(e.target) && !aiPanel.contains(e.target))
+    aiPanel.classList.remove('open');
+});
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
 initCharts();
 </script>
 </body>
