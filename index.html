@@ -4,530 +4,285 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartStock — Ağıllı Anbar İdarəetmə Sistemi</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg: #06080f;
-  --bg2: #0d1017;
-  --bg3: #131820;
-  --bg4: #1a2030;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #eef2f8;
-  --muted: #6b7a99;
-  --muted2: #9aa3bc;
-  --cyan: #00e5ff;
-  --cyan2: rgba(0,229,255,0.12);
-  --cyan3: rgba(0,229,255,0.06);
-  --violet: #7b5ea7;
-  --violet2: rgba(123,94,167,0.2);
-  --green: #00c896;
-  --green2: rgba(0,200,150,0.15);
-  --red: #ff4d6a;
-  --red2: rgba(255,77,106,0.15);
-  --amber: #ffb340;
-  --amber2: rgba(255,179,64,0.15);
-  --shadow: 0 24px 64px rgba(0,0,0,0.6);
-  --shadow2: 0 4px 16px rgba(0,0,0,0.4);
-  --ease: cubic-bezier(.4,0,.2,1);
-  --sidebar: 256px;
-  --header: 64px;
+  --bg: #06080f; --bg2: #0d1017; --bg3: #131820; --bg4: #1a2030;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+  --text: #eef2f8; --muted: #6b7a99; --muted2: #9aa3bc;
+  --cyan: #00e5ff; --cyan2: rgba(0,229,255,0.12); --cyan3: rgba(0,229,255,0.06);
+  --violet: #7b5ea7; --green: #00c896; --green2: rgba(0,200,150,0.15);
+  --red: #ff4d6a; --red2: rgba(255,77,106,0.15);
+  --amber: #ffb340; --amber2: rgba(255,179,64,0.15);
+  --shadow: 0 24px 64px rgba(0,0,0,0.6); --shadow2: 0 4px 16px rgba(0,0,0,0.4);
+  --ease: cubic-bezier(.4,0,.2,1); --sidebar: 256px; --header: 64px;
 }
 [data-theme="light"] {
-  --bg: #f0f2f8;
-  --bg2: #ffffff;
-  --bg3: #f5f7fc;
-  --bg4: #eaecf5;
-  --border: rgba(0,0,0,0.07);
-  --border2: rgba(0,0,0,0.12);
-  --text: #0f1623;
-  --muted: #7a869a;
-  --muted2: #5a6478;
-  --cyan: #0080ff;
-  --cyan2: rgba(0,128,255,0.1);
-  --cyan3: rgba(0,128,255,0.05);
-  --shadow: 0 24px 64px rgba(0,0,0,0.08);
-  --shadow2: 0 4px 16px rgba(0,0,0,0.06);
+  --bg: #f0f2f8; --bg2: #ffffff; --bg3: #f5f7fc; --bg4: #eaecf5;
+  --border: rgba(0,0,0,0.07); --border2: rgba(0,0,0,0.12);
+  --text: #0f1623; --muted: #7a869a; --muted2: #5a6478;
+  --cyan: #0080ff; --cyan2: rgba(0,128,255,0.1); --cyan3: rgba(0,128,255,0.05);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;transition:background .3s,color .3s}
+body{font-family:'Plus Jakarta Sans','Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;transition:background .3s,color .3s}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 
 /* ── SIDEBAR ── */
-.sidebar{
-  position:fixed;left:0;top:0;width:var(--sidebar);height:100dvh;
-  background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;z-index:200;overflow:hidden;
-  transition:transform .3s var(--ease);
-}
-.sidebar::before{
-  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-  background:radial-gradient(ellipse 200px 300px at 50% 0%,rgba(0,229,255,0.04) 0%,transparent 70%);
-  pointer-events:none;
-}
-.logo-area{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar{ position:fixed;left:0;top:0;width:var(--sidebar);height:100dvh; background:var(--bg2);border-right:1px solid var(--border); display:flex;flex-direction:column;z-index:200;overflow:hidden; transition:transform .3s var(--ease); }
+.sidebar::before{ content:'';position:absolute;top:0;left:0;right:0;bottom:0; background:radial-gradient(ellipse 200px 300px at 50% 0%,rgba(0,229,255,0.04) 0%,transparent 70%); pointer-events:none; }
+.logo-area{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;position:relative;z-index:1;}
 .logo-wrap{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.2rem}
-.logo-mark{
-  width:32px;height:32px;border-radius:8px;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;color:#fff;
-  letter-spacing:-0.5px;flex-shrink:0;
-}
-.logo-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-0.5px}
+.logo-mark{ width:32px;height:32px;border-radius:8px; background:linear-gradient(135deg,var(--cyan),var(--violet)); display:flex;align-items:center;justify-content:center; font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;color:#fff; }
+.logo-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-0.5px}
 .logo-sub{font-size:0.7rem;color:var(--muted);letter-spacing:0.3px}
-.sidebar-status{
-  display:flex;align-items:center;gap:0.4rem;margin-top:0.75rem;
-  padding:0.4rem 0.6rem;background:var(--green2);border-radius:6px;width:fit-content;
-}
+.sidebar-status{ display:flex;align-items:center;gap:0.4rem;margin-top:0.75rem; padding:0.4rem 0.6rem;background:var(--green2);border-radius:6px;width:fit-content; }
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.status-txt{font-size:0.68rem;color:var(--green);font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
-.nav-section{padding:1rem 0.75rem 0.5rem;flex:1;overflow-y:auto}
+.status-txt{font-size:0.68rem;color:var(--green);font-weight:600;text-transform:uppercase}
+.nav-section{padding:1rem 0.75rem 0.5rem;flex:1;overflow-y:auto;position:relative;z-index:1;}
 .nav-label{font-size:0.62rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;padding:0.5rem 0.5rem 0.4rem;margin-top:0.5rem}
 .nav-item{list-style:none;margin-bottom:2px}
-.nav-link{
-  display:flex;align-items:center;gap:0.65rem;padding:0.6rem 0.75rem;
-  border-radius:8px;color:var(--muted2);text-decoration:none;
-  font-size:0.85rem;font-weight:500;transition:all .2s var(--ease);position:relative;cursor:pointer;
-}
+.nav-link{ display:flex;align-items:center;gap:0.65rem;padding:0.6rem 0.75rem; border-radius:8px;color:var(--muted2);text-decoration:none; font-size:0.85rem;font-weight:500;transition:all .2s var(--ease);cursor:pointer; position:relative; }
 .nav-link:hover{background:var(--cyan3);color:var(--cyan)}
 .nav-link.active{background:var(--cyan2);color:var(--cyan)}
-.nav-link.active .nav-icon-wrap{color:var(--cyan)}
-.nav-link.active::before{
-  content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px;
-  background:var(--cyan);border-radius:0 2px 2px 0;
-}
+.nav-link.active::before{ content:'';position:absolute;left:0;top:20%;bottom:20%;width:2px; background:var(--cyan);border-radius:0 2px 2px 0; }
 .nav-icon-wrap{width:16px;text-align:center;font-size:0.9rem;flex-shrink:0}
-.nav-badge{
-  margin-left:auto;font-size:0.65rem;font-weight:700;
-  background:var(--red2);color:var(--red);
-  padding:1px 5px;border-radius:10px;
-}
-.sidebar-footer{
-  padding:0.75rem 1rem;border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:0.65rem;flex-shrink:0;
-}
-.user-avatar{
-  width:30px;height:30px;border-radius:8px;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0;
-}
+.nav-badge{ margin-left:auto;font-size:0.65rem;font-weight:700; background:var(--red2);color:var(--red); padding:1px 5px;border-radius:10px; }
+
+.sidebar-footer{ padding:0.75rem 1rem;border-top:1px solid var(--border); display:flex;align-items:center;gap:0.65rem;flex-shrink:0; position:relative;z-index:1; margin-top: auto; }
+.user-avatar{ width:30px;height:30px;border-radius:8px; background:linear-gradient(135deg,#667eea,#764ba2); display:flex;align-items:center;justify-content:center; font-size:0.75rem;font-weight:700;color:#fff;flex-shrink:0; }
 .user-info{flex:1;min-width:0}
 .user-name{font-size:0.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-role{font-size:0.65rem;color:var(--muted)}
 
-/* ── HEADER ── */
-.header{
-  position:fixed;top:0;left:var(--sidebar);right:0;height:var(--header);
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:1rem;padding:0 1.5rem;z-index:100;
-  backdrop-filter:blur(12px);
-}
-.search-wrap{position:relative;flex:1;max-width:440px}
-.search-ic{position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.85rem;pointer-events:none}
-.search-inp{
-  width:100%;padding:0.5rem 1rem 0.5rem 2.4rem;
-  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-  color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;
-  transition:.2s;outline:none;
-}
-.search-inp::placeholder{color:var(--muted)}
-.search-inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan3)}
-.search-drop{
-  position:absolute;top:calc(100% + 6px);left:0;right:0;
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  overflow:hidden;display:none;box-shadow:var(--shadow);z-index:300;
-}
-.search-drop.open{display:block}
-.search-row{
-  display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;
-  border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;
-}
-.search-row:last-child{border-bottom:0}
-.search-row:hover{background:var(--bg3)}
-.search-chip{
-  width:36px;height:36px;border-radius:8px;flex-shrink:0;
-  background:var(--bg4);display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:500;color:var(--cyan);
-}
-.search-rname{font-size:0.83rem;font-weight:500}
-.search-rmeta{font-size:0.72rem;color:var(--muted);margin-top:1px}
+/* ── HEADER & DROPDOWNS ── */
+.header{ position:fixed;top:0;left:var(--sidebar);right:0;height:var(--header); background:var(--bg2);border-bottom:1px solid var(--border); display:flex;align-items:center;gap:1rem;padding:0 1.5rem;z-index:100; backdrop-filter:blur(12px); }
+
 .hdr-actions{display:flex;align-items:center;gap:0.5rem;margin-left:auto}
-.hdr-btn{
-  display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem;
-  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
-  color:var(--muted2);font-size:0.78rem;font-weight:500;cursor:pointer;
-  transition:.2s;font-family:'DM Sans',sans-serif;white-space:nowrap;
-}
+.hdr-btn{ display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.75rem; background:var(--bg3);border:1px solid var(--border);border-radius:8px; color:var(--muted2);font-size:0.78rem;font-weight:500;cursor:pointer; transition:.2s; white-space:nowrap; font-family:'Inter',sans-serif;}
 .hdr-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-.notif-btn{
-  position:relative;width:34px;height:34px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:8px;display:flex;
-  align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:0.9rem;
+.menu-wrap { position:relative; }
+.drop-menu { position:absolute; top:calc(100% + 12px); right:0; background:var(--bg2); border:1px solid var(--border2); border-radius:12px; box-shadow:var(--shadow); width:280px; opacity:0; pointer-events:none; transform:translateY(10px); transition:all .2s var(--ease); z-index:400; overflow:hidden; }
+.drop-menu.open { opacity:1; pointer-events:auto; transform:translateY(0); }
+.drop-head { padding:1rem; border-bottom:1px solid var(--border); font-family:'Plus Jakarta Sans'; font-weight:700; font-size:0.9rem; }
+.drop-item { display:flex; align-items:center; gap:0.5rem; padding:0.75rem 1rem; cursor:pointer; font-size:0.8rem; transition:.15s; border-bottom:1px solid var(--border); }
+.drop-item:hover { background:var(--bg3); color:var(--cyan); }
+
+/* Notification specific styles */
+.notif-drop-item {
+  display:flex; flex-direction:column; gap:0.2rem;
+  padding:0.75rem 1rem; cursor:pointer; font-size:0.8rem;
+  transition:.15s; border-bottom:1px solid var(--border);
+  text-decoration:none; color:var(--text);
 }
-.notif-btn:hover{border-color:var(--cyan)}
-.notif-dot{
-  position:absolute;top:4px;right:4px;width:8px;height:8px;
-  background:var(--red);border-radius:50%;border:2px solid var(--bg2);
+.notif-drop-item:hover { background:var(--red2); }
+.notif-drop-item .notif-name { font-weight:600; color:var(--red); font-size:0.8rem; }
+.notif-drop-item .notif-meta { font-size:0.7rem; color:var(--muted); font-family:'DM Mono',monospace; }
+.notif-drop-item .notif-action { font-size:0.7rem; color:var(--cyan); margin-top:0.1rem; }
+.notif-empty { padding:1rem; text-align:center; color:var(--muted); font-size:0.8rem; }
+.notif-pulse { animation: notifPulse 1.5s ease-in-out infinite; }
+@keyframes notifPulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,77,106,0.4)} 50%{box-shadow:0 0 0 6px rgba(255,77,106,0)} }
+
+/* Row highlight animation */
+@keyframes highlightRow {
+  0%   { background: rgba(255,77,106,0.35); transform: scale(1.01); }
+  40%  { background: rgba(255,77,106,0.2); }
+  100% { background: transparent; transform: scale(1); }
 }
-.avatar-btn{
-  width:34px;height:34px;border-radius:8px;cursor:pointer;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;
+.row-highlight {
+  animation: highlightRow 2.5s var(--ease) forwards;
 }
 
-/* ── MAIN ── */
+.notif-btn{ position:relative;width:34px;height:34px;background:var(--bg3); border:1px solid var(--border);border-radius:8px;display:flex; align-items:center;justify-content:center;cursor:pointer;transition:.2s;font-size:0.9rem; }
+.notif-btn:hover{border-color:var(--cyan)}
+.notif-dot{ position:absolute;top:4px;right:4px;width:8px;height:8px; background:var(--red);border-radius:50%;border:2px solid var(--bg2); }
+.notif-count-badge {
+  position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;
+  background:var(--red);border-radius:9px;border:2px solid var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;font-weight:800;color:#fff;font-family:'Inter',sans-serif;
+  padding:0 3px;
+}
+.avatar-btn{ width:34px;height:34px;border-radius:8px;cursor:pointer; background:linear-gradient(135deg,#667eea,#764ba2); display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff; }
+
+/* ── MODALS & AUTHENTICATION ── */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:.3s var(--ease); }
+.modal-overlay.open { opacity:1; pointer-events:auto; }
+.modal-box { background:var(--bg2); border:1px solid var(--border); border-radius:14px; width:100%; max-width:420px; transform:scale(0.95); transition:.3s var(--ease); box-shadow:var(--shadow); }
+.modal-overlay.open .modal-box { transform:scale(1); }
+.modal-head { padding:1.25rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; font-size:1.1rem; }
+.modal-close { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.2rem; transition:.2s; }
+.modal-close:hover { color:var(--red); }
+.modal-body { padding:1.25rem; display:flex; flex-direction:column; gap:1rem; }
+.modal-inp { width:100%; padding:0.75rem 1rem; background:var(--bg3); border:1px solid var(--border); border-radius:8px; color:var(--text); outline:none; font-family:'Inter',sans-serif; font-size:0.85rem; transition:.2s; }
+.modal-inp:focus { border-color:var(--cyan); box-shadow:0 0 0 3px var(--cyan3); }
+.modal-btn { width:100%; padding:0.85rem; background:linear-gradient(135deg,var(--cyan),var(--violet)); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.9rem; transition:.25s; margin-top:0.5rem; font-family:'Plus Jakarta Sans',sans-serif;}
+.modal-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+/* Auth Specific CSS */
+.auth-tabs { display:flex; gap:0.5rem; background:var(--bg3); padding:0.3rem; border-radius:8px; margin-bottom: 0.5rem;}
+.auth-tab { flex:1; padding:0.5rem; text-align:center; font-size:0.8rem; font-weight:600; cursor:pointer; border-radius:6px; color:var(--muted); transition:.2s; }
+.auth-tab.active { background:var(--bg2); color:var(--cyan); box-shadow:var(--shadow2); }
+.phone-group { display:flex; gap:0.5rem; }
+.country-sel { width:110px; background:var(--bg3); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:0.75rem 0.5rem; font-size:0.8rem; outline:none; cursor:pointer; font-family:'Inter', sans-serif; }
+.error-msg { font-size:0.75rem; color:var(--red); padding:0.5rem; border-radius:6px; background:var(--red2); display:none; text-align:center;}
+.auth-switch { text-align:center; font-size:0.85rem; color:var(--muted); margin-top:1rem; cursor:pointer; transition:.2s; }
+.auth-switch span { color:var(--cyan); font-weight:600; }
+.auth-switch:hover span { text-decoration:underline; }
+
+/* ── MAIN PAGES ── */
 .main{margin-left:var(--sidebar);margin-top:var(--header);padding:1.5rem;min-height:calc(100dvh - var(--header))}
 .page{display:none;animation:fadeUp .3s var(--ease)}
 .page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .page-head{margin-bottom:1.5rem}
-.page-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;line-height:1.2}
+.page-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.5px;line-height:1.2}
 .page-sub{color:var(--muted);font-size:0.83rem;margin-top:0.2rem}
-.page-title span{
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.page-title span{ background:linear-gradient(90deg,var(--cyan),var(--violet)); -webkit-background-clip:text;-webkit-text-fill-color:transparent; }
 
-/* ── KPI CARDS ── */
+/* ── KPI & CARDS ── */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
-.kpi{
-  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:1rem 1.1rem;position:relative;overflow:hidden;transition:.25s var(--ease);
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.kpi::after{
-  content:'';position:absolute;inset:0;opacity:0;
-  background:linear-gradient(135deg,var(--cyan3),transparent);transition:.25s;
-}
+.kpi{ background:var(--bg2);border:1px solid var(--border);border-radius:12px; padding:1rem 1.1rem; position:relative; overflow:hidden; transition:.25s var(--ease); }
+.kpi::after{ content:'';position:absolute;inset:0;opacity:0; background:linear-gradient(135deg,var(--cyan3),transparent);transition:.25s; }
 .kpi:hover{transform:translateY(-2px);border-color:var(--border2)}
 .kpi:hover::after{opacity:1}
-.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;position:relative;z-index:1}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;position:relative;z-index:1;}
 .kpi-label{font-size:0.72rem;color:var(--muted);font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
 .kpi-ic{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.85rem}
-.kpi-val{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;letter-spacing:-0.3px;position:relative;z-index:1;line-height:1.1;word-break:break-all;overflow-wrap:anywhere}
-.kpi-mono{font-family:'DM Mono',monospace;font-size:0.65rem;margin-top:0.5rem;display:flex;align-items:center;gap:0.3rem;position:relative;z-index:1;flex-wrap:wrap}
-.tag-up{color:var(--green);font-weight:500}
-.tag-dn{color:var(--red);font-weight:500}
-.tag-dim{color:var(--muted)}
-.kpi-bar{height:2px;border-radius:1px;background:var(--bg4);margin-top:0.75rem;position:relative;z-index:1;overflow:hidden}
-.kpi-bar-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.kpi-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.25rem;font-weight:800;line-height:1.1;position:relative;z-index:1;}
+.kpi-mono{font-family:'DM Mono',monospace;font-size:0.68rem;margin-top:0.4rem;display:flex;align-items:center;gap:0.4rem}
+.tag-up{color:var(--green);font-weight:600}.tag-dn{color:var(--red);font-weight:600}.tag-dim{color:var(--muted)}
+.kpi-bar{width:100%;height:3px;background:var(--bg4);border-radius:1.5px;margin-top:0.7rem;overflow:hidden;position:relative;z-index:1;}
+.kpi-bar-fill{height:100%;background:var(--cyan);border-radius:1.5px}
 
-/* ── AI CARDS ── */
 .ai-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
-.ai-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:1rem 1.1rem;position:relative;overflow:hidden;
-}
+.ai-card{ background:var(--bg2);border:1px solid var(--border);border-radius:12px; padding:1rem 1.1rem; position:relative; }
 .ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad-top,linear-gradient(90deg,var(--cyan),var(--violet)))}
 .ai-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
 .ai-card-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600}
-.ai-card-ic{font-size:0.9rem}
-.ai-card-val{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:0.35rem;word-break:break-word;line-height:1.3}
+.ai-card-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;margin-bottom:0.35rem;}
 .ai-card-note{font-size:0.73rem;color:var(--muted2);line-height:1.45;margin-top:0.2rem}
-.ai-pulse{
-  display:inline-flex;align-items:center;gap:0.3rem;font-size:0.65rem;
-  color:var(--cyan);background:var(--cyan2);padding:2px 6px;border-radius:4px;
-  font-weight:600;letter-spacing:0.5px;margin-bottom:0.4rem;
-}
-.ai-pulse::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--cyan);animation:blink 1.5s infinite}
+.ai-pulse{ display:inline-flex;align-items:center;gap:0.3rem;font-size:0.65rem; color:var(--cyan);background:var(--cyan2);padding:2px 6px;border-radius:4px; font-weight:600;margin-bottom:0.4rem; }
 
-/* ── CHART CARD ── */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.5rem}
-.card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700}
-.card-meta{font-size:0.72rem;color:var(--muted);margin-top:1px}
-.filter-group{display:flex;gap:4px}
-.f-btn{
-  padding:0.35rem 0.7rem;border-radius:6px;font-size:0.72rem;font-weight:600;
-  background:var(--bg3);border:1px solid var(--border);color:var(--muted2);
-  cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif;
+/* Clickable risk card */
+.ai-card-risk {
+  cursor: pointer;
+  transition: transform .2s var(--ease), border-color .2s;
 }
+.ai-card-risk:hover {
+  transform: translateY(-3px);
+  border-color: var(--red);
+}
+.ai-card-risk:hover::after {
+  content:'Anbara keç →';
+  position:absolute;
+  bottom:0.6rem;right:0.8rem;
+  font-size:0.65rem;color:var(--cyan);font-weight:600;font-family:'Inter',sans-serif;
+}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;}
+.card-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700}
+.card-meta{font-size:0.72rem;color:var(--muted);}
+.f-btn{ padding:0.35rem 0.7rem;border-radius:6px;font-size:0.72rem;font-weight:600; background:var(--bg3);border:1px solid var(--border);color:var(--muted2); cursor:pointer;transition:.15s; font-family:'Inter',sans-serif;}
 .f-btn:hover,.f-btn.active{background:var(--cyan2);border-color:var(--cyan);color:var(--cyan)}
 .chart-wrap{position:relative}
-#mainChart{width:100%!important;height:280px!important}
-
-/* ── TWO COL ── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-#donutChart{width:100%!important;height:220px!important}
 
 /* ── TABLE ── */
-.tbl-wrap{overflow-x:auto;border-radius:10px}
-table{width:100%;border-collapse:collapse}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-family:'Inter',sans-serif;}
 thead tr{background:var(--bg3)}
-th{padding:0.75rem 1rem;text-align:left;font-size:0.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap}
+th{padding:0.75rem 1rem;text-align:left;font-size:0.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;white-space:nowrap}
 td{padding:0.75rem 1rem;font-size:0.82rem;border-bottom:1px solid var(--border);white-space:nowrap}
-tbody tr{transition:.15s}
+tbody tr{transition: opacity 0.4s ease, transform 0.4s ease;}
 tbody tr:hover{background:var(--bg3)}
-tbody tr:last-child td{border-bottom:0}
 .code{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--cyan)}
-.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.68rem;font-weight:700;letter-spacing:0.3px}
-.badge::before{content:'';width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border-radius:6px;font-size:0.68rem;font-weight:700;}
+.badge::before{content:'';width:4px;height:4px;border-radius:50%;}
 .b-crit{background:var(--red2);color:var(--red)}.b-crit::before{background:var(--red)}
 .b-ok{background:var(--green2);color:var(--green)}.b-ok::before{background:var(--green)}
 .b-warn{background:var(--amber2);color:var(--amber)}.b-warn::before{background:var(--amber)}
+
+.supplier-chip{ display:inline-flex;align-items:center;gap:0.3rem; padding:0.2rem 0.5rem;background:var(--bg4);border-radius:4px; font-size:0.72rem;color:var(--muted2); }
+.delete-btn, .pay-btn{ background: none; border: 1px solid var(--red); color: var(--red); padding: 0.25rem 0.5rem; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: 600; transition: 0.2s; font-family: 'Inter', sans-serif;}
+.delete-btn:hover{ background: var(--red); color: #fff; }
+.pay-btn{ border-color: var(--green); color: var(--green); }
+.pay-btn:hover{ background: var(--green); color: #fff; }
+
+.row-paid { opacity: 0.2; transform: scale(0.98); pointer-events: none; }
+
 .tbl-actions{display:flex;gap:1rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap}
-.tbl-search{
-  padding:0.4rem 0.75rem 0.4rem 2.2rem;background:var(--bg3);
-  border:1px solid var(--border);border-radius:8px;color:var(--text);
-  font-family:'DM Sans',sans-serif;font-size:0.8rem;outline:none;
-  width:220px;transition:.2s;
-}
-.tbl-search:focus{border-color:var(--cyan)}
-.tbl-search-wrap{position:relative}
-.tbl-search-wrap .search-ic{font-size:0.75rem}
-.add-btn{
-  display:flex;align-items:center;gap:0.35rem;padding:0.4rem 0.9rem;
-  background:var(--cyan2);border:1px solid var(--cyan);border-radius:8px;
-  color:var(--cyan);font-size:0.78rem;font-weight:600;cursor:pointer;
-  transition:.2s;font-family:'DM Sans',sans-serif;margin-left:auto;
-}
+.tbl-search{ padding:0.4rem 1rem 0.4rem 2.2rem;background:var(--bg3); border:1px solid var(--border);border-radius:8px;color:var(--text); font-size:0.8rem;outline:none; width:220px; font-family:'Inter',sans-serif;}
+.add-btn, .export-btn { padding:0.4rem 0.9rem; border-radius:8px; font-size:0.78rem;font-weight:600;cursor:pointer;transition:.2s; font-family:'Inter',sans-serif;}
+.add-btn{ background:var(--cyan2);border:1px solid var(--cyan);color:var(--cyan); }
 .add-btn:hover{background:var(--cyan);color:var(--bg)}
-.supplier-chip{
-  display:inline-flex;align-items:center;gap:0.3rem;
-  padding:0.2rem 0.5rem;background:var(--bg4);border-radius:4px;
-  font-size:0.72rem;color:var(--muted2);
-}
+.export-btn{ background:var(--green2);border:1px solid var(--green);color:var(--green); margin-left:auto;}
+.export-btn:hover{background:var(--green);color:var(--bg)}
 .progress-cell{display:flex;align-items:center;gap:0.5rem}
-.mini-bar{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;min-width:60px}
+.mini-bar{flex:1;height:4px;background:var(--bg4);border-radius:2px;min-width:60px}
 .mini-fill{height:100%;border-radius:2px}
-.pct-label{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);width:28px;text-align:right}
 
-/* ── BUDGET ── */
-.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.slider-card{background:var(--bg3);border-radius:10px;padding:1.1rem}
-.slider-label{font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:0.75rem}
-.slider-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--cyan);margin-bottom:0.75rem}
-input[type=range]{
-  width:100%;height:4px;-webkit-appearance:none;appearance:none;
-  background:var(--bg4);border-radius:2px;outline:none;cursor:pointer;
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  cursor:pointer;transition:.15s;box-shadow:0 0 8px rgba(0,229,255,0.4);
-}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
-.metrics-panel{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
-.met{background:var(--bg3);border-radius:10px;padding:1rem;border-left:3px solid var(--border2)}
-.met-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.4rem}
-.met-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800}
-.roi-card{
-  grid-column:span 2;background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(123,94,167,0.08));
-  border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:1.1rem;
-  display:flex;align-items:center;gap:1.5rem;
-}
-.roi-big{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--cyan);line-height:1}
-.roi-label{font-size:0.72rem;color:var(--muted);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.5px}
-.roi-note{font-size:0.8rem;color:var(--muted2)}
-.breakdown{margin-top:1rem}
-.breakdown-title{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.6rem}
-.breakdown-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
-.breakdown-name{font-size:0.8rem;display:flex;align-items:center;gap:0.5rem}
-.breakdown-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.breakdown-pct{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted2)}
-.breakdown-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin:0 0.75rem}
-.breakdown-bar-fill{height:100%;border-radius:2px;transition:.3s}
-
-/* ── DISCOUNT ── */
-.disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.disc-controls{display:flex;flex-direction:column;gap:0.75rem}
-.disc-select{
-  width:100%;padding:0.55rem 0.75rem;background:var(--bg4);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.83rem;outline:none;
-  cursor:pointer;transition:.2s;
-}
-.disc-select:focus{border-color:var(--cyan)}
-.disc-pct-display{
-  display:flex;align-items:flex-end;gap:0.5rem;padding:1rem;
-  background:linear-gradient(135deg,var(--cyan3),var(--violet2));
-  border:1px solid rgba(0,229,255,0.2);border-radius:10px;
-}
-.disc-big{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:var(--cyan);line-height:1}
-.disc-unit{font-size:1rem;color:var(--muted);margin-bottom:0.5rem}
-.disc-results{display:grid;gap:0.75rem}
-.disc-met{
-  background:var(--bg3);border-radius:10px;padding:1rem;
-  border-left:3px solid var(--border2);transition:.2s;
-}
-.disc-met-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:0.35rem}
-.disc-met-val{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800}
-.scenario-strip{
-  margin-top:1rem;padding:0.75rem 1rem;
-  background:var(--bg3);border-radius:8px;font-size:0.78rem;color:var(--muted2);
-  border-left:3px solid var(--amber);
-}
-.scenario-strip strong{color:var(--amber)}
-
-/* ── KANBAN ── */
+/* ── KANBAN & RECOMMENDATIONS ── */
 .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.kb-col{background:var(--bg3);border-radius:12px;padding:0.9rem}
+.kb-col{background:var(--bg3);border-radius:12px;padding:0.9rem; min-height: 400px;}
 .kb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.85rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
 .kb-title{font-size:0.8rem;font-weight:700;display:flex;align-items:center;gap:0.5rem}
-.kb-cnt{
-  font-family:'DM Mono',monospace;font-size:0.65rem;
-  background:var(--bg2);border:1px solid var(--border);
-  padding:1px 6px;border-radius:4px;color:var(--muted2);
-}
-.kb-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:9px;
-  padding:0.85rem;margin-bottom:0.5rem;cursor:grab;transition:.2s var(--ease);
-}
+.kb-cnt{ font-family:'DM Mono',monospace;font-size:0.65rem; background:var(--bg2);border:1px solid var(--border); padding:1px 6px;border-radius:4px;color:var(--muted2); }
+.kb-card{ background:var(--bg2);border:1px solid var(--border);border-radius:9px; padding:0.85rem;margin-bottom:0.5rem;cursor:grab;transition:transform .2s, border .2s, box-shadow .2s; }
 .kb-card:hover{transform:translateY(-2px);border-color:var(--border2);box-shadow:var(--shadow2)}
-.kb-card:last-child{margin-bottom:0}
+.kb-card.dragging { opacity:0.5; border: 2px dashed var(--cyan); transform:scale(0.95); box-shadow:none;}
 .kb-card-title{font-size:0.8rem;font-weight:600;margin-bottom:0.3rem}
 .kb-card-desc{font-size:0.73rem;color:var(--muted);margin-bottom:0.6rem;line-height:1.4}
 .kb-card-foot{display:flex;justify-content:space-between;align-items:center}
+.kb-time{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)}
+
 .kb-tag{font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:4px}
 .kb-tag-h{background:var(--red2);color:var(--red)}
 .kb-tag-m{background:var(--amber2);color:var(--amber)}
 .kb-tag-l{background:var(--green2);color:var(--green)}
-.kb-time{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted)}
-.kb-assign{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;color:#fff}
 
-/* ── RECOMMENDATIONS ── */
-.rec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
-.rec-card{
-  background:var(--bg3);border:1px dashed var(--border2);border-radius:12px;
-  padding:1.25rem;text-align:center;cursor:pointer;transition:.25s var(--ease);
-}
+.rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+.rec-card{ background:var(--bg2);border:1px solid var(--border);border-radius:12px; padding:1.25rem;text-align:center; transition:.25s; }
 .rec-card:hover{border-color:var(--cyan);border-style:solid;transform:translateY(-2px)}
-.rec-ic{font-size:2rem;margin-bottom:0.6rem}
-.rec-name{font-size:0.85rem;font-weight:700;margin-bottom:0.2rem}
-.rec-desc{font-size:0.72rem;color:var(--muted);margin-bottom:0.6rem}
-.rec-pct{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--cyan);font-weight:500}
-.rec-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:0.5rem;overflow:hidden}
-.rec-bar-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet))}
-.assoc-card{background:var(--bg3);border-radius:12px;padding:1.25rem;margin-bottom:1rem}
-.assoc-title{font-size:0.85rem;font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem}
-.assoc-row{display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid var(--border)}
-.assoc-row:last-child{border-bottom:0}
-.assoc-pair{display:flex;align-items:center;gap:0.4rem;flex:1;font-size:0.8rem}
-.assoc-arrow{color:var(--cyan);font-family:'DM Mono',monospace;font-size:0.75rem}
-.assoc-conf{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--cyan)}
-.assoc-lift{font-size:0.7rem;color:var(--muted)}
+.rec-name{font-size:0.95rem;font-weight:700;margin-top:0.4rem;}
+.rec-desc{font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem}
+.rec-pct{font-family:'DM Mono',monospace;font-size:0.85rem;font-weight:600}
 
-/* ── ANALYTICS ── */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-#lineChart{width:100%!important;height:200px!important}
-#barChart2{width:100%!important;height:200px!important}
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-bottom:1rem}
-.stat-box{background:var(--bg3);border-radius:10px;padding:0.9rem;text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:0.2rem}
-.stat-lbl{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
-
-/* ── SETTINGS ── */
-.settings-sections{display:grid;gap:1rem}
-.sett-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.sett-head{padding:0.85rem 1.1rem;background:var(--bg3);border-bottom:1px solid var(--border);font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
-.sett-row{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1.1rem;border-bottom:1px solid var(--border);transition:.15s}
-.sett-row:last-child{border-bottom:0}
-.sett-row:hover{background:var(--bg3)}
-.sett-key{font-size:0.82rem;font-weight:500}
-.sett-desc{font-size:0.72rem;color:var(--muted);margin-top:1px}
-.sett-val{font-size:0.8rem;color:var(--cyan);font-weight:600;text-align:right}
-.toggle{width:36px;height:20px;border-radius:10px;background:var(--green);cursor:pointer;position:relative;flex-shrink:0;transition:.2s}
-.toggle::after{content:'';position:absolute;top:2px;left:16px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
-.toggle.off{background:var(--bg4)}
-.toggle.off::after{left:2px}
-
-/* ── AI PANEL ── */
-.ai-fab{
-  position:fixed;right:1.25rem;bottom:1.25rem;width:52px;height:52px;
-  border-radius:50%;border:0;cursor:pointer;z-index:500;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
-  color:#fff;font-size:1.2rem;box-shadow:0 4px 20px rgba(0,229,255,0.35);
-  transition:.25s var(--ease);
-}
-.ai-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,229,255,0.5)}
-.ai-chat{
-  position:fixed;right:85px;bottom:1.25rem;width:320px;
-  background:var(--bg2);border:1px solid var(--border2);border-radius:14px;
-  box-shadow:var(--shadow);z-index:500;overflow:hidden;
-  transform:scale(0.95) translateY(8px);opacity:0;pointer-events:none;transition:.25s var(--ease);
-}
+/* ── AI CHAT ── */
+.ai-fab{ position:fixed;right:1.25rem;bottom:1.25rem;width:52px;height:52px; border-radius:50%;border:0;cursor:pointer;z-index:500; background:linear-gradient(135deg,var(--cyan),var(--violet)); color:#fff;font-size:1.2rem;box-shadow:0 4px 20px rgba(0,229,255,0.35); }
+.ai-chat{ position:fixed;right:85px;bottom:1.25rem;width:320px; background:var(--bg2);border:1px solid var(--border2);border-radius:14px; box-shadow:var(--shadow);z-index:500; transform:scale(0.95) translateY(8px);opacity:0;pointer-events:none;transition:.25s; }
 .ai-chat.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
-.ai-chat-head{
-  padding:0.75rem 0.9rem;background:var(--bg3);border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.ai-chat-title{font-size:0.83rem;font-weight:700;display:flex;align-items:center;gap:0.4rem}
-.ai-online{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
-.ai-x{background:0;border:0;color:var(--muted);cursor:pointer;font-size:1rem;line-height:1}
-.ai-msgs{max-height:220px;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem}
-.ai-msg{padding:0.55rem 0.7rem;border-radius:9px;font-size:0.78rem;line-height:1.5;max-width:90%}
-.ai-msg.bot{background:var(--bg3);border:1px solid var(--border);align-self:flex-start}
-.ai-msg.user{background:var(--cyan2);border:1px solid rgba(0,229,255,0.2);align-self:flex-end;text-align:right}
-.ai-typing{display:flex;gap:3px;align-items:center;padding:0.4rem 0.6rem}
-.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:bounce .9s infinite}
-.ai-dot:nth-child(2){animation-delay:.15s}
-.ai-dot:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.ai-inp-row{border-top:1px solid var(--border);padding:0.6rem;display:flex;gap:0.4rem}
-.ai-inp{
-  flex:1;padding:0.45rem 0.65rem;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;outline:none;
-}
-.ai-inp:focus{border-color:var(--cyan)}
-.ai-send{
-  padding:0.45rem 0.75rem;background:var(--cyan2);border:1px solid var(--cyan);
-  border-radius:8px;color:var(--cyan);font-size:0.75rem;font-weight:700;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:.15s;
-}
-.ai-send:hover{background:var(--cyan);color:var(--bg)}
-.ai-suggestions{display:flex;flex-wrap:wrap;gap:0.3rem;padding:0 0.75rem 0.5rem}
-.ai-sug{
-  font-size:0.68rem;padding:0.25rem 0.5rem;background:var(--bg3);
-  border:1px solid var(--border);border-radius:5px;color:var(--muted2);
-  cursor:pointer;transition:.15s;
-}
-.ai-sug:hover{border-color:var(--cyan);color:var(--cyan)}
+.ai-chat-head{ padding:0.75rem 0.9rem;background:var(--bg3);border-bottom:1px solid var(--border); display:flex;justify-content:space-between;align-items:center; }
+.ai-msgs{max-height:220px;overflow-y:auto;padding:0.75rem;display:flex;flex-direction:column;gap:0.5rem;scroll-behavior: smooth;}
+.ai-msg{padding:0.55rem 0.7rem;border-radius:9px;font-size:0.78rem;max-width:90%; line-height: 1.4; word-break: break-word;}
+.ai-msg.bot{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;color:var(--text)}
+.ai-msg.user{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#fff;align-self:flex-end}
 
-/* ── RESPONSIVE ── */
-@media(max-width:1100px){
-  .kpi-row{grid-template-columns:repeat(2,1fr)}
-  .ai-row{grid-template-columns:repeat(2,1fr)}
-  .two-col,.budget-grid,.disc-grid,.analytics-grid{grid-template-columns:1fr}
-  .rec-grid{grid-template-columns:repeat(2,1fr)}
-  .kanban{grid-template-columns:1fr}
-}
-@media(max-width:768px){
-  :root{--sidebar:0px}
-  .sidebar{transform:translateX(-256px)}
-  .sidebar.mobile-open{transform:translateX(0);width:256px}
-  .header{left:0}
-  .main{margin-left:0}
-  .kpi-row{grid-template-columns:1fr 1fr}
-  .ai-chat{right:0.75rem;left:0.75rem;width:auto;bottom:80px}
-}
-@media(max-width:500px){
-  .kpi-row,.ai-row,.rec-grid{grid-template-columns:1fr}
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+@media(max-width:1100px){ .kpi-row, .rec-grid{grid-template-columns:repeat(2,1fr)} .kanban{grid-template-columns:1fr} }
+@media(max-width:768px){ .sidebar{transform:translateX(-256px)} .header{left:0} .main{margin-left:0} .kpi-row{grid-template-columns:1fr 1fr} }
 </style>
 </head>
 <body data-theme="dark">
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="logo-area">
     <div class="logo-wrap">
       <div class="logo-mark">SS</div>
-      <div>
-        <div class="logo-name">SmartStock</div>
-      </div>
+      <div><div class="logo-name">SmartStock</div></div>
     </div>
-    <div class="logo-sub">AI-Powered Inventory Management v2.4</div>
+    <div class="logo-sub">AI-Powered Inventory v2.4</div>
     <div class="sidebar-status">
-      <div class="status-dot"></div>
-      <span class="status-txt">Sistem Aktiv</span>
+      <div class="status-dot"></div><span class="status-txt">Sistem Aktiv</span>
     </div>
   </div>
 
@@ -535,202 +290,168 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     <div class="nav-label">Əsas</div>
     <ul style="list-style:none">
       <li class="nav-item"><a class="nav-link active" data-page="dashboard"><span class="nav-icon-wrap">◈</span>İdarəetmə Paneli</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="inventory"><span class="nav-icon-wrap">▦</span>Anbar<span class="nav-badge">5</span></a></li>
+      <li class="nav-item"><a class="nav-link" data-page="inventory"><span class="nav-icon-wrap">▦</span>Anbar</a></li>
       <li class="nav-item"><a class="nav-link" data-page="recommendations"><span class="nav-icon-wrap">◎</span>Tövsiyələr</a></li>
+      <li class="nav-item"><a class="nav-link" data-page="debts"><span class="nav-icon-wrap">₼</span>Borclar Hesabatı</a></li>
     </ul>
     <div class="nav-label">Alətlər</div>
     <ul style="list-style:none">
-      <li class="nav-item"><a class="nav-link" data-page="budget"><span class="nav-icon-wrap">◇</span>Büdcə Optimizer</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="discount"><span class="nav-icon-wrap">◈</span>Endirim Sim.</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="tasks"><span class="nav-icon-wrap">≡</span>Tapşırıqlar<span class="nav-badge">8</span></a></li>
-    </ul>
-    <div class="nav-label">Analiz</div>
-    <ul style="list-style:none">
-      <li class="nav-item"><a class="nav-link" data-page="analytics"><span class="nav-icon-wrap">◉</span>Analitika</a></li>
-      <li class="nav-item"><a class="nav-link" data-page="settings"><span class="nav-icon-wrap">◌</span>Tənzimləmələr</a></li>
+      <li class="nav-item"><a class="nav-link" data-page="tasks"><span class="nav-icon-wrap">≡</span>Tapşırıqlar<span class="nav-badge" id="kbGlobalCnt">5</span></a></li>
     </ul>
   </div>
 
-  <div class="sidebar-footer">
-    <div class="user-avatar">ER</div>
+  <div class="sidebar-footer" id="sidebarFooter" style="display:none;">
+    <div class="user-avatar" id="sbUserAvatar">U</div>
     <div class="user-info">
-      <div class="user-name">Elnur Rəhimov</div>
-      <div class="user-role">Anbar Meneceri · Bakı</div>
+      <div class="user-name" id="sbUserName">İstifadəçi</div>
+      <div class="user-role" id="sbUserRole">Admin</div>
     </div>
   </div>
 </aside>
 
-<!-- HEADER -->
 <header class="header">
-  <div class="search-wrap">
-    <span class="search-ic">⌕</span>
-    <input class="search-inp" id="searchInp" placeholder="Məhsul kodu, ad, təchizatçı..." autocomplete="off">
-    <div class="search-drop" id="searchDrop"></div>
-  </div>
   <div class="hdr-actions">
-    <button class="hdr-btn" id="themeBtn">◑ &nbsp;Mövzu</button>
-    <div class="notif-btn" title="Bildirişlər">🔔<div class="notif-dot"></div></div>
-    <div class="avatar-btn">ER</div>
+    <button class="hdr-btn" id="optimalRouteBtn">🗺️ Optimal Rota</button>
+    <button class="hdr-btn" id="themeBtn">◑</button>
+    
+    <div class="menu-wrap">
+      <div class="notif-btn" id="notifBtn">
+        🔔
+        <div class="notif-dot" id="notifDot"></div>
+        <div class="notif-count-badge" id="notifCountBadge" style="display:none;">0</div>
+      </div>
+      <div class="drop-menu" id="notifDrop">
+        <div class="drop-head" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>Kritik Stok Xəbərdarlıqları</span>
+          <span id="notifDropCount" style="font-size:0.7rem;color:var(--red);font-family:'DM Mono',monospace;font-weight:700;"></span>
+        </div>
+        <div id="notifList">
+          <div class="notif-empty">Məlumat yüklənir...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth / Profile Area -->
+    <div id="authActions">
+      <button class="hdr-btn" id="openAuthBtn" style="border-color:var(--cyan); color:var(--cyan);">👤 Qeydiyyat / Giriş</button>
+    </div>
+    
+    <div class="menu-wrap" id="userActions" style="display:none;">
+      <div class="avatar-btn" id="profileBtn">U</div>
+      <div class="drop-menu" id="profileDrop">
+        <div class="drop-head">
+          <div style="font-weight:800;font-size:1rem;" id="uiUsername">İstifadəçi</div>
+          <div style="font-size:0.7rem;color:var(--muted);" id="uiEmail">email@domain.com</div>
+        </div>
+        <div class="drop-item" id="settingsBtn" style="color:var(--cyan)">⚙️ Tənzimləmələr</div>
+        <div class="drop-item" id="logoutBtn" style="color:var(--red); border-top:1px solid var(--border)">🚪 Sistemdən Çıxış</div>
+      </div>
+    </div>
+
   </div>
 </header>
 
-<!-- MAIN -->
 <main class="main">
 
-  <!-- ═══════════════ DASHBOARD ═══════════════ -->
+  <!-- DASHBOARD -->
   <div class="page active" id="page-dashboard">
     <div class="page-head">
       <div class="page-title">İdarəetmə <span>Paneli</span></div>
-      <div class="page-sub">Son yenilənmə: 03 May 2026, 14:22 · Bütün filiallara ümumi baxış</div>
+      <div class="page-sub">Son yenilənmə: 12 May 2026 · Ümumi baxış</div>
     </div>
 
     <div class="kpi-row">
       <div class="kpi">
-        <div class="kpi-top">
-          <div class="kpi-label">Aylıq Gəlir</div>
-          <div class="kpi-ic" style="background:var(--green2);color:var(--green)">₼</div>
-        </div>
+        <div class="kpi-top"><div class="kpi-label">Aylıq Gəlir</div><div class="kpi-ic" style="background:var(--green2);color:var(--green)">₼</div></div>
         <div class="kpi-val">₼387.4K</div>
         <div class="kpi-mono"><span class="tag-up">↑ 14.2%</span><span class="tag-dim">ötən aya</span></div>
         <div class="kpi-bar"><div class="kpi-bar-fill" style="width:72%"></div></div>
       </div>
       <div class="kpi">
-        <div class="kpi-top">
-          <div class="kpi-label">Anbar Dəyəri</div>
-          <div class="kpi-ic" style="background:var(--cyan2);color:var(--cyan)">▦</div>
-        </div>
+        <div class="kpi-top"><div class="kpi-label">Anbar Dəyəri</div><div class="kpi-ic" style="background:var(--cyan2);color:var(--cyan)">▦</div></div>
         <div class="kpi-val">₼214.8K</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 6.8%</span><span class="tag-dim">7.240 SKU aktiv</span></div>
+        <div class="kpi-mono"><span class="tag-up">↑ 6.8%</span><span class="tag-dim">7.240 SKU</span></div>
         <div class="kpi-bar"><div class="kpi-bar-fill" style="width:58%"></div></div>
       </div>
       <div class="kpi">
         <div class="kpi-top">
-          <div class="kpi-label">Zay Olma Riski</div>
-          <div class="kpi-ic" style="background:var(--red2);color:var(--red)">⚠</div>
+          <div class="kpi-label">Aktiv Borclar</div>
+          <div class="kpi-ic" style="background:var(--red2);color:var(--red)">₼</div>
         </div>
-        <div class="kpi-val">₼18.6K</div>
-        <div class="kpi-mono"><span class="tag-dn">↓ 22.1%</span><span class="tag-dim">68 SKU risk</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:28%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div>
+        <div class="kpi-val" id="dashTotalDebtsVal">₼0.00</div>
+        <div class="kpi-mono"><span class="tag-dn">Dinamika</span><span class="tag-dim">Təchizatçılara</span></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:42%;background:var(--red)"></div></div>
       </div>
       <div class="kpi">
-        <div class="kpi-top">
-          <div class="kpi-label">VIP Sifarişlər</div>
-          <div class="kpi-ic" style="background:var(--violet2);color:var(--violet)">★</div>
-        </div>
+        <div class="kpi-top"><div class="kpi-label">VIP Sifarişlər</div><div class="kpi-ic" style="background:var(--violet2);color:var(--violet)">★</div></div>
         <div class="kpi-val">147</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 31.4%</span><span class="tag-dim">₼92.4K dəyər</span></div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:85%;background:linear-gradient(90deg,var(--violet),#c084fc)"></div></div>
+        <div class="kpi-mono"><span class="tag-up">↑ 31.4%</span></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:85%;background:var(--violet)"></div></div>
       </div>
     </div>
 
     <div class="ai-row">
       <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--cyan),#0ea5e9)">
-        <div class="ai-card-head"><div class="ai-card-label">AI Proqnoz</div><div class="ai-card-ic">📈</div></div>
+        <div class="ai-card-head"><div class="ai-card-label">Proqnoz</div></div>
         <div class="ai-pulse">CANLI</div>
         <div class="ai-card-val">+22% Tələb Artımı</div>
-        <div class="ai-card-note">Növbəti 14 gündə Ramazan öncəsi kofe, çay və şirniyyat kateqoriyasında tələb 22% artacaq. Nərimanov filialı üçün ehtiyat tövsiyə edilir.</div>
+        <div class="ai-card-note">Növbəti 14 gündə kofe kateqoriyasında tələb artacaq.</div>
       </div>
-      <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--red),var(--amber))">
-        <div class="ai-card-head"><div class="ai-card-label">AI Risk Xəbərdarlığı</div><div class="ai-card-ic">⚠️</div></div>
-        <div class="ai-pulse" style="color:var(--red);background:var(--red2)">KRİTİK</div>
-        <div class="ai-card-val">7 SKU · 48 saat</div>
-        <div class="ai-card-note">PRD-001, PRD-005, PRD-019 üçün stok kritik həddə çatıb. Beverage Co. təchizatçısından 48 saat içində minimum 200 ədəd sifariş tələb olunur.</div>
+
+      <!-- RISK CARD — synced with live inventory -->
+      <div class="ai-card ai-card-risk" id="dashRiskCard" style="--grad-top:linear-gradient(90deg,var(--red),var(--amber))" onclick="goToInventoryFiltered()">
+        <div class="ai-card-head"><div class="ai-card-label">Risk Xəbərdarlığı</div></div>
+        <div class="ai-pulse" style="color:var(--red);background:var(--red2)" id="dashRiskPulse">KRİTİK</div>
+        <div class="ai-card-val" id="dashRiskVal">Yüklənir...</div>
+        <div class="ai-card-note" id="dashRiskNote">Anbar ilə sinxronizasiya gözlənilir.</div>
       </div>
+
       <div class="ai-card" style="--grad-top:linear-gradient(90deg,var(--green),#059669)">
-        <div class="ai-card-head"><div class="ai-card-label">AI Endirim Tövsiyəsi</div><div class="ai-card-ic">🏷️</div></div>
+        <div class="ai-card-head"><div class="ai-card-label">Endirim Tövsiyəsi</div></div>
         <div class="ai-pulse" style="color:var(--green);background:var(--green2)">OPTİMAL</div>
-        <div class="ai-card-val">12–15% · Süd Kateqoriyası</div>
-        <div class="ai-card-note">567 ədəd Tam Yağlı Süd üçün mərhələli kampaniya: ilk 3 gün 12%, sonra 15%. Gözlənilən dövriyyə sürəti: 11 gündən 7 günə.</div>
+        <div class="ai-card-val">12–15% · Süd</div>
+        <div class="ai-card-note">Tam Yağlı Süd üçün mərhələli kampaniya tövsiyə edilir.</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">Filialların Satış Müqayisəsi</div>
-          <div class="card-meta">6 filial · Bakı Metropolitan Area</div>
-        </div>
-        <div class="filter-group">
-          <button class="f-btn active" data-period="month">Bu Ay</button>
-          <button class="f-btn" data-period="quarter">Rüblük</button>
-          <button class="f-btn" data-period="year">İllik</button>
-        </div>
-      </div>
-      <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
-    </div>
-
-    <div class="two-col">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head">
-          <div>
-            <div class="card-title">Son 7 Gün · Satış Trendi</div>
-            <div class="card-meta">Bütün filiallar · Gündəlik</div>
-          </div>
-        </div>
-        <canvas id="lineChart"></canvas>
-      </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head">
-          <div>
-            <div class="card-title">Son İstifadə Tarixi Analizi</div>
-            <div class="card-meta">458 aktiv məhsul üzrə</div>
-          </div>
-        </div>
-        <canvas id="donutChart"></canvas>
-      </div>
+      <div class="card-head"><div><div class="card-title">Filialların Satış Müqayisəsi</div></div></div>
+      <div class="chart-wrap" style="height:280px"><canvas id="mainChart"></canvas></div>
     </div>
   </div>
 
-  <!-- ═══════════════ INVENTORY ═══════════════ -->
+  <!-- INVENTORY -->
   <div class="page" id="page-inventory">
     <div class="page-head">
       <div class="page-title">Anbar <span>Vəziyyəti</span></div>
-      <div class="page-sub">7.240 aktiv SKU · 6 filial · Real vaxt məlumatı</div>
     </div>
-
-    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Ümumi SKU</div><div class="kpi-ic" style="background:var(--cyan2);color:var(--cyan)">▦</div></div>
-        <div class="kpi-val">7,240</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 3.1%</span><span class="tag-dim">həftəlik</span></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Kritik Stok</div><div class="kpi-ic" style="background:var(--red2);color:var(--red)">!</div></div>
-        <div class="kpi-val">68</div>
-        <div class="kpi-mono"><span class="tag-dn">↑ 5 yeni</span><span class="tag-dim">bu gün</span></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Dövriyyə Sürəti</div><div class="kpi-ic" style="background:var(--green2);color:var(--green)">↻</div></div>
-        <div class="kpi-val">8.3x</div>
-        <div class="kpi-mono"><span class="tag-up">↑ 0.7x</span><span class="tag-dim">aylıq</span></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-top"><div class="kpi-label">Uyğunsuzluq</div><div class="kpi-ic" style="background:var(--amber2);color:var(--amber)">≠</div></div>
-        <div class="kpi-val">12</div>
-        <div class="kpi-mono"><span class="tag-dn">↓ 3</span><span class="tag-dim">dünənə nisbətən</span></div>
-      </div>
-    </div>
-
     <div class="card">
       <div class="tbl-actions">
-        <div class="tbl-search-wrap" style="position:relative">
-          <span class="search-ic" style="position:absolute;left:0.6rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.75rem">⌕</span>
-          <input class="tbl-search" id="tblSearch" placeholder="Axtar..." style="padding-left:2rem">
+        <div style="position:relative;">
+          <span class="search-ic" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.75rem;pointer-events:none">⌕</span>
+          <input class="tbl-search" id="tblSearch" placeholder="Axtar...">
         </div>
-        <select class="disc-select" style="width:auto;padding:0.38rem 0.75rem;font-size:0.78rem" id="statusFilter">
-          <option value="">Bütün statuslar</option>
+        
+        <select style="padding:0.4rem; border-radius:6px; background:var(--bg3); color:var(--text); border:1px solid var(--border); font-family: 'Inter', sans-serif;" id="catFilter">
+          <option value="">Bütün Kateqoriyalar</option>
+        </select>
+
+        <select style="padding:0.4rem; border-radius:6px; background:var(--bg3); color:var(--text); border:1px solid var(--border); font-family: 'Inter', sans-serif;" id="statusFilter">
+          <option value="">Bütün Statuslar</option>
           <option value="Kritik">Kritik</option>
           <option value="Normal">Normal</option>
-          <option value="Çox">Çox</option>
+          <option value="Yaxşı">Yaxşı</option>
         </select>
-        <button class="add-btn" onclick="alert('Yeni məhsul əlavə et')">+ Məhsul Əlavə Et</button>
+        
+        <button class="export-btn" id="exportBtn">⬇️ Excel-ə İxrac</button>
+        <button class="add-btn" id="openAddModalBtn">+ Məhsul Əlavə Et</button>
       </div>
       <div class="tbl-wrap">
         <table id="invTable">
           <thead>
             <tr>
               <th>Kod</th><th>Məhsul</th><th>Kateqoriya</th><th>Stok</th><th>Min.Hədd</th>
-              <th>Stok Dolma</th><th>Status</th><th>Qiymət</th><th>Təchizatçı</th><th>Yenilənib</th>
+              <th>Dolma %</th><th>Status</th><th>Qiymət</th><th>Təchizatçı</th><th>Əməliyyat</th>
             </tr>
           </thead>
           <tbody id="invBody"></tbody>
@@ -739,801 +460,1267 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
   </div>
 
-  <!-- ═══════════════ RECOMMENDATIONS ═══════════════ -->
+  <!-- RECOMMENDATIONS -->
   <div class="page" id="page-recommendations">
     <div class="page-head">
-      <div class="page-title">AI <span>Tövsiyələr</span></div>
-      <div class="page-sub">Apriori alqoritmi əsaslı birlikdə alış analizi · Son 90 gün · 28,400 tranzaksiya</div>
+      <div class="page-title">Satınalma və <span>Tövsiyə Paneli</span></div>
+      <div class="page-sub">Təchizatçı dəyişiklikləri və növbəti sifariş strategiyasının təyini üçün analitika</div>
     </div>
-
-    <div class="rec-grid">
-      <div class="rec-card">
-        <div class="rec-ic">☕</div>
-        <div class="rec-name">Kofe Dənələri</div>
-        <div class="rec-desc">Ən çox satılan məhsul</div>
-        <div class="rec-pct">Dəstək: 34.2%</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:85%"></div></div>
+    
+    <div class="rec-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="rec-card" style="border-left: 4px solid var(--green); text-align: center; background: var(--bg2); border-style: solid; border-color: var(--border);">
+        <div style="font-size:1.8rem">📈</div>
+        <div class="rec-name">Ən Çox Satılan</div>
+        <div class="rec-desc">Premium Kofe Dənələri</div>
+        <div class="rec-pct" style="color:var(--green)">+42% Tələb / Sifarişi Artır</div>
       </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍫</div>
-        <div class="rec-name">Şokolad</div>
-        <div class="rec-desc">Kofe ilə 85% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 2.48x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:85%"></div></div>
+      <div class="rec-card" style="border-left: 4px solid var(--amber); text-align: center; background: var(--bg2); border-style: solid; border-color: var(--border);">
+        <div style="font-size:1.8rem">📦</div>
+        <div class="rec-name">Əldə Qalan</div>
+        <div class="rec-desc">Korporativ Promo Broşürlər</div>
+        <div class="rec-pct" style="color:var(--amber)">94 Gün Hərəkətsiz / Sifarişi Azalt</div>
       </div>
-      <div class="rec-card">
-        <div class="rec-ic">🥛</div>
-        <div class="rec-name">Süd</div>
-        <div class="rec-desc">Çay ilə 72% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.93x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:72%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍪</div>
-        <div class="rec-name">Peçenye</div>
-        <div class="rec-desc">Kofe ilə 68% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.72x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:68%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🧀</div>
-        <div class="rec-name">Pendir</div>
-        <div class="rec-desc">Çörək ilə 61% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.59x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:61%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🍳</div>
-        <div class="rec-name">Yumurta</div>
-        <div class="rec-desc">Süd ilə 58% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.44x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:58%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">🧴</div>
-        <div class="rec-name">Zeytun Yağı</div>
-        <div class="rec-desc">Makaron ilə 52% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.38x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:52%"></div></div>
-      </div>
-      <div class="rec-card">
-        <div class="rec-ic">⚡</div>
-        <div class="rec-name">Enerji İçkisi</div>
-        <div class="rec-desc">Çips ilə 47% birlikdə alınır</div>
-        <div class="rec-pct">Lift: 1.28x</div>
-        <div class="rec-bar"><div class="rec-bar-fill" style="width:47%"></div></div>
+      <div class="rec-card" style="border-left: 4px solid var(--red); text-align: center; background: var(--bg2); border-style: solid; border-color: var(--border);">
+        <div style="font-size:1.8rem">🔄</div>
+        <div class="rec-name">Geri Qaytarılan </div>
+        <div class="rec-desc">Mühərrik Yağı 5W-30</div>
+        <div class="rec-pct" style="color:var(--red)">14% Zay Nisbəti / Təchizatçını Dəyiş</div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><div class="card-title">Güclü Birlikdə Alış Qaydaları (Association Rules)</div></div>
+      <div class="card-head">
+        <div class="card-title">🚨 Təchizatçı Risk və Sifariş Optimizasiyası Qaydaları</div>
+      </div>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th>Əgər Alınsa</th><th>Onda Alınır</th><th>Dəstək</th><th>Etibar</th><th>Lift</th><th>Tövsiyə</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Məhsul</th>
+              <th>Cari Təchizatçı</th>
+              <th>Performans Metriki</th>
+              <th>Təsir Statusu</th>
+              <th>AI Strateji Tövsiyə</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td>Kofe Dənələri</td><td>Şokolad + Peçenye</td><td><span class="code">34.2%</span></td><td><span class="code">85.4%</span></td><td><span style="color:var(--green);font-family:'DM Mono',monospace">2.48x</span></td><td><span class="badge b-ok">Birlikdə yerləşdir</span></td></tr>
-            <tr><td>Çay Paketləri</td><td>Süd + Şəkər</td><td><span class="code">28.7%</span></td><td><span class="code">78.3%</span></td><td><span style="color:var(--green);font-family:'DM Mono',monospace">2.14x</span></td><td><span class="badge b-ok">Paket kampaniyası</span></td></tr>
-            <tr><td>Makaron</td><td>Tomat Pasty + Yağ</td><td><span class="code">22.1%</span></td><td><span class="code">71.6%</span></td><td><span style="color:var(--cyan);font-family:'DM Mono',monospace">1.93x</span></td><td><span class="badge b-ok">Combo endirimi</span></td></tr>
-            <tr><td>Çörək</td><td>Kərə Yağı + Pendir</td><td><span class="code">19.4%</span></td><td><span class="code">68.9%</span></td><td><span style="color:var(--cyan);font-family:'DM Mono',monospace">1.77x</span></td><td><span class="badge b-warn">Yaxın rəfdə saxla</span></td></tr>
-            <tr><td>Enerji İçkisi</td><td>Protein Bar + Çips</td><td><span class="code">12.8%</span></td><td><span class="code">61.2%</span></td><td><span style="color:var(--amber);font-family:'DM Mono',monospace">1.44x</span></td><td><span class="badge b-warn">Test et</span></td></tr>
+            <tr>
+              <td><strong>Mühərrik Yağı 5W-30</strong></td>
+              <td><span class="supplier-chip">AutoParts</span></td>
+              <td><span style="color:var(--red); font-weight:bold;">14% Geri Qaytarılma</span></td>
+              <td><span class="badge b-crit">Yüksək Maliyyə İtkisi</span></td>
+              <td><strong style="color:var(--red)">Təchizatçını Dəyiş (Defektli Mal)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Korporativ Broşürlər</strong></td>
+              <td><span class="supplier-chip">PrintBaku</span></td>
+              <td><span style="color:var(--amber); font-weight:bold;">Anbarda Overstock (156 ədəd)</span></td>
+              <td><span class="badge b-warn">Kapital Bloklanması</span></td>
+              <td><span style="color:var(--amber)">Növbəti sifarişi 50% azalt və ya dayandır</span></td>
+            </tr>
+            <tr>
+              <td><strong>Premium Kofe Dənələri</strong></td>
+              <td><span class="supplier-chip">Beverage Co.</span></td>
+              <td><span style="color:var(--green); font-weight:bold;">Stok Dövrü: 4 gün</span></td>
+              <td><span class="badge b-ok">Yüksək Marja & Satış</span></td>
+              <td><strong style="color:var(--green)">Topdan Alış Müqaviləsi et (Sifariş Sayını Artır)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Uşaq Kaşası</strong></td>
+              <td><span class="supplier-chip">NutriBaku</span></td>
+              <td><span style="color:var(--red); font-weight:bold;">Gecikmə: 5 gün logistika</span></td>
+              <td><span class="badge b-crit">Kritik Stok Boşluğu</span></td>
+              <td><strong style="color:var(--cyan)">Lokal alternativ təchizatçıya keçid et</strong></td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ BUDGET ═══════════════ -->
-  <div class="page" id="page-budget">
+  <!-- DEBTS PAGE -->
+  <div class="page" id="page-debts">
     <div class="page-head">
-      <div class="page-title">Büdcə <span>Optimizer</span></div>
-      <div class="page-sub">Knapsack alqoritmi · Optimal alış planlaması · 7 kateqoriya üzrə</div>
+      <div class="page-title">Borclar <span>Hesabatı</span></div>
+      <div class="page-sub">Anbardakı malların dəyərinə görə təchizatçılar üzrə borc və ödəniş balansı</div>
     </div>
+
+    <div class="kpi-row" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 1.5rem; max-width: 660px;">
+      <div class="kpi">
+        <div class="kpi-top">
+          <div class="kpi-label">Ümumi Borc Məbləği</div>
+          <div class="kpi-ic" style="background:var(--red2); color:var(--red)">₼</div>
+        </div>
+        <div class="kpi-val" id="totalDebtsVal">₼0.00</div>
+        <div class="kpi-mono"><span class="tag-dim">Ödənilməli cari qalıq</span></div>
+      </div>
+      
+      <div class="kpi">
+        <div class="kpi-top">
+          <div class="kpi-label">Ümumi Ödənilən Məbləğ</div>
+          <div class="kpi-ic" style="background:var(--green2); color:var(--green)">₼</div>
+        </div>
+        <div class="kpi-val" id="totalPaidDebtsVal" style="color: var(--green)">₼0.00</div>
+        <div class="kpi-mono"><span class="tag-dim">İndiyə qədər bağlanmış borclar</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-head">
+        <div class="card-title" style="color: var(--red);">⚠️ Cari Aktiv Borclar</div>
+      </div>
+      <div class="tbl-actions">
+        <div style="position:relative;">
+          <span class="search-ic" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.75rem;pointer-events:none">⌕</span>
+          <input class="tbl-search" id="debtSearch" placeholder="Təchizatçı axtar...">
+        </div>
+        
+        <select style="padding:0.4rem; border-radius:6px; background:var(--bg3); color:var(--text); border:1px solid var(--border); font-family: 'Inter', sans-serif;" id="debtSortFilter">
+          <option value="desc">Borc: Böyükdən Kiçiyə</option>
+          <option value="asc">Borc: Kiçikdən Böyüyə</option>
+        </select>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Təchizatçı Adı</th>
+              <th>Aktiv Məhsul Çeşidi (SKU)</th>
+              <th>Ödənilməmiş Mal Sayı</th>
+              <th>Hesablanmış Borc (AZN)</th>
+              <th>Əməliyyat</th>
+            </tr>
+          </thead>
+          <tbody id="debtsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="budget-grid">
-        <div>
-          <div class="slider-card">
-            <div class="slider-label">Mövcud Büdcə</div>
-            <div class="slider-val" id="budgetDisp">₼15,000</div>
-            <input type="range" id="budgetSlider" min="2000" max="50000" step="1000" value="15000">
-            <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.68rem;color:var(--muted)"><span>₼2,000</span><span>₼50,000</span></div>
-          </div>
-          <div class="breakdown" style="margin-top:1rem">
-            <div class="breakdown-title">Optimal Bölgü (Knapsack)</div>
-            <div id="breakdownRows"></div>
-          </div>
-        </div>
-        <div>
-          <div class="roi-card">
-            <div>
-              <div class="roi-label">Gözlənilən ROI</div>
-              <div class="roi-big" id="roiDisp">187%</div>
-            </div>
-            <div>
-              <div class="roi-note" id="roiNote">₼15,000 büdcə üçün optimal alış planı hesablandı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.</div>
-            </div>
-          </div>
-          <div class="metrics-panel" style="margin-top:0.75rem">
-            <div class="met" style="border-left-color:var(--cyan)">
-              <div class="met-label">Optimal Xərc</div>
-              <div class="met-val" id="optCost" style="color:var(--cyan)">₼14,550</div>
-            </div>
-            <div class="met" style="border-left-color:var(--green)">
-              <div class="met-label">Gözlənilən Gəlir</div>
-              <div class="met-val" id="expRev" style="color:var(--green)">₼41,700</div>
-            </div>
-            <div class="met" style="border-left-color:var(--violet)">
-              <div class="met-label">Xalis Qazanc</div>
-              <div class="met-val" id="netProfit" style="color:var(--violet)">₼27,150</div>
-            </div>
-            <div class="met" style="border-left-color:var(--amber)">
-              <div class="met-label">Geri Ödəmə</div>
-              <div class="met-val" id="payback" style="color:var(--amber)">6.2 gün</div>
-            </div>
-          </div>
-        </div>
+      <div class="card-head">
+        <div class="card-title" style="color: var(--green);">✅ Ödənilmiş Borclar Arxivi</div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Təchizatçı Adı</th>
+              <th>Arxivlənmiş Çeşid (SKU)</th>
+              <th>Ödənilmiş Mal Sayı</th>
+              <th>Ödənilən Ümumi Pul (AZN)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="paidDebtsBody"></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════════ DISCOUNT ═══════════════ -->
-  <div class="page" id="page-discount">
-    <div class="page-head">
-      <div class="page-title">Endirim <span>Simulyatoru</span></div>
-      <div class="page-sub">Price elasticity modeli · Tarixi satış məlumatları əsasında · Gərçək vaxt simulyasiya</div>
-    </div>
-    <div class="card">
-      <div class="disc-grid">
-        <div class="disc-controls">
-          <div class="slider-card">
-            <div class="slider-label">Endirim Faizi</div>
-            <div class="disc-pct-display">
-              <div class="disc-big" id="discDisp">15</div>
-              <div class="disc-unit">%</div>
-            </div>
-            <input type="range" id="discSlider" min="0" max="50" step="5" value="15" style="margin-top:0.75rem">
-            <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.68rem;color:var(--muted)"><span>0%</span><span>50%</span></div>
-          </div>
-          <div class="slider-card">
-            <div class="slider-label">Hədəf Məhsul</div>
-            <select class="disc-select" id="discProduct" style="margin-top:0.5rem">
-              <option value="sud" data-stock="567" data-price="1.80" data-elastic="-1.8">Tam Yağlı Süd (567 ədəd · ₼1.80) — Çox</option>
-              <option value="yogurt" data-stock="423" data-price="2.40" data-elastic="-2.1">Organik Yoğurt (423 ədəd · ₼2.40) — Vaxt bitir</option>
-              <option value="pendir" data-stock="178" data-price="8.50" data-elastic="-1.3">Premium Pendir (178 ədəd · ₼8.50) — Normal</option>
-              <option value="kofe" data-stock="45" data-price="12.99" data-elastic="-0.9">Kofe Dənələri (45 ədəd · ₼12.99) — Kritik</option>
-              <option value="enerji" data-stock="28" data-price="2.10" data-elastic="-2.4">Enerji İçkisi (28 ədəd · ₼2.10) — Kritik</option>
-            </select>
-          </div>
-        </div>
-        <div class="disc-results">
-          <div class="disc-met" style="border-left-color:var(--green)">
-            <div class="disc-met-label">Gözlənilən Satış Artımı</div>
-            <div class="disc-met-val" id="discSales" style="color:var(--green)">+27.0%</div>
-          </div>
-          <div class="disc-met" style="border-left-color:var(--amber)">
-            <div class="disc-met-label">Gəlir Dəyişimi (endirim effekti)</div>
-            <div class="disc-met-val" id="discRevChg" style="color:var(--amber)">+₼342</div>
-          </div>
-          <div class="disc-met" style="border-left-color:var(--cyan)">
-            <div class="disc-met-label">Anbarın Boşalma Müddəti</div>
-            <div class="disc-met-val" id="discClear" style="color:var(--cyan)">9 gün</div>
-          </div>
-          <div class="disc-met" style="border-left-color:var(--violet)">
-            <div class="disc-met-label">Marja Dəyişimi</div>
-            <div class="disc-met-val" id="discMargin" style="color:var(--violet)">-₼486</div>
-          </div>
-        </div>
-      </div>
-      <div class="scenario-strip" id="scenarioNote">
-        <strong>AI Tövsiyəsi:</strong> Tam Yağlı Süd üçün 15% endirim optimal seçimdir — satış həcmi 27% artacaq, marja itkisi isə minimal qalacaq. Kampaniya cümə günü başlaması tövsiyə edilir.
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════ TASKS ═══════════════ -->
+  <!-- TASKS KANBAN -->
   <div class="page" id="page-tasks">
     <div class="page-head">
       <div class="page-title">Prioritetli <span>Tapşırıqlar</span></div>
-      <div class="page-sub">16 aktiv tapşırıq · 3 filial · Bu gün üçün</div>
+      <div class="page-sub">Kartları siçanla tutub sütunlar arası sürüşdürə bilərsiniz (Drag & Drop)</div>
     </div>
     <div class="kanban">
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--red)">●</span> Təcili VIP <span class="kb-cnt">3</span></div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2847 · Nargiz Hüseynova</div>
-          <div class="kb-card-desc">Xüsusi Novruz qablaşdırması · 48 dəst · Yasamal çatdırılma</div>
+      
+      <div class="kb-col" id="col1">
+        <div class="kb-head"><div class="kb-title"><span style="color:var(--red)">●</span> Təcili VIP <span class="kb-cnt">2</span></div></div>
+        
+        <div class="kb-card" draggable="true">
+          <div class="kb-card-title">VIP-101 · Yeni Cihaz Quraşdırılması</div>
+          <div class="kb-card-desc">Elektronika şöbəsi üçün yeni barkod oxuyucuların tətbiqi və sınağı.</div>
           <div class="kb-card-foot">
             <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ 14:00</span>
-            <div class="kb-assign">ER</div>
+            <span class="kb-time">Təcili</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2848 · Azərenerji ASC</div>
-          <div class="kb-card-desc">Korporativ sifariş · 1,200 ədəd içki · Sabunçu anbarı</div>
+
+        <div class="kb-card" draggable="true">
+          <div class="kb-card-title">VIP-102 · Təcili Audit</div>
+          <div class="kb-card-desc">Aylıq hesabatdan əvvəl rəflərin dərhal yoxlanışı və uyğunsuzluq aradan qaldırılması.</div>
           <div class="kb-card-foot">
             <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ 16:30</span>
-            <div class="kb-assign">SQ</div>
-          </div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">VIP-2849 · Limak Holding</div>
-          <div class="kb-card-desc">Layihə dövründə ərzaq dəstəyi · Aylıq kontrakt</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-h">Yüksək</span>
-            <span class="kb-time">→ Sabah 09:00</span>
-            <div class="kb-assign">FR</div>
+            <span class="kb-time">Bu gün</span>
           </div>
         </div>
       </div>
 
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--amber)">●</span> Vaxt Azalır <span class="kb-cnt">5</span></div>
-        </div>
-        <div class="kb-card">
+      <div class="kb-col" id="col2">
+        <div class="kb-head"><div class="kb-title"><span style="color:var(--amber)">●</span> Vaxt Azalır <span class="kb-cnt">2</span></div></div>
+        
+        <div class="kb-card" draggable="true">
           <div class="kb-card-title">PRD-087 · Süd Məhsulları</div>
-          <div class="kb-card-desc">Son istifadə: 06 May · 234 ədəd · Nizami filialı</div>
+          <div class="kb-card-desc">Son istifadə: 15 May · 234 ədəd · Nizami filialı</div>
           <div class="kb-card-foot">
             <span class="kb-tag kb-tag-m">Orta</span>
             <span class="kb-time">3 gün</span>
           </div>
         </div>
-        <div class="kb-card">
+        
+        <div class="kb-card" draggable="true">
           <div class="kb-card-title">PRD-112 · Organik Yoğurt</div>
-          <div class="kb-card-desc">Son istifadə: 08 May · 156 ədəd · 28 May filialı</div>
+          <div class="kb-card-desc">Son istifadə: 18 May · 156 ədəd · 28 May filialı</div>
           <div class="kb-card-foot">
             <span class="kb-tag kb-tag-m">Orta</span>
             <span class="kb-time">5 gün</span>
           </div>
         </div>
-        <div class="kb-card">
-          <div class="kb-card-title">PRD-203 · Taze Pendir</div>
-          <div class="kb-card-desc">Son istifadə: 10 May · 89 ədəd · Gənclik filialı</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-m">Orta</span>
-            <span class="kb-time">7 gün</span>
-          </div>
-        </div>
       </div>
 
-      <div class="kb-col">
-        <div class="kb-head">
-          <div class="kb-title"><span style="color:var(--green)">●</span> Gündəlik Sifarişlər <span class="kb-cnt">8</span></div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">ORD-5623 · Sahil Filialı</div>
-          <div class="kb-card-desc">Standart həftəlik sifariş · 340 ədəd müxtəlif</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-l">Adi</span>
-            <span class="kb-time">Sabah</span>
-          </div>
-        </div>
-        <div class="kb-card">
-          <div class="kb-card-title">ORD-5624 · Filial Transferi</div>
-          <div class="kb-card-desc">Yasamal → Nərimanov · 120 ədəd kofe kateqoriyası</div>
-          <div class="kb-card-foot">
-            <span class="kb-tag kb-tag-l">Adi</span>
-            <span class="kb-time">2 gün</span>
-          </div>
-        </div>
-        <div class="kb-card">
+      <div class="kb-col" id="col3">
+        <div class="kb-head"><div class="kb-title"><span style="color:var(--green)">●</span> Gündəlik Sifarişlər <span class="kb-cnt">1</span></div></div>
+        
+        <div class="kb-card" draggable="true">
           <div class="kb-card-title">ORD-5625 · Anbar Sayımı</div>
-          <div class="kb-card-desc">Aylıq inventar sayımı · Bütün filiallarda</div>
+          <div class="kb-card-desc">Aylıq inventar sayımı · Bütün filiallarda həyata keçirilməlidir.</div>
           <div class="kb-card-foot">
             <span class="kb-tag kb-tag-l">Adi</span>
             <span class="kb-time">31 May</span>
           </div>
         </div>
       </div>
+
     </div>
   </div>
-
-  <!-- ═══════════════ ANALYTICS ═══════════════ -->
-  <div class="page" id="page-analytics">
-    <div class="page-head">
-      <div class="page-title">Dərin <span>Analitika</span></div>
-      <div class="page-sub">May 2026 · 6 filial · Azərbaycan Manatı (₼)</div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--green)">₼387,450</div>
-        <div class="stat-lbl">Bu Ay Cəmi Gəlir</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--cyan)">₼241,280</div>
-        <div class="stat-lbl">Xalis Mənfəət (62.3%)</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num" style="color:var(--amber)">8.3x</div>
-        <div class="stat-lbl">Stok Dövriyyə Sürəti</div>
-      </div>
-    </div>
-    <div class="two-col">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head"><div class="card-title">Filial Gəlirləri · May 2026</div></div>
-        <canvas id="barChart2"></canvas>
-      </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-head"><div class="card-title">Kateqoriya Payı</div></div>
-        <canvas id="pieChart"></canvas>
-      </div>
-    </div>
-    <div class="card" style="margin-top:1rem">
-      <div class="card-head">
-        <div class="card-title">Aylıq Gəlir Trendi · 2025–2026</div>
-        <div class="filter-group">
-          <button class="f-btn active">₼ Gəlir</button>
-          <button class="f-btn">% Artım</button>
-        </div>
-      </div>
-      <canvas id="trendChart" style="width:100%!important;height:200px!important"></canvas>
-    </div>
-  </div>
-
-  <!-- ═══════════════ SETTINGS ═══════════════ -->
-  <div class="page" id="page-settings">
-    <div class="page-head">
-      <div class="page-title">Sistem <span>Tənzimləmələri</span></div>
-      <div class="page-sub">SmartStock v2.4.1 · Lisenziya: Enterprise · Bakı, Azərbaycan</div>
-    </div>
-    <div class="settings-sections">
-      <div class="sett-section">
-        <div class="sett-head">Ümumi Parametrlər</div>
-        <div class="sett-row"><div><div class="sett-key">Sistem Dili</div><div class="sett-desc">İnterfeys dili</div></div><div class="sett-val">Azərbaycan dili (AZ)</div></div>
-        <div class="sett-row"><div><div class="sett-key">Valyuta</div><div class="sett-desc">Azərbaycan Manatı</div></div><div class="sett-val">₼ AZN</div></div>
-        <div class="sett-row"><div><div class="sett-key">Saat Qurşağı</div><div class="sett-desc">Bakı, Azərbaycan</div></div><div class="sett-val">UTC+4 (AZT)</div></div>
-        <div class="sett-row"><div><div class="sett-key">Vergi Dərəcəsi (ƏDV)</div><div class="sett-desc">Azərbaycan ƏDV standartı</div></div><div class="sett-val">18%</div></div>
-      </div>
-      <div class="sett-section">
-        <div class="sett-head">Bildiriş & Avtomatlaşdırma</div>
-        <div class="sett-row"><div><div class="sett-key">Real Vaxt Bildirişlər</div><div class="sett-desc">Kritik stok siqnalları</div></div><div class="toggle" onclick="this.classList.toggle('off')"></div></div>
-        <div class="sett-row"><div><div class="sett-key">Avtomatik Sifariş</div><div class="sett-desc">Minimum hədd aşıldıqda</div></div><div class="toggle off" onclick="this.classList.toggle('off')"></div></div>
-        <div class="sett-row"><div><div class="sett-key">AI Proqnoz Yenilənməsi</div><div class="sett-desc">Modelin öyrənmə tezliyi</div></div><div class="sett-val">Hər 6 saat</div></div>
-        <div class="sett-row"><div><div class="sett-key">Məlumat Yedəkləmə</div><div class="sett-desc">Azər Bulud serverinə</div></div><div class="sett-val">Hər gecə 02:00</div></div>
-      </div>
-      <div class="sett-section">
-        <div class="sett-head">İnteqrasiyalar</div>
-        <div class="sett-row"><div><div class="sett-key">ABB Bank POS İnteqrasiyası</div><div class="sett-desc">Satış məlumatlarının sinxronizasiyası</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
-        <div class="sett-row"><div><div class="sett-key">ASAN İmza</div><div class="sett-desc">Elektron sənəd imzalanması</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
-        <div class="sett-row"><div><div class="sett-key">DGK Vergi Portalı</div><div class="sett-desc">Vergi hesabatları avtomatik göndərilmə</div></div><div class="sett-val" style="color:var(--amber)">● Qurulur</div></div>
-        <div class="sett-row"><div><div class="sett-key">1C Mühasibat</div><div class="sett-desc">Mühasibat sistemi inteqrasiyası</div></div><div class="sett-val" style="color:var(--green)">● Aktiv</div></div>
-      </div>
-      <div class="sett-section">
-        <div class="sett-head">Lisenziya Məlumatı</div>
-        <div class="sett-row"><div><div class="sett-key">Plan</div><div class="sett-desc">Limitsiz filial, limitsiz SKU</div></div><div class="sett-val" style="color:var(--violet)">Enterprise</div></div>
-        <div class="sett-row"><div><div class="sett-key">Filialllar</div><div class="sett-desc">Aktiv filial sayı</div></div><div class="sett-val">6 / Limitsiz</div></div>
-        <div class="sett-row"><div><div class="sett-key">Yenilənmə Tarixi</div><div class="sett-desc">Növbəti ödəniş</div></div><div class="sett-val">01 Yanvar 2027</div></div>
-      </div>
-    </div>
-  </div>
-
 </main>
 
-<!-- AI FAB + CHAT -->
-<button class="ai-fab" id="aiFab" title="AI ilə Məsləhətləş">🤖</button>
-<div class="ai-chat" id="aiChat">
-  <div class="ai-chat-head">
-    <div class="ai-chat-title"><div class="ai-online"></div> SmartStock AI</div>
-    <button class="ai-x" id="aiX">✕</button>
-  </div>
-  <div class="ai-msgs" id="aiMsgs">
-    <div class="ai-msg bot">Salam, Elnur! Bugün 7 kritik SKU var. Stok, endirim, proqnoz — nə lazımdır?</div>
-  </div>
-  <div class="ai-suggestions" id="aiSugs">
-    <span class="ai-sug" data-q="Kritik stoklar hansılardır?">Kritik stoklar</span>
-    <span class="ai-sug" data-q="Süd məhsullarına endirim verimmi?">Endirim tövsiyəsi</span>
-    <span class="ai-sug" data-q="Bu ay ROI nə qədərdir?">ROI analizi</span>
-  </div>
-  <div class="ai-inp-row">
-    <input class="ai-inp" id="aiInp" placeholder="Sual yaz...">
-    <button class="ai-send" id="aiSendBtn">→</button>
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <div class="modal-head">Yeni Məhsul Əlavə Et <button class="modal-close" id="closeModalBtn">✕</button></div>
+    <div class="modal-body">
+      <input type="text" placeholder="Məhsulun adı" class="modal-inp" id="newProdName">
+      
+      <select class="modal-inp" id="newProdCat" style="cursor: pointer; background: var(--bg3); color: var(--text); font-family: 'Inter', sans-serif;">
+        <option value="İçki">İçki</option>
+        <option value="Şirniyyat">Şirniyyat</option>
+        <option value="Elektronika">Elektronika</option>
+        <option value="Ofis">Ofis</option>
+        <option value="Süd məhsulları">Süd məhsulları</option>
+        <option value="Ət və dəniz məhsulları">Ət və dəniz məhsulları</option>
+        <option value="Meyvə və tərəvəz">Meyvə və tərəvəz</option>
+        <option value="Un məhsulları">Un məhsulları</option>
+        <option value="Dondurulmuş qidalar">Dondurulmuş qidalar</option>
+        <option value="Konservlər">Konservlər</option>
+        <option value="Ədviyyat və souslar">Ədviyyat və souslar</option>
+        <option value="Uşaq qidaları">Uşaq qidaları</option>
+        <option value="Kosmetika və şəxsi qulluq">Kosmetika və şəxsi qulluq</option>
+        <option value="Məişət kimyası">Məişət kimyası</option>
+        <option value="Geyim və tekstil">Geyim və tekstil</option>
+        <option value="Ev və mətbəx əşyaları">Ev və mətbəx əşyaları</option>
+        <option value="Avto aksesuarlar">Avto aksesuarlar</option>
+        <option value="İdman və asudə">İdman və asudə</option>
+        <option value="Tikinti və təmir">Tikinti və təmir</option>
+        <option value="Heyvan qidaları">Heyvan qidaları</option>
+        <option value="Başqa...">Başqa...</option>
+      </select>
+      
+      <div style="display:flex; gap:1rem;">
+        <input type="number" min="1" placeholder="Stok (Vahid tam ədəd)" class="modal-inp natural-int" id="newProdStock">
+        <input type="number" min="1" placeholder="Min. Hədd (Vahid tam ədəd)" class="modal-inp natural-int" id="newProdMin">
+      </div>
+      <input type="number" min="0" step="any" placeholder="Qiymət (₼)" class="modal-inp" id="newProdPrice">
+      <input type="text" placeholder="Təchizatçı" class="modal-inp" id="newProdSupplier">
+      <button class="modal-btn" id="saveProductBtn">Məhsulu Yarat</button>
+    </div>
   </div>
 </div>
 
-<script>
-// ── DATA ──
-const invData = [
-  {code:'PRD-001',name:'Premium Kofe Dənələri',cat:'İçki',stock:45,min:100,price:12.99,supplier:'Beverage Co.',updated:'2 saat əvvəl',status:'Kritik'},
-  {code:'PRD-002',name:'Organik Şokolad',cat:'Şirniyyat',stock:234,min:50,price:4.50,supplier:'Şərq Şirin MMC',updated:'5 saat əvvəl',status:'Normal'},
-  {code:'PRD-003',name:'Tam Yağlı Süd (1L)',cat:'Süd məhsulları',stock:567,min:200,price:1.80,supplier:'Bakı Süd Zavodu',updated:'1 gün əvvəl',status:'Çox'},
-  {code:'PRD-004',name:'Markalı Peçenye',cat:'Qida',stock:156,min:80,price:2.30,supplier:'Bakery Plus',updated:'3 saat əvvəl',status:'Normal'},
-  {code:'PRD-005',name:'Enerji İçkisi (330ml)',cat:'İçki',stock:28,min:150,price:2.10,supplier:'Beverage Co.',updated:'4 saat əvvəl',status:'Kritik'},
-  {code:'PRD-006',name:'Premium Pendir',cat:'Süd məhsulları',stock:178,min:60,price:8.50,supplier:'Sumqayıt Süd',updated:'6 saat əvvəl',status:'Normal'},
-  {code:'PRD-007',name:'Organik Yoğurt (500q)',cat:'Süd məhsulları',stock:423,min:100,price:2.40,supplier:'Bakı Süd Zavodu',updated:'2 gün əvvəl',status:'Çox'},
-  {code:'PRD-008',name:'Zəytun Yağı (0.75L)',cat:'Yağlar',stock:89,min:40,price:9.20,supplier:'AgroAzər',updated:'1 saat əvvəl',status:'Normal'},
-  {code:'PRD-009',name:'Makaron (500q)',cat:'Dənli bitkilər',stock:312,min:120,price:1.10,supplier:'Azər Un',updated:'3 gün əvvəl',status:'Çox'},
-  {code:'PRD-010',name:'Çay (100q)',cat:'İçki',stock:67,min:80,price:3.60,supplier:'Lənkəran Çay',updated:'2 saat əvvəl',status:'Kritik'},
-  {code:'PRD-011',name:'Düyü (1kq)',cat:'Dənli bitkilər',stock:198,min:100,price:2.80,supplier:'AgroAzər',updated:'5 saat əvvəl',status:'Normal'},
-  {code:'PRD-012',name:'Pomidor Pasty (800q)',cat:'Konservlər',stock:445,min:150,price:2.20,supplier:'Şəki Konserv',updated:'1 gün əvvəl',status:'Çox'},
-];
+<!-- AUTHENTICATION MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span id="authTitle">Sistemə Qeydiyyat</span>
+      <button class="modal-close" id="closeAuthBtn">✕</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="error-msg" id="authError"></div>
 
-const periods = {
-  month:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[87400,76200,94100,68300,82600,78850],
-    inv:[32100,28400,35600,25900,31200,29500]
-  },
-  quarter:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[262200,228600,282300,204900,247800,236550],
-    inv:[96300,85200,106800,77700,93600,88500]
-  },
-  year:{
-    labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-    sales:[1048800,914400,1129200,819600,991200,946200],
-    inv:[385200,340800,427200,310800,374400,354000]
-  }
+      <div id="registerForm">
+        <input type="text" placeholder="İstifadəçi adı (Unikal)" class="modal-inp" id="regUsername" style="margin-bottom:1rem;">
+        
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tabPhone">📱 Telefon</div>
+          <div class="auth-tab" id="tabEmail">✉️ Email</div>
+        </div>
+        
+        <div id="phoneArea">
+          <div class="phone-group">
+            <select class="country-sel" id="countrySelect">
+              <option value="+994" data-len="9">🇦🇿 +994</option>
+              <option value="+90" data-len="10">🇹🇷 +90</option>
+              <option value="+1" data-len="10">🇺🇸 +1</option>
+            </select>
+            <input type="number" min="0" placeholder="Nömrə (məs: 501234567)" class="modal-inp" id="regPhone">
+          </div>
+        </div>
+
+        <div id="emailArea" style="display:none;">
+          <input type="text" placeholder="E-poçt ünvanınızı daxil edin" class="modal-inp" id="regEmail">
+        </div>
+
+        <input type="password" placeholder="Şifrə (Ən az 8 simvol)" class="modal-inp" id="regPass" style="margin-top:1rem;">
+        <button class="modal-btn" id="submitRegBtn">Qeydiyyatdan Keç</button>
+        
+        <div class="auth-switch" id="switchToLogin">
+          Hesabınız var? <span>Giriş et</span>
+        </div>
+      </div>
+
+      <div id="loginForm" style="display:none;">
+        <input type="text" placeholder="İstifadəçi adı və ya Email" class="modal-inp" id="loginIdentifier" style="margin-bottom:1rem;">
+        <input type="password" placeholder="Şifrə" class="modal-inp" id="loginPass" style="margin-bottom:1rem;">
+        <button class="modal-btn" id="submitLoginBtn">Sistemə Daxil Ol</button>
+        
+        <div class="auth-switch" id="switchToReg">
+          Hesabınız yoxdur? <span>Qeydiyyatdan keç</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <div class="modal-head">Tənzimləmələr <button class="modal-close" id="closeSettingsBtn">✕</button></div>
+    <div class="modal-body">
+      <label style="font-size:0.8rem; color:var(--muted)">İstifadəçi adı</label>
+      <input type="text" class="modal-inp" id="setUserName">
+      
+      <label style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem" id="setContactLabel">Email / Telefon</label>
+      <input type="text" class="modal-inp" id="setContact">
+
+      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label style="font-size:0.85rem; font-weight:bold; color:var(--text);">Şifrəni Yenilə</label>
+          <button type="button" id="showCurrentPassBtn" style="background:none; border:none; color:var(--cyan); font-size:0.75rem; cursor:pointer; font-family:'Inter', sans-serif;">👁️ Hazırki Şifrəni Gör</button>
+        </div>
+        
+        <input type="password" class="modal-inp" id="setOldPass" placeholder="Köhnə şifrənizi daxil edin" style="margin-top:0.5rem;">
+        <input type="password" class="modal-inp" id="setNewPass" placeholder="Yeni şifrə (ən az 8 simvol)" style="margin-top:0.5rem;">
+        
+        <div style="font-size:0.7rem; color:var(--muted); margin-top:0.4rem; line-height:1.4;">
+          * Şifrəni dəyişmək istəmirsinizsə, bu xanaları boş buraxın. Yeni şifrə təyin etmək üçün köhnə şifrəni daxil etmək mütləqdir.
+        </div>
+      </div>
+
+      <label style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem">Bildirişlər</label>
+      <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem">
+        <input type="checkbox" id="setNotifKritik" checked> Kritik stok xəbərdarlığı
+      </div>
+      
+      <button class="modal-btn" id="saveSettingsBtn">Yadda Saxla</button>
+    </div>
+  </div>
+</div>
+
+<!-- OPTIMAL ROUTE MODAL -->
+<div class="modal-overlay" id="routeModal">
+  <div class="modal-box" style="max-width:500px;">
+    <div class="modal-head">🗺️ Optimal Rota Hesablayıcı <button class="modal-close" id="closeRouteBtn">✕</button></div>
+    <div class="modal-body">
+      <div style="background:var(--bg3); padding:1rem; border-radius:8px; border:1px dashed var(--border2);">
+        <div style="font-size:0.85rem; margin-bottom:1rem;">Aktiv Tapşırıq: <strong>ORD-5625 (Anbar Sayımı və Yığım)</strong></div>
+        
+        <div style="display:flex; flex-direction:column; gap:0.6rem; font-family:'DM Mono', monospace; font-size:0.8rem;">
+          <div style="padding:0.6rem; background:var(--bg2); border-left:3px solid var(--cyan); border-radius:4px;">1. Başlanğıc Zolağı: A Girişi</div>
+          <div style="padding:0.6rem; background:var(--bg2); border-left:3px solid var(--violet); border-radius:4px;">2. Rəf A-12 (Kofe Dənələri - 45 ədəd)</div>
+          <div style="padding:0.6rem; background:var(--bg2); border-left:3px solid var(--amber); border-radius:4px;">3. Rəf B-04 (Şokolad - 234 ədəd)</div>
+          <div style="padding:0.6rem; background:var(--bg2); border-left:3px solid var(--green); border-radius:4px;">4. Çıxış Zolağı: Yükləmə Zonası 2</div>
+        </div>
+        
+        <div style="margin-top:1rem; font-size:0.75rem; color:var(--muted); text-align:center;">
+          Süni İntellekt tərəfindən hesablanmış qənaət: <strong style="color:var(--cyan)">3.2 dəqiqə / 45 metr</strong>
+        </div>
+      </div>
+      <button class="modal-btn" id="startRouteBtn">Rotaya Başla</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI CHAT ENGINE WIDGET INTERFACE -->
+<button class="ai-fab" id="aiFab">🤖</button>
+<div class="ai-chat" id="aiChat">
+  <div class="ai-chat-head">
+    <div style="font-weight:700;display:flex;align-items:center;gap:5px"><div class="status-dot"></div> SmartStock AI</div>
+    <button style="background:0;border:0;color:var(--muted);cursor:pointer;" id="aiX">✕</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs">
+    <div class="ai-msg bot">Salam! Anbar analizi, kritik vəziyyətdə qalan stoklar, satınalma tövsiyələri və ya borclar haqqında nə öyrənmək istəyirsiniz?</div>
+  </div>
+  <div style="padding:0.6rem;display:flex;gap:0.4rem;border-top:1px solid var(--border)">
+    <input style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);outline:none;font-family:'Inter',sans-serif;" id="aiInp" placeholder="Sual yazın və Enter basın...">
+    <button id="aiSendBtn" style="background:var(--cyan2); border:1px solid var(--cyan); color:var(--cyan); border-radius:8px; padding:0 0.6rem; cursor:pointer; font-weight:600;">➔</button>
+  </div>
+</div>
+
+<!-- JAVASCRIPT FIREBASE INTEGRATION (MODULE) -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDD-xvp9FmhuBArFmqmlKleTVxHeCByGXM",
+  authDomain: "smartstock-37a47.firebaseapp.com",
+  projectId: "smartstock-37a47",
+  storageBucket: "smartstock-37a47.firebasestorage.app",
+  messagingSenderId: "550268108684",
+  appId: "1:550268108684:web:0f497996e7a8b8379aa0a9",
+  measurementId: "G-7H80T0W2MD"
 };
 
-const catColors=['rgba(0,229,255,0.8)','rgba(123,94,167,0.8)','rgba(0,200,150,0.8)','rgba(255,179,64,0.8)','rgba(255,77,106,0.8)','rgba(99,102,241,0.8)','rgba(236,72,153,0.8)'];
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// ── CHARTS ──
-let mainChart, lineChart, donutChart, barChart2, pieChart, trendChart;
+const usersCollection = collection(db, "users");
+const inventoryCollection = collection(db, "inventory");
 
-function hexToRgba(c,a){return c}
+let users = [];
+let invData = [];
+let currentUser = JSON.parse(localStorage.getItem('smartstock_current_user')) || null;
 
-function initCharts(){
-  const gridColor='rgba(255,255,255,0.05)';
-  const tickColor='rgba(255,255,255,0.35)';
+window.invDataRef = () => invData;
 
-  // Main bar chart
-  mainChart = new Chart(document.getElementById('mainChart'),{
-    type:'bar',
-    data:{
-      labels:periods.month.labels,
-      datasets:[
-        {label:'Satış (₼)',data:periods.month.sales,backgroundColor:'rgba(0,229,255,0.7)',borderColor:'rgba(0,229,255,1)',borderWidth:1,borderRadius:6},
-        {label:'Anbar Dəyəri (₼)',data:periods.month.inv,backgroundColor:'rgba(123,94,167,0.7)',borderColor:'rgba(123,94,167,1)',borderWidth:1,borderRadius:6}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:tickColor,font:{family:'DM Sans',size:11}}}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:10},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:11}}}
-      }
-    }
+document.querySelectorAll('input[type="number"]').forEach(input => {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') { e.preventDefault(); }
+    if (this.classList.contains('natural-int') && (e.key === '.' || e.key === ',')) { e.preventDefault(); }
   });
+});
 
-  // Line chart
-  const days=['27 Apr','28 Apr','29 Apr','30 Apr','01 May','02 May','03 May'];
-  lineChart = new Chart(document.getElementById('lineChart'),{
-    type:'line',
-    data:{
-      labels:days,
-      datasets:[{
-        label:'Gündəlik Satış (₼)',
-        data:[52400,48900,61200,57800,64300,59700,71200],
-        borderColor:'rgba(0,229,255,1)',
-        backgroundColor:'rgba(0,229,255,0.08)',
-        borderWidth:2,pointRadius:4,pointBackgroundColor:'rgba(0,229,255,1)',
-        fill:true,tension:0.4
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
-      }
-    }
-  });
-
-  // Donut
-  donutChart = new Chart(document.getElementById('donutChart'),{
-    type:'doughnut',
-    data:{
-      labels:['1-3 gün (Kritik)','4-7 gün','8-14 gün','15+ gün (Təhlükəsiz)'],
-      datasets:[{
-        data:[68,143,247,2782],
-        backgroundColor:['rgba(255,77,106,0.85)','rgba(255,179,64,0.85)','rgba(0,229,255,0.85)','rgba(0,200,150,0.85)'],
-        borderWidth:0,hoverOffset:6
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      cutout:'62%',
-      plugins:{
-        legend:{position:'bottom',labels:{color:tickColor,font:{family:'DM Sans',size:10},padding:12}}
-      }
-    }
-  });
-
-  // Bar 2 (analytics)
-  barChart2 = new Chart(document.getElementById('barChart2'),{
-    type:'bar',
-    data:{
-      labels:['28 Mal','Nərimanov','Nizami','Gənclik','Sahil','Yasamal'],
-      datasets:[{
-        label:'Gəlir (₼)',
-        data:[87400,76200,94100,68300,82600,78850],
-        backgroundColor:catColors,borderRadius:5,borderWidth:0
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
-      }
-    }
-  });
-
-  // Pie (analytics)
-  pieChart = new Chart(document.getElementById('pieChart'),{
-    type:'doughnut',
-    data:{
-      labels:['İçkilər','Süd məhsulları','Şirniyyat','Dənli bitkilər','Konservlər','Yağlar','Digər'],
-      datasets:[{
-        data:[28.4,22.1,15.6,12.3,9.8,6.7,5.1],
-        backgroundColor:catColors,borderWidth:0,hoverOffset:6
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      cutout:'55%',
-      plugins:{
-        legend:{position:'bottom',labels:{color:tickColor,font:{family:'DM Sans',size:10},padding:8}}
-      }
-    }
-  });
-
-  // Trend
-  trendChart = new Chart(document.getElementById('trendChart'),{
-    type:'line',
-    data:{
-      labels:['İyn 25','İyl 25','Avq 25','Snt 25','Okt 25','Noy 25','Dek 25','Yan 26','Fvr 26','Mar 26','Apr 26','May 26'],
-      datasets:[{
-        label:'Aylıq Gəlir (₼)',
-        data:[298000,311000,324000,308000,342000,387000,421000,356000,334000,361000,378000,387450],
-        borderColor:'rgba(0,229,255,1)',
-        backgroundColor:'rgba(0,229,255,0.07)',
-        borderWidth:2,pointRadius:3,pointBackgroundColor:'rgba(0,229,255,1)',
-        fill:true,tension:0.4
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{
-        y:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:'DM Mono',size:9},callback:v=>'₼'+v.toLocaleString()}},
-        x:{grid:{display:false},ticks:{color:tickColor,font:{family:'DM Sans',size:10}}}
-      }
-    }
+/* =========================================================
+   HELPER: get critical items from live data
+   ========================================================= */
+function getCriticalItems() {
+  return invData.filter(item => {
+    const s = Number(item.stock) || 0;
+    const m = Number(item.min) || 0;
+    return s <= m && !item.isPaid;
   });
 }
 
-// ── INVENTORY TABLE ──
-function renderInvTable(filter='',statusF=''){
-  const body=document.getElementById('invBody');
-  const rows=invData.filter(r=>{
-    const q=filter.toLowerCase();
-    const matchQ=!q||(r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q)||r.cat.toLowerCase().includes(q)||r.supplier.toLowerCase().includes(q));
-    const matchS=!statusF||r.status===statusF;
-    return matchQ&&matchS;
+/* =========================================================
+   NOTIFICATION PANEL — synced with live inventory
+   ========================================================= */
+function renderNotifications() {
+  const notifList = document.getElementById('notifList');
+  const notifDot = document.getElementById('notifDot');
+  const notifCountBadge = document.getElementById('notifCountBadge');
+  const notifDropCount = document.getElementById('notifDropCount');
+  if (!notifList) return;
+
+  const criticals = getCriticalItems();
+  const count = criticals.length;
+
+  // Badge on bell icon
+  if (count > 0) {
+    notifDot.style.display = 'block';
+    notifCountBadge.style.display = 'flex';
+    notifCountBadge.textContent = count > 9 ? '9+' : count;
+    notifDropCount.textContent = `${count} kritik məhsul`;
+  } else {
+    notifDot.style.display = 'none';
+    notifCountBadge.style.display = 'none';
+    notifDropCount.textContent = '';
+  }
+
+  if (count === 0) {
+    notifList.innerHTML = `<div class="notif-empty">✅ Kritik stok yoxdur. Anbar sağlamdır.</div>`;
+    return;
+  }
+
+  // Show up to 6 items, rest summarized
+  const shown = criticals.slice(0, 6);
+  const rest = count - shown.length;
+
+  notifList.innerHTML = shown.map(item => {
+    const s = Number(item.stock);
+    const m = Number(item.min);
+    const deficit = m - s;
+    return `
+      <div class="notif-drop-item" onclick="goToInventoryProduct('${item.code}')">
+        <span class="notif-name">⚠️ ${item.name}</span>
+        <span class="notif-meta">${item.code} · Stok: ${s} / Min: ${m} · Çatışmazlıq: ${deficit} ədəd</span>
+        <span class="notif-action">Anbarda göstər →</span>
+      </div>
+    `;
+  }).join('');
+
+  if (rest > 0) {
+    notifList.innerHTML += `
+      <div class="notif-drop-item" onclick="goToInventoryFiltered()" style="justify-content:center; text-align:center;">
+        <span style="color:var(--amber); font-size:0.78rem; font-weight:600;">+ ${rest} kritik məhsul daha var — tam siyahıya bax</span>
+      </div>
+    `;
+  }
+}
+
+/* =========================================================
+   DASHBOARD RISK CARD — synced with live inventory
+   ========================================================= */
+function renderDashboardRisk() {
+  const valEl = document.getElementById('dashRiskVal');
+  const noteEl = document.getElementById('dashRiskNote');
+  const pulseEl = document.getElementById('dashRiskPulse');
+  const cardEl = document.getElementById('dashRiskCard');
+  if (!valEl) return;
+
+  const criticals = getCriticalItems();
+  const count = criticals.length;
+
+  if (count === 0) {
+    pulseEl.textContent = 'TƏHLÜKƏSİZ';
+    pulseEl.style.color = 'var(--green)';
+    pulseEl.style.background = 'var(--green2)';
+    valEl.textContent = '0 SKU · Kritik Yoxdur';
+    valEl.style.color = 'var(--green)';
+    noteEl.textContent = 'Bütün məhsullar təhlükəsiz səviyyədədir. Heç bir kritik stok yoxdur.';
+    cardEl.style.setProperty('--grad-top', 'linear-gradient(90deg, var(--green), #059669)');
+  } else {
+    pulseEl.textContent = 'KRİTİK';
+    pulseEl.style.color = 'var(--red)';
+    pulseEl.style.background = 'var(--red2)';
+    valEl.textContent = `${count} SKU · Təcili Müdaxilə`;
+    valEl.style.color = 'var(--red)';
+    // Build note from first 2 critical items
+    const names = criticals.slice(0, 2).map(i => i.name).join(', ');
+    const extra = count > 2 ? ` və ${count - 2} məhsul daha` : '';
+    noteEl.textContent = `${names}${extra} kritik həddə çatıb. Klikləyin →`;
+    cardEl.style.setProperty('--grad-top', 'linear-gradient(90deg, var(--red), var(--amber))');
+  }
+}
+
+/* =========================================================
+   NAVIGATION HELPERS — go to inventory & highlight product
+   ========================================================= */
+window.goToInventoryProduct = function(productCode) {
+  // Close notification dropdown
+  document.querySelectorAll('.drop-menu').forEach(m => m.classList.remove('open'));
+  
+  // Switch to inventory page
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-page="inventory"]').classList.add('active');
+  document.getElementById('page-inventory').classList.add('active');
+
+  // Clear filters to show all items
+  document.getElementById('tblSearch').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('catFilter').value = '';
+  renderInvTable('', '', '');
+
+  // Highlight the specific row after render
+  setTimeout(() => {
+    const rows = document.querySelectorAll('#invBody tr');
+    rows.forEach(row => {
+      const codeCell = row.querySelector('.code');
+      if (codeCell && codeCell.textContent.trim() === productCode) {
+        row.classList.add('row-highlight');
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => row.classList.remove('row-highlight'), 3000);
+      }
+    });
+  }, 100);
+};
+
+window.goToInventoryFiltered = function() {
+  document.querySelectorAll('.drop-menu').forEach(m => m.classList.remove('open'));
+  
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-page="inventory"]').classList.add('active');
+  document.getElementById('page-inventory').classList.add('active');
+
+  // Filter to show only critical items
+  document.getElementById('statusFilter').value = 'Kritik';
+  document.getElementById('tblSearch').value = '';
+  document.getElementById('catFilter').value = '';
+  triggerFilters();
+};
+
+/* =========================================================
+   BORCLAR HESABATI MƏNTİQİ
+   ========================================================= */
+function renderDebtsTable() {
+  const body = document.getElementById('debtsBody');
+  const paidBody = document.getElementById('paidDebtsBody');
+  const totalValEl = document.getElementById('totalDebtsVal');
+  const totalPaidValEl = document.getElementById('totalPaidDebtsVal');
+  const dashTotalDebtsEl = document.getElementById('dashTotalDebtsVal');
+  const searchQuery = document.getElementById('debtSearch') ? document.getElementById('debtSearch').value.toLowerCase().trim() : '';
+  const sortOrder = document.getElementById('debtSortFilter') ? document.getElementById('debtSortFilter').value : 'desc';
+  
+  if (!body) return;
+
+  const supplierGroups = {};
+  const paidSupplierGroups = {};
+  let totalWarehouseDebt = 0;
+  let totalPaidDebt = 0;
+
+  invData.forEach(item => {
+    const supplier = item.supplier || 'Qeyd edilməyib';
+    const stock = Number(item.stock) || 0;
+    const price = Number(item.price) || 0;
+    const itemTotalValue = stock * price;
+
+    if (item.isPaid === true) {
+      if (!paidSupplierGroups[supplier]) {
+        paidSupplierGroups[supplier] = { name: supplier, skuCount: 0, totalStock: 0, totalDebt: 0 };
+      }
+      paidSupplierGroups[supplier].skuCount += 1;
+      paidSupplierGroups[supplier].totalStock += stock;
+      paidSupplierGroups[supplier].totalDebt += itemTotalValue;
+      totalPaidDebt += itemTotalValue;
+    } else {
+      if (!supplierGroups[supplier]) {
+        supplierGroups[supplier] = { name: supplier, skuCount: 0, totalStock: 0, totalDebt: 0 };
+      }
+      supplierGroups[supplier].skuCount += 1;
+      supplierGroups[supplier].totalStock += stock;
+      supplierGroups[supplier].totalDebt += itemTotalValue;
+      totalWarehouseDebt += itemTotalValue;
+    }
   });
-  body.innerHTML=rows.map(r=>{
-    const pct=Math.min(100,Math.round((r.stock/Math.max(r.stock,r.min*2))*100));
-    const barColor=r.status==='Kritik'?'var(--red)':r.status==='Çox'?'var(--amber)':'var(--green)';
-    const badgeCls=r.status==='Kritik'?'b-crit':r.status==='Çox'?'b-warn':'b-ok';
-    return `<tr>
-      <td><span class="code">${r.code}</span></td>
-      <td>${r.name}</td>
-      <td><span style="font-size:0.72rem;color:var(--muted2)">${r.cat}</span></td>
-      <td><strong>${r.stock}</strong> <span style="font-size:0.7rem;color:var(--muted)">ədəd</span></td>
-      <td style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:0.75rem">${r.min}</td>
-      <td>
-        <div class="progress-cell">
-          <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${barColor}"></div></div>
-          <span class="pct-label">${pct}%</span>
-        </div>
-      </td>
+
+  if(totalValEl) totalValEl.textContent = `₼${totalWarehouseDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if(totalPaidValEl) totalPaidValEl.textContent = `₼${totalPaidDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if(dashTotalDebtsEl) dashTotalDebtsEl.textContent = `₼${totalWarehouseDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  let groupsArray = Object.values(supplierGroups).filter(g => g.name.toLowerCase().includes(searchQuery));
+  if (sortOrder === 'desc') { groupsArray.sort((a, b) => b.totalDebt - a.totalDebt); } 
+  else { groupsArray.sort((a, b) => a.totalDebt - b.totalDebt); }
+
+  if (groupsArray.length === 0) {
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted)">Heç bir ödənilməmiş borc tapılmadı.</td></tr>`;
+  } else {
+    body.innerHTML = groupsArray.map((g, index) => `
+      <tr id="debt-row-${index}">
+        <td><strong>${g.name}</strong></td>
+        <td><span class="code">${g.skuCount} SKU</span></td>
+        <td>${g.totalStock} ədəd</td>
+        <td style="font-family:'DM Mono', monospace; font-weight:700; color:var(--red)">
+          ₼${g.totalDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </td>
+        <td>
+          <button class="pay-btn" onclick="paySupplierDebt('${g.name.replace(/'/g, "\\'")}', 'debt-row-${index}')">✓ Ödənildi</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  if(paidBody) {
+    let paidGroupsArray = Object.values(paidSupplierGroups);
+    if (paidGroupsArray.length === 0) {
+      paidBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted)">Hələ heç bir ödəniş tarixi yoxdur.</td></tr>`;
+    } else {
+      paidBody.innerHTML = paidGroupsArray.map(g => `
+        <tr>
+          <td><strong>${g.name}</strong></td>
+          <td><span class="code" style="color: var(--green);">${g.skuCount} SKU</span></td>
+          <td>${g.totalStock} ədəd</td>
+          <td style="font-family:'DM Mono', monospace; font-weight:700; color:var(--green)">
+            ₼${g.totalDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </td>
+          <td><span class="badge b-ok" style="padding: 2px 8px;">Tam Ödənilib</span></td>
+        </tr>
+      `).join('');
+    }
+  }
+}
+
+window.paySupplierDebt = async function(supplierName, rowId) {
+  if (confirm(`${supplierName} üçün yığılmış cari borcun ödənildiyini təsdiqləyirsiniz?`)) {
+    const rowEl = document.getElementById(rowId);
+    if (rowEl) {
+      rowEl.classList.add('row-paid'); 
+      try {
+        for (const item of invData) {
+          if (item.supplier && item.supplier.toLowerCase() === supplierName.toLowerCase() && !item.isPaid) {
+            item.isPaid = true; 
+            await setDoc(doc(db, "inventory", item.code), item);
+          }
+        }
+        setTimeout(() => {
+          renderDebtsTable();
+          renderNotifications();
+          renderDashboardRisk();
+          triggerFilters();
+        }, 1000);
+      } catch(e) {
+        rowEl.classList.remove('row-paid');
+      }
+    }
+  }
+}
+
+/* =========================================================
+   AUTHENTICATION LOGIC & SIDEBAR SYNC
+   ========================================================= */
+const authModal = document.getElementById('authModal');
+const authError = document.getElementById('authError');
+const authTitle = document.getElementById('authTitle');
+
+const registerForm = document.getElementById('registerForm');
+const regUsername = document.getElementById('regUsername');
+const regPhone = document.getElementById('regPhone');
+const regEmail = document.getElementById('regEmail');
+const regPass = document.getElementById('regPass');
+const countrySelect = document.getElementById('countrySelect');
+const tabPhone = document.getElementById('tabPhone');
+const tabEmail = document.getElementById('tabEmail');
+const phoneArea = document.getElementById('phoneArea');
+const emailArea = document.getElementById('emailArea');
+let regMode = 'phone';
+
+const loginForm = document.getElementById('loginForm');
+const loginIdentifier = document.getElementById('loginIdentifier');
+const loginPass = document.getElementById('loginPass');
+
+const authActions = document.getElementById('authActions');
+const userActions = document.getElementById('userActions');
+const uiUsername = document.getElementById('uiUsername');
+const uiEmail = document.getElementById('uiEmail');
+const profileBtn = document.getElementById('profileBtn');
+
+function updateUI() {
+  if(currentUser) {
+    authActions.style.display = 'none';
+    userActions.style.display = 'block';
+    uiUsername.textContent = currentUser.username;
+    uiEmail.textContent = currentUser.email || (currentUser.countryCode + currentUser.phone);
+    profileBtn.textContent = currentUser.username.charAt(0).toUpperCase();
+
+    document.getElementById('sbUserName').textContent = currentUser.username;
+    document.getElementById('sbUserRole').textContent = "Sistem İdarəçisi";
+    document.getElementById('sbUserAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+    document.getElementById('sidebarFooter').style.display = 'flex';
+  } else {
+    authActions.style.display = 'block';
+    userActions.style.display = 'none';
+    document.getElementById('sidebarFooter').style.display = 'none';
+  }
+}
+
+document.getElementById('openAuthBtn').addEventListener('click', () => { authModal.classList.add('open'); showError(''); });
+document.getElementById('closeAuthBtn').addEventListener('click', () => authModal.classList.remove('open'));
+
+function showError(msg) {
+  if(!msg) { authError.style.display = 'none'; return; }
+  authError.textContent = msg;
+  authError.style.display = 'block';
+}
+
+document.getElementById('switchToLogin').addEventListener('click', () => {
+  registerForm.style.display = 'none'; loginForm.style.display = 'block';
+  authTitle.textContent = 'Hesaba Giriş'; showError('');
+});
+document.getElementById('switchToReg').addEventListener('click', () => {
+  loginForm.style.display = 'none'; registerForm.style.display = 'block';
+  authTitle.textContent = 'Sistemə Qeydiyyat'; showError('');
+});
+
+tabPhone.addEventListener('click', () => {
+  regMode = 'phone'; tabPhone.classList.add('active'); tabEmail.classList.remove('active');
+  phoneArea.style.display = 'block'; emailArea.style.display = 'none';
+});
+tabEmail.addEventListener('click', () => {
+  regMode = 'email'; tabEmail.classList.add('active'); tabPhone.classList.remove('active');
+  emailArea.style.display = 'block'; phoneArea.style.display = 'none';
+});
+
+regPhone.addEventListener('input', function() {
+  const maxLen = parseInt(countrySelect.options[countrySelect.selectedIndex].dataset.len);
+  if (this.value.length > maxLen) this.value = this.value.slice(0, maxLen);
+});
+countrySelect.addEventListener('change', () => { regPhone.value = ''; regPhone.focus(); });
+
+document.getElementById('submitRegBtn').addEventListener('click', async () => {
+  const username = regUsername.value.trim();
+  const pass = regPass.value;
+  
+  if(!username) return showError('İstifadəçi adı daxil edilməlidir.');
+  if(users.some(u => u.username.toLowerCase() === username.toLowerCase())) return showError('Bu istifadəçi adı artıq mövcuddur.');
+  if(pass.length < 8) return showError('Şifrə ən az 8 simvol olmalıdır.');
+
+  let newUser = { username, password: pass, mode: regMode };
+
+  if(regMode === 'phone') {
+    const requiredLen = parseInt(countrySelect.options[countrySelect.selectedIndex].dataset.len);
+    const phoneVal = regPhone.value.replace(/\D/g, '');
+    if(phoneVal.length !== requiredLen) return showError('Lütfən düzgün nömrə qeyd edin.');
+    newUser.phone = phoneVal; newUser.countryCode = countrySelect.value;
+  } else {
+    const emailVal = regEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) return showError('Düzgün email daxil edin.');
+    if(users.some(u => u.email && u.email.toLowerCase() === emailVal.toLowerCase())) return showError('Bu email ilə hesab mövcuddur.');
+    newUser.email = emailVal;
+  }
+
+  try {
+    await setDoc(doc(db, "users", username.toLowerCase()), newUser);
+    users.push(newUser);
+    currentUser = newUser;
+    localStorage.setItem('smartstock_current_user', JSON.stringify(currentUser));
+    updateUI();
+    authModal.classList.remove('open');
+    regUsername.value = ''; regPass.value = ''; regPhone.value = ''; regEmail.value = '';
+  } catch (error) {
+    showError("Xəta: " + error.message);
+  }
+});
+
+document.getElementById('submitLoginBtn').addEventListener('click', () => {
+  const identifier = loginIdentifier.value.trim().toLowerCase();
+  const pass = loginPass.value;
+  if(!identifier || !pass) return showError('Bütün xanaları doldurun.');
+
+  const validUser = users.find(u => (u.username.toLowerCase() === identifier || (u.email && u.email.toLowerCase() === identifier)) && u.password === pass);
+  if(!validUser) return showError('parol və ya istifadəçi adı və ya email səhv daxil edilmişdir');
+
+  currentUser = validUser;
+  localStorage.setItem('smartstock_current_user', JSON.stringify(currentUser));
+  updateUI();
+  authModal.classList.remove('open');
+  loginIdentifier.value = ''; loginPass.value = '';
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  currentUser = null;
+  localStorage.removeItem('smartstock_current_user');
+  document.getElementById('profileDrop').classList.remove('open');
+  updateUI();
+});
+
+/* =========================================================
+   SETTINGS & PASSWORD UPDATE LOGIC
+   ========================================================= */
+const settingsModal = document.getElementById('settingsModal');
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  document.getElementById('profileDrop').classList.remove('open');
+  
+  if(currentUser) {
+    document.getElementById('setUserName').value = currentUser.username;
+    
+    const contactLabel = document.getElementById('setContactLabel');
+    const contactInput = document.getElementById('setContact');
+    
+    if(currentUser.mode === 'phone') {
+        contactLabel.textContent = 'Telefon Nömrəsi';
+        contactInput.value = currentUser.phone || '';
+    } else {
+        contactLabel.textContent = 'Email Ünvanı';
+        contactInput.value = currentUser.email || '';
+    }
+    document.getElementById('setOldPass').value = '';
+    document.getElementById('setNewPass').value = '';
+  }
+  settingsModal.classList.add('open');
+});
+
+document.getElementById('closeSettingsBtn').addEventListener('click', () => settingsModal.classList.remove('open'));
+
+document.getElementById('showCurrentPassBtn').addEventListener('click', () => {
+  if(currentUser) {
+    alert("Sizin hazırki şifrəniz: " + currentUser.password);
+  }
+});
+
+document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+  if(currentUser) {
+    const newName = document.getElementById('setUserName').value.trim();
+    const newContact = document.getElementById('setContact').value.trim();
+    const oldPass = document.getElementById('setOldPass').value;
+    const newPass = document.getElementById('setNewPass').value;
+
+    if(!newName || !newContact) { return; }
+
+    if(newPass.length > 0 || oldPass.length > 0) {
+        if(oldPass !== currentUser.password) { return; }
+        if(newPass.length < 8) { return; }
+    }
+
+    const index = users.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+
+    currentUser.username = newName;
+    if(currentUser.mode === 'phone') { currentUser.phone = newContact; } 
+    else { currentUser.email = newContact; }
+    if(newPass.length >= 8) { currentUser.password = newPass; }
+
+    try {
+      await setDoc(doc(db, "users", currentUser.username.toLowerCase()), currentUser);
+      if(index !== -1) { users[index] = currentUser; }
+      localStorage.setItem('smartstock_current_user', JSON.stringify(currentUser));
+      updateUI();
+      settingsModal.classList.remove('open');
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+});
+
+const routeModal = document.getElementById('routeModal');
+document.getElementById('optimalRouteBtn').addEventListener('click', () => routeModal.classList.add('open'));
+document.getElementById('closeRouteBtn').addEventListener('click', () => routeModal.classList.remove('open'));
+document.getElementById('startRouteBtn').addEventListener('click', () => { routeModal.classList.remove('open'); });
+
+/* =========================================================
+   INVENTORY, FILTERS, DELETE & EXPORT
+   ========================================================= */
+function updateCatFilterOptions() {
+  const catFilter = document.getElementById('catFilter');
+  const categories = [...new Set(invData.map(item => item.cat))];
+  catFilter.innerHTML = '<option value="">Bütün Kateqoriyalar</option>';
+  categories.forEach(cat => {
+    catFilter.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+}
+
+document.getElementById('openAddModalBtn').addEventListener('click', () => {
+  if (!currentUser) {
+    document.getElementById('authModal').classList.add('open');
+    showError('');
+  } else {
+    document.getElementById('addModal').classList.add('open');
+  }
+});
+
+document.getElementById('closeModalBtn').addEventListener('click', () => { document.getElementById('addModal').classList.remove('open'); });
+
+document.getElementById('saveProductBtn').addEventListener('click', async () => {
+  const name = document.getElementById('newProdName').value.trim();
+  const cat = document.getElementById('newProdCat').value;
+  const stockStr = document.getElementById('newProdStock').value;
+  const minStr = document.getElementById('newProdMin').value;
+  const priceStr = document.getElementById('newProdPrice').value;
+  const supplier = document.getElementById('newProdSupplier').value.trim();
+
+  if(!name || !cat || stockStr === "" || minStr === "" || priceStr === "" || !supplier) { return; }
+
+  const stockInt = Math.max(1, Math.floor(Number(stockStr)));
+  const minInt = Math.max(1, Math.floor(Number(minStr)));
+
+  let calculatedStatus = 'Normal';
+  if (stockInt <= minInt) { 
+    calculatedStatus = 'Kritik';
+  } else if (stockInt >= minInt * 2) { 
+    calculatedStatus = 'Yaxşı';  
+  }
+
+  const generatedCode = 'PRD-' + Math.floor(Math.random() * 900 + 100);
+  const newProduct = {
+    code: generatedCode, name: name, cat: cat, stock: stockInt,
+    min: minInt, price: Math.max(0, parseFloat(priceStr)), supplier: supplier,
+    isPaid: false, status: calculatedStatus
+  };
+
+  try {
+    await setDoc(doc(db, "inventory", generatedCode), newProduct);
+    invData.unshift(newProduct);
+    updateCatFilterOptions();
+    triggerFilters();
+    renderDebtsTable(); 
+    renderNotifications();
+    renderDashboardRisk();
+    document.getElementById('addModal').classList.remove('open'); 
+    document.querySelectorAll('#addModal .modal-inp').forEach(i => i.value = '');
+    document.getElementById('newProdCat').selectedIndex = 0;
+  } catch(e) {
+    console.error(e.message);
+  }
+});
+
+window.deleteProduct = async function(code) {
+  if (!currentUser) {
+    document.getElementById('authModal').classList.add('open');
+    showError('');
+    return;
+  }
+
+  if(confirm(`Bu məhsulu silmək istədiyinizdən əminsiniz?`)) {
+    try {
+      await deleteDoc(doc(db, "inventory", code));
+      const index = invData.findIndex(item => item.code === code);
+      if(index !== -1) {
+        invData.splice(index, 1);
+        updateCatFilterOptions();
+        triggerFilters();
+        renderDebtsTable(); 
+        renderNotifications();
+        renderDashboardRisk();
+      }
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+}
+
+function renderInvTable(filter='', statusF='', catF=''){
+  const body = document.getElementById('invBody');
+  if(!body) return;
+  
+  invData.forEach(r => {
+    const s = Number(r.stock) || 0;
+    const m = Number(r.min) || 0;
+    if (s <= m) { r.status = 'Kritik'; }
+    else if (s >= m * 2) { r.status = 'Yaxşı'; }
+    else { r.status = 'Normal'; }
+  });
+
+  const rows = invData.filter(r => {
+    const matchQ = !filter || (r.code.toLowerCase().includes(filter.toLowerCase()) || r.name.toLowerCase().includes(filter.toLowerCase()) || (r.supplier && r.supplier.toLowerCase().includes(filter.toLowerCase())));
+    return matchQ && (!statusF || r.status === statusF) && (!catF || r.cat === catF);
+  });
+
+  body.innerHTML = rows.map(r => {
+    const s = Number(r.stock);
+    const m = Number(r.min);
+    
+    const pct = Math.min(100, Math.round((s / Math.max(s, m * 2)) * 100));
+    
+    const barColor = r.status === 'Kritik' ? 'var(--red)' : r.status === 'Normal' ? 'var(--amber)' : 'var(--green)';
+    const badgeCls = r.status === 'Kritik' ? 'b-crit' : r.status === 'Normal' ? 'b-warn' : 'b-ok';
+
+    return `<tr id="inv-row-${r.code}">
+      <td><span class="code">${r.code}</span></td><td>${r.name}</td>
+      <td><span style="font-size:0.7rem;color:var(--muted)">${r.cat}</span></td>
+      <td><strong>${s}</strong></td>
+      <td style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.75rem">${m}</td>
+      <td><div class="progress-cell"><div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${barColor}"></div></div></div></td>
       <td><span class="badge ${badgeCls}">${r.status}</span></td>
-      <td style="font-family:'DM Mono',monospace;font-size:0.78rem">₼${r.price.toFixed(2)}</td>
-      <td><span class="supplier-chip">${r.supplier}</span></td>
-      <td style="font-size:0.72rem;color:var(--muted)">${r.updated}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.78rem">₼${Number(r.price).toFixed(2)}</td>
+      <td><span class="supplier-chip">${r.supplier} ${r.isPaid ? '✅' : ''}</span></td>
+      <td><button class="delete-btn" onclick="deleteProduct('${r.code}')">🗑️ Sil</button></td>
     </tr>`;
   }).join('');
 }
-renderInvTable();
-document.getElementById('tblSearch').addEventListener('input',e=>renderInvTable(e.target.value,document.getElementById('statusFilter').value));
-document.getElementById('statusFilter').addEventListener('change',e=>renderInvTable(document.getElementById('tblSearch').value,e.target.value));
 
-// ── SEARCH ──
-const searchInp=document.getElementById('searchInp');
-const searchDrop=document.getElementById('searchDrop');
-searchInp.addEventListener('input',e=>{
-  const q=e.target.value.toLowerCase().trim();
-  if(q.length<2){searchDrop.classList.remove('open');return}
-  const res=invData.filter(r=>r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q));
-  if(!res.length){searchDrop.classList.remove('open');return}
-  searchDrop.innerHTML=res.slice(0,5).map(r=>`
-    <div class="search-row" onclick="searchInp.value='${r.name}';searchDrop.classList.remove('open')">
-      <div class="search-chip">${r.code.slice(-3)}</div>
-      <div><div class="search-rname">${r.name}</div><div class="search-rmeta">${r.code} · ${r.stock} ədəd · <span style="color:${r.status==='Kritik'?'var(--red)':r.status==='Çox'?'var(--amber)':'var(--green)'}">${r.status}</span></div></div>
-    </div>`).join('');
-  searchDrop.classList.add('open');
+function triggerFilters() {
+  const searchVal = document.getElementById('tblSearch').value;
+  const statusVal = document.getElementById('statusFilter').value;
+  const catVal = document.getElementById('catFilter').value;
+  renderInvTable(searchVal, statusVal, catVal);
+}
+
+document.getElementById('tblSearch').addEventListener('input', triggerFilters);
+document.getElementById('statusFilter').addEventListener('change', triggerFilters);
+document.getElementById('catFilter').addEventListener('change', triggerFilters);
+
+document.getElementById('debtSearch').addEventListener('input', renderDebtsTable);
+document.getElementById('debtSortFilter').addEventListener('change', renderDebtsTable);
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  let csv = 'Kod,Məhsul,Kateqoriya,Stok,Min Hədd,Qiymət(AZN),Təchizatçı,Status\n';
+  invData.forEach(r => csv += `${r.code},${r.name},${r.cat},${r.stock},${r.min},${r.price},${r.supplier},${r.status}\n`);
+  const blob = new Blob(["\uFEFF"+csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "SmartStock_Anbar.csv";
+  link.click();
 });
-document.addEventListener('click',e=>{if(!searchInp.contains(e.target)&&!searchDrop.contains(e.target))searchDrop.classList.remove('open')});
 
-// ── NAVIGATION ──
+/* =========================================================
+   UI INTERACTIONS (Dropdowns, Tabs, Drag&Drop)
+   ========================================================= */
+function setupDropdown(btnId, dropId) {
+  document.getElementById(btnId).addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.drop-menu').forEach(m => { if(m.id !== dropId) m.classList.remove('open'); });
+    document.getElementById(dropId).classList.toggle('open');
+  });
+}
+setupDropdown('notifBtn', 'notifDrop');
+setupDropdown('profileBtn', 'profileDrop');
+
+document.addEventListener('click', (e) => { 
+  if (!e.target.closest('.menu-wrap')) { document.querySelectorAll('.drop-menu').forEach(m => m.classList.remove('open')); }
+});
+
 document.querySelectorAll('.nav-link').forEach(link=>{
   link.addEventListener('click',e=>{
     e.preventDefault();
-    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-    link.classList.add('active');
-    const page=link.dataset.page;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-'+page).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); link.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+link.dataset.page).classList.add('active');
+    renderDebtsTable(); 
   });
 });
 
-// ── FILTER BUTTONS ──
-document.querySelectorAll('.filter-group').forEach(group=>{
-  group.querySelectorAll('.f-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      group.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      if(btn.dataset.period&&mainChart){
-        const d=periods[btn.dataset.period];
-        mainChart.data.datasets[0].data=d.sales;
-        mainChart.data.datasets[1].data=d.inv;
-        mainChart.update();
-      }
-    });
-  });
-});
-
-// ── BUDGET SLIDER ──
-const budgetCats=[
-  {name:'İçkilər',color:'#00e5ff',ratio:0.28},
-  {name:'Süd məhsulları',color:'#7b5ea7',ratio:0.22},
-  {name:'Şirniyyat',color:'#00c896',ratio:0.16},
-  {name:'Dənli bitkilər',color:'#ffb340',ratio:0.13},
-  {name:'Konservlər',color:'#ff4d6a',ratio:0.11},
-  {name:'Yağlar',color:'#6366f1',ratio:0.1},
-];
-
-function updateBudget(){
-  const b=parseInt(document.getElementById('budgetSlider').value);
-  document.getElementById('budgetDisp').textContent='₼'+b.toLocaleString();
-  const cost=Math.round(b*0.97);
-  const rev=Math.round(b*2.78);
-  const profit=rev-cost;
-  const roi=Math.round((profit/cost)*100);
-  const days=Math.max(4,Math.round(7200/b*10));
-  document.getElementById('optCost').textContent='₼'+cost.toLocaleString();
-  document.getElementById('expRev').textContent='₼'+rev.toLocaleString();
-  document.getElementById('netProfit').textContent='₼'+profit.toLocaleString();
-  document.getElementById('roiDisp').textContent=roi+'%';
-  document.getElementById('payback').textContent=days.toFixed(1)+' gün';
-  document.getElementById('roiNote').textContent='₼'+b.toLocaleString()+' büdcə üçün optimal alış planı. Yüksək dövriyyəli kateqoriyalara prioritet verildi.';
-  const rows=document.getElementById('breakdownRows');
-  rows.innerHTML=budgetCats.map(c=>{
-    const amt=Math.round(b*c.ratio);
-    return`<div class="breakdown-row">
-      <div class="breakdown-name"><div class="breakdown-dot" style="background:${c.color}"></div>${c.name}</div>
-      <div class="breakdown-bar-wrap"><div class="breakdown-bar-fill" style="width:${c.ratio*100}%;background:${c.color}"></div></div>
-      <span class="breakdown-pct">₼${amt.toLocaleString()}</span>
-    </div>`;
-  }).join('');
-}
-document.getElementById('budgetSlider').addEventListener('input',updateBudget);
-updateBudget();
-
-// ── DISCOUNT SIMULATOR ──
-function updateDisc(){
-  const disc=parseInt(document.getElementById('discSlider').value);
-  const sel=document.getElementById('discProduct');
-  const opt=sel.options[sel.selectedIndex];
-  const stock=parseInt(opt.dataset.stock||567);
-  const price=parseFloat(opt.dataset.price||1.80);
-  const elastic=parseFloat(opt.dataset.elastic||-1.8);
-  document.getElementById('discDisp').textContent=disc;
-  const salesInc=Math.max(0,Math.round(-elastic*disc*10)/10);
-  const revChange=Math.round(stock*price*(salesInc/100)*(1-disc/100)-stock*price*(salesInc/100)*0);
-  const baseRev=stock*price;
-  const newSales=stock*(1+salesInc/100);
-  const newRev=newSales*price*(1-disc/100);
-  const revDiff=Math.round(newRev-baseRev);
-  const marginLoss=Math.round(disc/100*price*newSales*0.4);
-  const baseDays=Math.round(stock/18);
-  const newDays=Math.max(3,Math.round(baseDays/(1+salesInc/100)));
-  document.getElementById('discSales').textContent='+'+salesInc.toFixed(1)+'%';
-  document.getElementById('discRevChg').style.color=revDiff>=0?'var(--green)':'var(--red)';
-  document.getElementById('discRevChg').textContent=(revDiff>=0?'+':'')+'₼'+Math.abs(revDiff).toLocaleString();
-  document.getElementById('discClear').textContent=newDays+' gün';
-  document.getElementById('discMargin').textContent='-₼'+marginLoss.toLocaleString();
-  const pName=opt.text.split('(')[0].trim();
-  let note='';
-  if(disc===0){note=`<strong>AI Tövsiyəsi:</strong> Endirim yoxdur. Mövcud satış sürəti saxlanılır.`;}
-  else if(disc<=15){note=`<strong>AI Tövsiyəsi:</strong> ${pName} üçün ${disc}% endirim optimal seçimdir — satış həcmi ${salesInc.toFixed(1)}% artacaq, marja itkisi minimal qalacaq. Kampaniya cümə günü başlaması tövsiyə edilir.`;}
-  else if(disc<=30){note=`<strong>AI Xəbərdarlığı:</strong> ${disc}% endirim yüksək satış artımı verəcək, lakin marja itkisi nəzərəçarpacaq ola bilər (₼${marginLoss}). Yalnız çox yüksək stokda istifadə et.`;}
-  else{note=`<strong>AI Risk:</strong> ${disc}% endirim marjanızı ciddi azaldacaq. Yalnız son istifadə tarixi kritik olan məhsullar üçün tövsiyə edilir.`;}
-  document.getElementById('scenarioNote').innerHTML=note;
-}
-document.getElementById('discSlider').addEventListener('input',updateDisc);
-document.getElementById('discProduct').addEventListener('change',updateDisc);
-updateDisc();
-
-// ── THEME ──
 document.getElementById('themeBtn').addEventListener('click',()=>{
-  const t=document.body.getAttribute('data-theme');
-  document.body.setAttribute('data-theme',t==='dark'?'light':'dark');
+  const t=document.body.getAttribute('data-theme'); document.body.setAttribute('data-theme',t==='dark'?'light':'dark');
 });
 
-// ── AI CHAT ──
-const fab=document.getElementById('aiFab');
-const chat=document.getElementById('aiChat');
-const aiX=document.getElementById('aiX');
-const aiMsgs=document.getElementById('aiMsgs');
-const aiInp=document.getElementById('aiInp');
-const aiSendBtn=document.getElementById('aiSendBtn');
-const aiSugs=document.getElementById('aiSugs');
+const draggables = document.querySelectorAll('.kb-card');
+const containers = document.querySelectorAll('.kb-col');
+draggables.forEach(d => { 
+  d.addEventListener('dragstart', () => d.classList.add('dragging')); d.addEventListener('dragend', () => { d.classList.remove('dragging'); updateKanbanCounts(); }); 
+});
+containers.forEach(c => { 
+  c.addEventListener('dragover', e => { e.preventDefault(); c.appendChild(document.querySelector('.dragging')); }); 
+});
+function updateKanbanCounts() {
+  let total=0; containers.forEach(col => { const cnt=col.querySelectorAll('.kb-card').length; col.querySelector('.kb-cnt').textContent=cnt; total+=cnt; });
+  document.getElementById('kbGlobalCnt').textContent=total;
+}
 
-fab.addEventListener('click',()=>chat.classList.toggle('open'));
-aiX.addEventListener('click',()=>chat.classList.remove('open'));
+document.getElementById('aiFab').addEventListener('click', () => document.getElementById('aiChat').classList.toggle('open'));
+document.getElementById('aiX').addEventListener('click', () => document.getElementById('aiChat').classList.remove('open'));
 
-const aiKB={
-  'kritik':()=>`Hazırda 7 kritik SKU var:\n• PRD-001 (Kofe) — 45 ədəd, min.hədd 100\n• PRD-005 (Enerji İçkisi) — 28 ədəd, min.hədd 150\n• PRD-010 (Çay) — 67 ədəd, min.hədd 80\nBeverage Co. ilə 48 saat içində əlaqə saxla.`,
-  'endirim':()=>`Süd məhsullarına 12–15% endirim tövsiyə edilir:\n• Tam Yağlı Süd: 567 ədəd (Çox stok)\n• Organik Yoğurt: 423 ədəd (Son tarix yaxınlaşır)\nCümə axşamı başlamaq optimal nəticə verir.`,
-  'roi':()=>`Bu ay ROI analizi:\n• Ümumi gəlir: ₼387,450\n• Xalis mənfəət: ₼241,280 (62.3%)\n• Stok dövriyyəsi: 8.3x (Sənaye ortalaması: 6.2x)\n• Zay olma itkisi: ₼18,640 (↓22% ötən aya)`,
-  'proqnoz':()=>`AI proqnozu (növbəti 14 gün):\n• Kofe kateqoriyası: +22% tələb artımı\n• Ramazan öncəsi çay: +18% artım\n• Süd məhsulları: -8% azalma (mövsüm sonu)`,
-  'filial':()=>`Ən yaxşı performans göstərən filial: Nizami (₼94,100/ay)\nƏn aşağı: Gənclik (₼68,300/ay)\nTövsiyə: Gənclik filialı üçün ayrıca kampaniya planla.`,
-};
+/* =========================================================
+   CHART.JS
+   ========================================================= */
+new Chart(document.getElementById('mainChart'),{
+  type:'bar',
+  data:{
+    labels:['Nərimanov','Nizami','Gənclik', 'Yasamal', 'Xətai'],
+    datasets:[{label:'Satış',data:[76200,94100,68300, 85000, 50000],backgroundColor:'rgba(0,229,255,0.7)', borderRadius: 4}]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+});
 
-function aiReply(q){
-  const ql=q.toLowerCase();
-  for(const[k,fn] of Object.entries(aiKB)){
-    if(ql.includes(k))return fn();
+/* =========================================================
+   REAL-TIME FIREBASE DATA LOADING FETCH
+   ========================================================= */
+async function loadDataFromFirebase() {
+  try {
+    const userSnapshot = await getDocs(usersCollection);
+    users = [];
+    userSnapshot.forEach(doc => users.push(doc.data()));
+
+    const invSnapshot = await getDocs(inventoryCollection);
+    invData = [];
+    invSnapshot.forEach(doc => invData.push(doc.data()));
+
+    if(invData.length === 0) {
+      const defaultData = [
+        {code:'PRD-001', name:'Premium Kofe Dənələri', cat:'İçki', stock:45, min:100, price:12.99, supplier:'Beverage Co.', isPaid: false, status:'Kritik'},
+        {code:'PRD-002', name:'Organik Şokolad', cat:'Şirniyyat', stock:234, min:50, price:4.50, supplier:'Şərq Şirin MMC', isPaid: false, status:'Normal'},
+        {code:'PRD-003', name:'ESP32 Mikrokontroller (IoT)', cat:'Elektronika', stock:567, min:200, price:12.80, supplier:'TechCorp Group', isPaid: false, status:'Yaxşı'},
+        {code:'PRD-004', name:'Korporativ Promo Broşürlər', cat:'Ofis', stock:156, min:80, price:0.30, supplier:'PrintBaku', isPaid: false, status:'Normal'},
+        {code:'PRD-005', name:'Premium Pendir', cat:'Süd məhsulları', stock:178, min:60, price:8.50, supplier:'Sumqayıt Süd', isPaid: false, status:'Normal'},
+        {code:'PRD-006', name:'Təzə Albalı', cat:'Meyvə və tərəvəz', stock:80, min:30, price:3.50, supplier:'BakuFarms', isPaid: false, status:'Normal'},
+        {code:'PRD-007', name:'Mal Əti (Premium)', cat:'Ət və dəniz məhsulları', stock:120, min:50, price:16.50, supplier:'Qarabağ Aqro', isPaid: false, status:'Normal'},
+        {code:'PRD-008', name:'Zavod Çörəyi', cat:'Un məhsulları', stock:300, min:100, price:0.65, supplier:'Xəzər Şirniyyat', isPaid: false, status:'Normal'},
+        {code:'PRD-009', name:'Dondurulmuş Kartof', cat:'Dondurulmuş qidalar', stock:90, min:40, price:5.20, supplier:'Sərin Qıda', isPaid: false, status:'Normal'},
+        {code:'PRD-010', name:'Yaşıl Noxud Konservi', cat:'Konservlər', stock:140, min:60, price:2.10, supplier:'Bizim Tarla', isPaid: false, status:'Normal'},
+        {code:'PRD-011', name:'İstiot və Sarıkök Qarışığı', cat:'Ədviyyat və souslar', stock:75, min:20, price:1.80, supplier:'Dadlı MMC', isPaid: false, status:'Normal'},
+        {code:'PRD-012', name:'Uşaq Kaşası', cat:'Uşaq qidaları', stock:50, min:45, price:6.40, supplier:'NutriBaku', isPaid: false, status:'Normal'},
+        {code:'PRD-013', name:'Nəmləndirici Krem', cat:'Kosmetika və şəxsi qulluq', stock:110, min:30, price:14.90, supplier:'BioBeauty', isPaid: false, status:'Normal'},
+        {code:'PRD-014', name:'Qabyuyan Maye', cat:'Məişət kimyası', stock:210, min:70, price:3.20, supplier:'Təmiz Ev', isPaid: false, status:'Normal'},
+        {code:'PRD-015', name:'Pambıq Köynək', cat:'Geyim və tekstil', stock:65, min:20, price:25.00, supplier:'BakuTextile', isPaid: false, status:'Normal'},
+        {code:'PRD-016', name:'Teflon Tava', cat:'Ev və mətbəx əşyaları', stock:40, min:15, price:42.00, supplier:'Mətbəx Dünyası', isPaid: false, status:'Normal'},
+        {code:'PRD-017', name:'Mühərrik Yağı 5W-30', cat:'Avto aksesuarlar', stock:85, min:30, price:55.00, supplier:'AutoParts', isPaid: false, status:'Normal'},
+        {code:'PRD-018', name:'İdman Matı (Yoqa)', cat:'İdman və asudə', stock:35, min:10, price:18.50, supplier:'SportMaster', isPaid: false, status:'Normal'},
+        {code:'PRD-019', name:'Sement (40 KG)', cat:'Tikinti və təmir', stock:400, min:150, price:7.80, supplier:'BakuCement', isPaid: false, status:'Yaxşı'},
+        {code:'PRD-020', name:'Quru Pişik Qidası', cat:'Heyvan qidaları', stock:95, min:40, price:11.30, supplier:'Azərpet MMC', isPaid: false, status:'Normal'},
+        {code:'PRD-021', name:'Xüsusi Sifariş Paketləmə', cat:'Başqa...', stock:500, min:100, price:0.50, supplier:'Lokal', isPaid: false, status:'Yaxşı'}
+      ];
+      for (const item of defaultData) {
+        await setDoc(doc(db, "inventory", item.code), item);
+        invData.push(item);
+      }
+    }
+    updateCatFilterOptions();
+    renderInvTable();
+    renderDebtsTable();
+    renderNotifications();   // ← sync notifications
+    renderDashboardRisk();   // ← sync dashboard risk card
+    updateUI();
+  } catch (error) {
+    console.error("Məlumat oxunarkən xəta baş verdi:", error);
   }
-  return`Bu barədə məlumat topluyuram. Stok, endirim, proqnoz, ROI, filial analizi ilə bağlı sual ver — daha dəqiq cavab verə bilərəm.`;
 }
 
-function appendMsg(type,text){
-  const d=document.createElement('div');
-  d.className=`ai-msg ${type}`;
-  d.textContent=text;
-  aiMsgs.appendChild(d);
-  aiMsgs.scrollTop=aiMsgs.scrollHeight;
-}
+loadDataFromFirebase();
+</script>
 
-function sendMsg(q){
-  q=q||aiInp.value.trim();
-  if(!q)return;
-  appendMsg('user',q);
-  aiInp.value='';
-  aiSugs.style.display='none';
-  setTimeout(()=>{
-    const typing=document.createElement('div');
-    typing.className='ai-msg bot ai-typing';
-    typing.innerHTML='<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
-    aiMsgs.appendChild(typing);
-    aiMsgs.scrollTop=aiMsgs.scrollHeight;
-    setTimeout(()=>{
-      typing.remove();
-      appendMsg('bot',aiReply(q));
-    },900);
-  },100);
-}
+<!-- AI CHAT ENGINE INTELLIGENT REPLY LOGIC SCRIPTS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const aiMsgs = document.getElementById('aiMsgs');
+  const aiInp = document.getElementById('aiInp');
+  const aiSendBtn = document.getElementById('aiSendBtn');
 
-aiSendBtn.addEventListener('click',()=>sendMsg());
-aiInp.addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg()});
-document.querySelectorAll('.ai-sug').forEach(s=>{
-  s.addEventListener('click',()=>sendMsg(s.dataset.q));
+  function appendMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('ai-msg', sender);
+    msgDiv.innerText = text;
+    aiMsgs.appendChild(msgDiv);
+    aiMsgs.scrollTop = aiMsgs.scrollHeight;
+  }
+
+  function processAIResponse(userText) {
+    const text = userText.toLowerCase().trim();
+    let currentInv = [];
+    
+    if (typeof window.invDataRef === 'function') {
+      currentInv = window.invDataRef();
+    }
+
+    const totalItems = currentInv.length;
+    const kritikSkus = currentInv.filter(item => {
+      const s = Number(item.stock) || 0;
+      const m = Number(item.min) || 0;
+      return s <= m;
+    });
+    
+    let totalDebt = 0;
+    currentInv.forEach(i => {
+      if (!i.isPaid) totalDebt += (Number(i.stock) || 0) * (Number(i.price) || 0);
+    });
+
+    if (text.includes('salam') || text.includes('hey') || text.includes('salamlar')) {
+      return "Salam! Mən SmartStock süni intellekt köməkçisiyəm. Sizə anbar vəziyyəti, riskli təchizatçılar, əldə qalan mallar və borclar barədə canlı analitika təqdim edə bilərəm. Nəyi öyrənmək istərdiniz?";
+    }
+    
+    if (text.includes('anbar') || text.includes('stok') || text.includes('məhsul') || text.includes('sku')) {
+      return `Hazırda verilənlər bazasında ${totalItems} çeşid (SKU) aktiv məhsul qeydiyyatdadır. Onlardan ${kritikSkus.length} ədədi kritik həddə düşüb. Tam siyahıya baxmaq üçün 'Anbar Vəziyyəti' bölməsinə keçid edə bilərsiniz.`;
+    }
+
+    if (text.includes('kritik') || text.includes('risk') || text.includes('qırmızı') || text.includes('az qalan')) {
+      if (kritikSkus.length === 0) {
+        return "Əla xəbər! Hazırda anbarda kritik həddə və ya risk qrupunda olan hər hansı bir məhsul yoxdur.";
+      }
+      let list = kritikSkus.slice(0, 3).map(i => `${i.name} (${i.stock} ədəd / Təchizatçı: ${i.supplier})`).join(', ');
+      return `Diqqət, sistemdə ${kritikSkus.length} riskli SKU var! Ən kritik olanlar: ${list}. Sifariş sayını artırmağınız tövsiyə olunur.`;
+    }
+
+    if (text.includes('borc') || text.includes('ödəniş') || text.includes('pul') || text.includes('azn')) {
+      return `Cari hesablamalara əsasən təchizatçılara olan ümumi aktiv ödənilməmiş borc məbləği: ₼${totalDebt.toLocaleString('az-AZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} təşkil edir. 'Borclar Hesabatı' panelindən ödənişləri idarə edə bilərsiniz.`;
+    }
+
+    if (text.includes('təchizatçı') || text.includes('satınalma') || text.includes('dəyiş') || text.includes('tövsiyə')) {
+      return "Tövsiyələr panelinin cari analitikasına əsasən 'AutoParts' tədarükçüsündən gələn məhsulda 14% geri qaytarılma (defekt) nisbəti qeydə alınıb. İtkilərin qarşısını almaq üçün bu ay fərqli təchizatçıya keçməyi və ya sifarişi azaltmağı tövsiyə edirəm.";
+    }
+
+    if (text.includes('sağ ol') || text.includes('təşəkkür')) {
+      return "Dəyməz, hər zaman kömək etməyə hazıram! Uğurlu satışlar!";
+    }
+
+    return "Anladım. Sistem məlumatları əsasında düzgün rəqəmlər verə bilməm üçün zəhmət olmasa 'anbar vəziyyəti', 'kritik stoklar', 'cari borclar' və ya 'təchizatçı tövsiyələri' haqqında suallarınızı spesifikləşdirin.";
+  }
+
+  function handleSend() {
+    const text = aiInp.value.trim();
+    if (!text) return;
+
+    appendMessage(text, 'user');
+    aiInp.value = '';
+
+    setTimeout(() => {
+      const reply = processAIResponse(text);
+      appendMessage(reply, 'bot');
+    }, 400);
+  }
+
+  aiSendBtn.addEventListener('click', handleSend);
+  aiInp.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSend();
+  });
 });
-document.addEventListener('click',e=>{
-  if(!fab.contains(e.target)&&!chat.contains(e.target))chat.classList.remove('open');
-});
-
-// ── INIT ──
-initCharts();
 </script>
 </body>
 </html>
